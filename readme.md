@@ -2,8 +2,8 @@
 
 ### Naming convention
 Branches name : 
-  - case feature : feature/<name-of-the-feature>
-  - case bugfix : bug-fix/<name-of-the-bug-to-fix>
+  - case feature : feature/\<name-of-the-feature\>
+  - case bugfix : bug-fix/\<name-of-the-bug-to-fix\>
   
 As soon as a branch has been merged, delete it. You can [configure GitHub](https://docs.github.com/en/github/administering-a-repository/managing-the-automatic-deletion-of-branches) to do this automatically. 
   

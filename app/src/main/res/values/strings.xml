@@ -1,6 +1,0 @@
-<resources>
-    <string name="app_name">ShareLook</string>
-    <string name="name">Name</string>
-    <string name="button">Button</string>
-    <string name="greetingString">Default Name Showing String: this should not be visible</string>
-</resources>

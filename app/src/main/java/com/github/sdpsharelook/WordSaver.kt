@@ -8,4 +8,8 @@ class WordSaver(private val database: Database) : HashMap<String, Word>() {
     fun save() {
         database.saveFavourites(this)
     }
+
+    fun fill() {
+        database.fillFavourites(this)
+    }
 }

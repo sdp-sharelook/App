@@ -1,10 +1,7 @@
 package com.github.sdpsharelook
 
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.espresso.matcher.ViewMatchers.assertThat
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import org.hamcrest.Matchers
-import org.hamcrest.Matchers.*
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -23,9 +20,8 @@ class InternalFileDatabaseTest {
         words.save()
         words.clear()
         assert(words.isEmpty())
-        assertThat(words["Test"], nullValue())
         words.fill()
-        assertThat(words, hasKey("Test"))
-        assertThat(words["Test"]!!.name, equalTo("Test"))
+        assert(words.containsKey("Test"))
+        assert(words["Test"]!!.name.equals("Test"))
     }
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.github.sdpsharelook" >
+    package="com.github.sdpsharelook">
 
     <application
         android:allowBackup="true"
@@ -8,13 +8,19 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MyBootcamp" >
+        android:theme="@style/Theme.MyBootcamp">
         <activity
-            android:name="com.github.sdpsharelook.GreetingActivity"
+            android:name=".Section.SectionDetail"
             android:exported="false" />
         <activity
-            android:name="com.github.sdpsharelook.MainActivity"
-            android:exported="true" >
+            android:name=".Section.SectionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".GreetingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

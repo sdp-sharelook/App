@@ -3,6 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/edoul/Documents/Ba6/SDProject/App/app/src/main/res/layout/activity_section.xml" value="0.35280797101449274" />
+        <entry key="..\:/Users/edoul/Documents/Ba6/SDProject/App/app/src/main/res/layout/activity_section_detail.xml" value="0.409375" />
+        <entry key="..\:/Users/edoul/Documents/Ba6/SDProject/App/app/src/main/res/layout/card_section.xml" value="0.409375" />
         <entry key="app/src/main/res/layout/activity_greeting.xml" value="0.29846014492753625" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.29846014492753625" />
       </map>

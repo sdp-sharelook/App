@@ -31,7 +31,7 @@
         app:layout_constraintTop_toBottomOf="@+id/email" />
 
     <Button
-        android:id="@+id/loginButton"
+        android:id="@+id/singUpButton"
         android:layout_width="401dp"
         android:layout_height="46dp"
         android:layout_marginTop="12dp"
@@ -42,4 +42,24 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/password" />
+
+    <Button
+        android:id="@+id/signUpButton"
+        android:layout_width="401dp"
+        android:layout_height="46dp"
+        android:backgroundTint="@color/teal_200"
+        android:checkable="false"
+        android:fontFamily="sans-serif-medium"
+        android:onClick="goToSignUp"
+        android:text="Don't have an account? Sign up here !"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="10sp"
+        app:iconPadding="0dp"
+        app:iconTint="#00FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/singUpButton"
+        tools:visibility="visible" />
 </androidx.constraintlayout.widget.ConstraintLayout>

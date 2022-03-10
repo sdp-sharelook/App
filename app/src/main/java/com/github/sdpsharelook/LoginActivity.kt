@@ -41,4 +41,7 @@ class LoginActivity : AppCompatActivity() {
         }
         startActivity(intent)
     }
+    fun goToSignUp(view: View){
+        startActivity(Intent(this, SignUpActivity::class.java).apply {  })
+    }
 }

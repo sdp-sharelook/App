@@ -23,8 +23,7 @@ class TextToSpeechActivity : AppCompatActivity() {
                     tts?.setSpeechRate(1.4f)
                     tts?.setLanguage(Locale.UK)
                     putLanguagesInSpinner(tts?.availableLanguages ?: setOf())
-                    bindPitchSeekBar()
-                    bindSpeechRateSeekBar()
+                    bindSeekBars()
                 }
                 else -> {
                     toast("An error happened while creating the TextToSpeech object", this)
@@ -37,43 +36,34 @@ class TextToSpeechActivity : AppCompatActivity() {
         val spinner: Spinner? = findViewById(R.id.spinner_languages)
         val adapter: ArrayAdapter<String> = ArrayAdapter(this, R.layout.activity_text_to_speech,
             languages?.toList()?.map { it.displayCountry } ?: listOf("No language available"))
-         spinner?.setAdapter(adapter)
+        spinner?.setAdapter(adapter)
         // crash
         // spinner?.setAdapter(adapter)
     }
+
     private fun bindSeekBars() {
-
-    }
-    private fun bindPitchSeekBar() {
         // spinner?.adapter = adapter
-        val seekBarPitchListener = object : SeekBar.OnSeekBarChangeListener {
+        val seekBarPitch: SeekBar? = findViewById(R.id.seek_bar_pitch)
+        val seekBarSpeechRate: SeekBar? = findViewById(R.id.seek_bar_speech_rate)
+
+        val seekBarsListener = object : SeekBar.OnSeekBarChangeListener {
+
             override fun onProgressChanged(seekBar: SeekBar?, i: Int, b: Boolean) {
-                tts?.setPitch(i.toFloat() / 5)
+                if (seekBar === seekBarPitch)
+                    tts?.setPitch(i.toFloat() / 5)
+                else if (seekBar == seekBarSpeechRate)
+                    tts?.setSpeechRate(i.toFloat() / 5)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         }
-        findViewById<SeekBar>(R.id.seek_bar_pitch).setOnSeekBarChangeListener(
-            seekBarPitchListener
-        )
+
+        seekBarPitch?.setOnSeekBarChangeListener(seekBarsListener)
+        seekBarSpeechRate?.setOnSeekBarChangeListener(seekBarsListener)
     }
 
-    private fun bindSpeechRateSeekBar() {
-        val seekBarSpeechRateListener = object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, i: Int, b: Boolean) {
-                tts?.setSpeechRate(i.toFloat() / 5)
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
-        }
-        findViewById<SeekBar>(R.id.seek_bar_speech_rate).setOnSeekBarChangeListener(
-            seekBarSpeechRateListener
-        )
-    }
 
     fun speak(view: View) {
         val editText = findViewById<EditText>(R.id.edit_text_input_tts)

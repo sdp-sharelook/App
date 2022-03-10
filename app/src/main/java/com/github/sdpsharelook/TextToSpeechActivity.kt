@@ -19,7 +19,8 @@ class TextToSpeechActivity : AppCompatActivity() {
                     tts?.setPitch(0.2f)
                     tts?.setSpeechRate(1.4f)
                     tts?.setLanguage(Locale.UK)
-                    putLanguagesInSpinner(tts?.availableLanguages ?: setOf())
+                    val mapToTag = putLanguagesInSpinner(tts?.availableLanguages ?: setOf())
+                    bindSpinnerLanguages(mapToTag)
                     bindSeekBars()
                 }
                 else -> {
@@ -29,7 +30,7 @@ class TextToSpeechActivity : AppCompatActivity() {
         }
     }
 
-    private fun putLanguagesInSpinner(languages: Set<Locale>?) {
+    private fun putLanguagesInSpinner(languages: Set<Locale>?): Map<String, String>? {
         val spinner: Spinner? = findViewById(R.id.spinner_languages)
         val nameToTag = languages?.map { it.displayLanguage to it.toLanguageTag() }?.toMap()
         val adapter: ArrayAdapter<String> =
@@ -37,6 +38,11 @@ class TextToSpeechActivity : AppCompatActivity() {
                 nameToTag?.keys?.toList()?.filter { it.trim() != "" }
                     ?: listOf("No language available"))
         spinner?.setAdapter(adapter)
+        return nameToTag
+    }
+
+    private fun bindSpinnerLanguages(nameToTag: Map<String, String>?) {
+        val spinner: Spinner? = findViewById(R.id.spinner_languages)
         spinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
@@ -49,16 +55,13 @@ class TextToSpeechActivity : AppCompatActivity() {
                 if (tag != null) {
                     val selectedLanguage = Locale.forLanguageTag(tag)
                     tts?.setLanguage(selectedLanguage)
-                } else
-                    tts?.setLanguage(Locale.UK)
-            } // to close the onItemSelected
+                }
+            }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
-                tts?.setLanguage(Locale.UK)
             }
         }
     }
-
 
     private fun bindSeekBars() {
         // spinner?.adapter = adapter

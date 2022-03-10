@@ -8,8 +8,8 @@
 
     <LinearLayout
             android:orientation="vertical"
-            android:layout_width="409dp"
-            android:layout_height="729dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             tools:layout_editor_absoluteY="1dp"
             tools:layout_editor_absoluteX="1dp"
             android:padding="5dp">
@@ -21,7 +21,8 @@
                 android:ems="10"
                 android:id="@+id/edit_text_input_tts"
                 android:gravity="top"
-                android:hint="@string/textToSpeechHint" />
+                android:hint="@string/textToSpeechHint"
+                android:importantForAutofill="no" />
 
         <Button
                 android:text="@string/speak"
@@ -36,7 +37,7 @@
                 app:barrierDirection="top" />
 
         <TextView
-                android:text="Pitch"
+                android:text="@string/pitch_tts"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/text_view_pitch" />

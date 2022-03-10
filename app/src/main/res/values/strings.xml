@@ -9,5 +9,6 @@
     <string name="textToSpeechLanguage">Language</string>
     <string name="nameHint">Name</string>
     <string name="text_to_speech_button_text">Text to speech</string>
+    <string name="pitch_tts">Pitch</string>
 
 </resources>

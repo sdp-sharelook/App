@@ -3,13 +3,16 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Romain/Documents/EPFL_documents/SDP/App/app/src/main/res/layout/activity_greeting.xml" value="0.152" />
         <entry key="..\:/Users/Romain/Documents/EPFL_documents/SDP/App/app/src/main/res/layout/activity_main.xml" value="0.2" />
+        <entry key="..\:/Users/Romain/Documents/EPFL_documents/SDP/App/app/src/main/res/layout/activity_text_to_speech.xml" value="0.16304347826086957" />
+        <entry key="..\:/Users/Romain/Documents/EPFL_documents/SDP/App/app/src/main/res/layout/text_to_speech.xml" value="0.16799999999999998" />
         <entry key="app/src/main/res/layout/activity_greeting.xml" value="0.29846014492753625" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.29846014492753625" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_16" project-jdk-name="17" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_X" default="true" project-jdk-name="17" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

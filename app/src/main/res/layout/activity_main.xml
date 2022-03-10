@@ -7,48 +7,42 @@
         tools:context="com.github.sdpsharelook.MainActivity"
         android:padding="5dp">
 
-    <ScrollView
-            android:layout_width="409dp"
-            android:layout_height="729dp"
-            tools:layout_editor_absoluteY="1dp"
-            tools:layout_editor_absoluteX="1dp">
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <LinearLayout
+        <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:inputType="textPersonName"
+                android:hint="@string/nameHint"
+                android:ems="10"
+                android:id="@+id/edit_text_name"
+                android:autofillHints="name"/>
 
-            <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPersonName"
-                    android:hint="Name"
-                    android:ems="10"
-                    android:id="@+id/edit_text_name" />
+        <Button
+                android:text="@string/greet"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/button_greet"
+                android:onClick="greet" />
 
-            <Button
-                    android:text="@string/greet"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/button_greet"
-                    android:onClick="greet" />
+        <androidx.constraintlayout.widget.Barrier
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:barrierDirection="top" />
 
-            <androidx.constraintlayout.widget.Barrier
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:barrierDirection="top" />
+        <Button
+                android:text="@string/text_to_speech_button_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/button_text_to_speech"
+                android:onClick="textToSpeech" />
 
-            <Button
-                    android:text="Text to speech"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/button_text_to_speech"
-                    android:onClick="textToSpeech" />
-
-            <androidx.constraintlayout.widget.Barrier
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:barrierDirection="top" />
-        </LinearLayout>
-    </ScrollView>
+        <androidx.constraintlayout.widget.Barrier
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:barrierDirection="top" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

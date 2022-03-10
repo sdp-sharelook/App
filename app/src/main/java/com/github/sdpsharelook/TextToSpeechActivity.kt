@@ -41,10 +41,12 @@ class TextToSpeechActivity : AppCompatActivity() {
         // crash
         // spinner?.setAdapter(adapter)
     }
+    private fun bindSeekBars() {
 
+    }
     private fun bindPitchSeekBar() {
         // spinner?.adapter = adapter
-        val seekBarListener = object : SeekBar.OnSeekBarChangeListener {
+        val seekBarPitchListener = object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, i: Int, b: Boolean) {
                 tts?.setPitch(i.toFloat() / 5)
             }
@@ -54,12 +56,12 @@ class TextToSpeechActivity : AppCompatActivity() {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         }
         findViewById<SeekBar>(R.id.seek_bar_pitch).setOnSeekBarChangeListener(
-            seekBarListener
+            seekBarPitchListener
         )
     }
 
     private fun bindSpeechRateSeekBar() {
-        val seekBarListener = object : SeekBar.OnSeekBarChangeListener {
+        val seekBarSpeechRateListener = object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, i: Int, b: Boolean) {
                 tts?.setSpeechRate(i.toFloat() / 5)
             }
@@ -69,7 +71,7 @@ class TextToSpeechActivity : AppCompatActivity() {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
         }
         findViewById<SeekBar>(R.id.seek_bar_speech_rate).setOnSeekBarChangeListener(
-            seekBarListener
+            seekBarSpeechRateListener
         )
     }
 

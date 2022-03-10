@@ -6,25 +6,83 @@
     android:layout_height="match_parent"
     tools:context="com.github.sdpsharelook.MainActivity">
 
-    <EditText
-        android:id="@+id/mainName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:autofillHints=""
-        android:ems="10"
-        android:hint="@string/name"
-        android:inputType="textPersonName"
-        android:minHeight="48dp"
-        app:layout_constraintEnd_toStartOf="@+id/mainGoButton"
-        app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="409dp"
+            android:layout_height="681dp"
+            android:id="@+id/linearLayout"
+            tools:layout_editor_absoluteY="149dp">
 
-    <Button
-        android:id="@+id/mainGoButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="greet"
-        android:text="@string/button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:ems="10"
+                android:id="@+id/mainName"
+                android:hint="Name" />
+
+        <Button
+                android:text="Greet"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/button2"
+                android:onClick="greet" />
+
+        <TextView
+                android:text="Speech rate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView" />
+
+        <SeekBar
+                style="@style/Widget.AppCompat.SeekBar.Discrete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="10"
+                android:progress="5"
+                android:id="@+id/seekBar_speechRate" />
+
+        <TextView
+                android:text="Pitch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView2" />
+
+        <SeekBar
+                style="@style/Widget.AppCompat.SeekBar.Discrete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="10"
+                android:progress="5"
+                android:id="@+id/seekBar_pitch" />
+
+        <TextView
+                android:text="Language"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView3"
+                tools:text="Language" />
+
+        <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/spinner_language" />
+
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:ems="10"
+                android:id="@+id/editTextTextPersonName2"
+                android:hint="Enter your text" />
+
+        <Button
+                android:text="Speak"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/button"
+                android:onClick="speak" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

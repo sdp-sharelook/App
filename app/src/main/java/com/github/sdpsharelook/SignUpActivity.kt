@@ -21,6 +21,15 @@ class SignUpActivity : AppCompatActivity() {
         val email = findViewById<EditText>(R.id.email).text.toString()
         val password = findViewById<EditText>(R.id.password).text.toString()
 
+        if(email.isNullOrBlank()){
+            Toast.makeText(this,"Email cannot be left blank!",Toast.LENGTH_LONG ).show()
+            return
+        }
+        if(password.isNullOrBlank()){
+            Toast.makeText(this,"Password cannot be left blank!",Toast.LENGTH_LONG ).show()
+            return
+        }
+
         auth.createUserWithEmailAndPassword(email,password).addOnSuccessListener { res ->
             Toast.makeText(this,"Signed Up !",Toast.LENGTH_LONG ).show()
             greet(auth.currentUser?.displayName)

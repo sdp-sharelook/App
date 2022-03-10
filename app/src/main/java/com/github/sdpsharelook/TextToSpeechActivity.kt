@@ -4,10 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.SeekBar
-import android.widget.Spinner
+import android.widget.*
 import java.util.*
 import com.github.sdpsharelook.Utils.Companion.toast
 
@@ -34,12 +31,34 @@ class TextToSpeechActivity : AppCompatActivity() {
 
     private fun putLanguagesInSpinner(languages: Set<Locale>?) {
         val spinner: Spinner? = findViewById(R.id.spinner_languages)
-        val adapter: ArrayAdapter<String> = ArrayAdapter(this, R.layout.activity_text_to_speech,
-            languages?.toList()?.map { it.displayCountry } ?: listOf("No language available"))
+        val nameToTag = languages?.map { it.displayLanguage to it.toLanguageTag() }?.toMap()
+        val adapter: ArrayAdapter<String> =
+            ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item,
+                nameToTag?.keys?.toList()?.filter { it.trim() != "" }
+                    ?: listOf("No language available"))
         spinner?.setAdapter(adapter)
-        // crash
-        // spinner?.setAdapter(adapter)
+        spinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View,
+                position: Int,
+                id: Long
+            ) {
+                val name = parent.getItemAtPosition(position).toString()
+                val tag = nameToTag?.get(name)
+                if (tag != null) {
+                    val selectedLanguage = Locale.forLanguageTag(tag)
+                    tts?.setLanguage(selectedLanguage)
+                } else
+                    tts?.setLanguage(Locale.UK)
+            } // to close the onItemSelected
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                tts?.setLanguage(Locale.UK)
+            }
+        }
     }
+
 
     private fun bindSeekBars() {
         // spinner?.adapter = adapter

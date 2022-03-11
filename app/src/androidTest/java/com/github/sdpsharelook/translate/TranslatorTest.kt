@@ -28,6 +28,6 @@ class TranslatorTest {
             }
         })
 
-        Thread.sleep(2000);
+        Thread.sleep(10000); // Wait for the callback to be executed.
     }
 }

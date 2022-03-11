@@ -3,12 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Romain/Documents/EPFL_documents/SDP/Bilinguee/app/src/main/res/layout/activity_main.xml" value="0.11875" />
+        <entry key="..\:/Users/Romain/Documents/EPFL_documents/SDP/Bilinguee/app/src/main/res/layout/activity_text_to_speech.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_greeting.xml" value="0.29846014492753625" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.29846014492753625" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_16" project-jdk-name="17" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

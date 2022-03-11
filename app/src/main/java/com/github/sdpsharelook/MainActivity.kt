@@ -24,4 +24,8 @@ class MainActivity : AppCompatActivity() {
         }
         startActivity(intent)
     }
+    fun textToSpeech(view:View){
+        val intent = Intent(this, TextToSpeechActivity::class.java)
+        startActivity(intent)
+    }
 }

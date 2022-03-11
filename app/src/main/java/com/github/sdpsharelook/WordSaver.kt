@@ -12,4 +12,8 @@ class WordSaver(private val database: Database) : HashMap<String, Word>() {
     fun fill() {
         database.fillFavourites(this)
     }
+
+    fun contextualize(word: Word): Map<String, Word> {
+        return filter { it.value.isRelatedTo(word) > 0 }
+    }
 }

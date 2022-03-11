@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
 
     fun greet(view: View) {
         val editText = findViewById<EditText>(R.id.edit_text_name)
-        val name = editText.text.toString()
+        val name = editText?.text.toString()
         val intent = Intent(this, GreetingActivity::class.java).apply {
             putExtra(EXTRA_MESSAGE, name)
         }

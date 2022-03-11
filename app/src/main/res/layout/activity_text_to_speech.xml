@@ -37,7 +37,7 @@
                 app:barrierDirection="top" />
 
         <TextView
-                android:text="@string/pitch_tts"
+                android:text="@string/pitchTextToSpeech"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/text_view_pitch" />

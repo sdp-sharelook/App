@@ -51,9 +51,8 @@ class TextToSpeechActivity : AppCompatActivity() {
                 id: Long
             ) {
                 val name = parent.getItemAtPosition(position).toString()
-                val tag = nameToTag?.get(name)
-                if (tag != null) {
-                    val selectedLanguage = Locale.forLanguageTag(tag)
+                nameToTag?.get(name)?.let {
+                    val selectedLanguage = Locale.forLanguageTag(it)
                     tts?.setLanguage(selectedLanguage)
                 }
             }

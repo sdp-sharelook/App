@@ -34,7 +34,7 @@
                 app:barrierDirection="top" />
 
         <Button
-                android:text="@string/text_to_speech_button_text"
+                android:text="@string/textToSpeechButtonText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/button_text_to_speech"

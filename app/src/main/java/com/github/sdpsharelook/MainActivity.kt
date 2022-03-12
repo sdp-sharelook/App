@@ -28,5 +28,6 @@ class MainActivity : AppCompatActivity() {
 
     fun textToSpeech(view: View) {
         startActivity(Intent(this, TextToSpeechActivity::class.java))
+
     }
 }

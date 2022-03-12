@@ -6,7 +6,9 @@ import android.speech.tts.TextToSpeech
 import android.view.View
 import android.widget.*
 import java.util.*
+
 import com.github.sdpsharelook.Utils.Companion.toast
+
 
 class TextToSpeechActivity : AppCompatActivity() {
     private var tts: TextToSpeech? = null

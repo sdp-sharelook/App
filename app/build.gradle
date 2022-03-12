@@ -5,6 +5,10 @@ plugins {
     id 'com.google.gms.google-services'
 }
 
+jacoco {
+    toolVersion = "0.8.7"
+}
+
 android {
     compileSdk 32
 
@@ -52,6 +56,16 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:29.1.0')
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-auth'
+}
+
+configurations.all{
+    resolutionStrategy {
+        eachDependency { details ->
+            if ('org.jacoco' == details.requested.group) {
+                details.useVersion "0.8.7"
+            }
+        }
+    }
 }
 
 tasks.withType(Test) {

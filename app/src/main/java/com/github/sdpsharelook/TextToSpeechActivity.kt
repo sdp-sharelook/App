@@ -7,6 +7,9 @@ import android.view.View
 import android.widget.*
 import java.util.*
 
+import com.github.sdpsharelook.Utils.Companion.toast
+
+
 class TextToSpeechActivity : AppCompatActivity() {
     private var tts: TextToSpeech? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,7 +26,7 @@ class TextToSpeechActivity : AppCompatActivity() {
                     bindSeekBars()
                 }
                 else -> {
-                    Toast.makeText(this, "An error happened while creating the TextToSpeech object", Toast.LENGTH_SHORT).show()
+                    toast("An error happened while creating the TextToSpeech object", this)
                 }
             }
         }
@@ -89,6 +92,6 @@ class TextToSpeechActivity : AppCompatActivity() {
         val editText = findViewById<EditText>(R.id.edit_text_input_tts)
         val name = editText.text.toString()
         tts?.speak(name, TextToSpeech.QUEUE_FLUSH, null, null)
-            ?: Toast.makeText(this, "The TextToSpeech object is null", Toast.LENGTH_SHORT).show()
+            ?: toast("The TextToSpeech object is null", this)
     }
 }

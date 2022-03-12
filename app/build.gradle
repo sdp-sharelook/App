@@ -52,6 +52,7 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.4.0'
     androidTestImplementation 'androidx.test:rules:1.4.0'
     androidTestImplementation 'androidx.test.espresso:espresso-intents:3.4.0'
+    implementation 'com.google.mlkit:translate:17.0.0'
 }
 
 configurations.all{

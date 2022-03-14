@@ -2,10 +2,13 @@
     <string name="appName">ShareLook</string>
     <string name="greet">Greet</string>
     <string name="speak">Speak</string>
-    <string name="textToSpeechHint" >Enter your text here</string>
+    <string name="textToSpeechHint">Enter your text here</string>
     <string name="textToSpeechRate">Speech rate</string>
     <string name="textToSpeechLanguage">Language</string>
     <string name="nameHint">Name</string>
     <string name="textToSpeechButtonText">Text to speech</string>
     <string name="pitchTextToSpeech">Pitch</string>
+    <string name="voice_recognition">Voice recognition</string>
+    <string name="start_speech_recognition">Start speech recognition</string>
+    <string name="the_result_of_the_speech_recognition_will_appear_here">The result of the speech recognition will appear here</string>
 </resources>

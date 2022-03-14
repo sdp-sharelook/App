@@ -44,5 +44,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:barrierDirection="top" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="voiceRecognition"
+            android:text="@string/voice_recognition" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

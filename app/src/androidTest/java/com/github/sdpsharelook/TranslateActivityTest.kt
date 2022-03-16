@@ -19,7 +19,7 @@ class TranslateActivityTest {
     fun testTranslateActivity() {
         Espresso.onView(ViewMatchers.withId(R.id.sourceText))
             .perform(ViewActions.typeText("Bonjour."))
-        Thread.sleep(1000);
+        Thread.sleep(10000);
         Espresso.onView(ViewMatchers.withId(R.id.targetText))
             .check(ViewAssertions.matches(ViewMatchers.withText("Hello.")))
     }

@@ -29,6 +29,48 @@
             android:textColorHint="#757575" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <Spinner
+        android:id="@+id/sourceLangSelector"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:contentDescription="@string/source_language"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="@id/buttonSwitchLang"
+        app:layout_constraintEnd_toStartOf="@id/buttonSwitchLang"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonSwitchLang"
+        android:layout_width="59dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/switch_arrow"
+        app:layout_constraintBottom_toTopOf="@id/targetText"
+        app:layout_constraintEnd_toStartOf="@+id/targetLangSelector"
+        app:layout_constraintStart_toEndOf="@+id/sourceLangSelector"
+        app:layout_constraintTop_toTopOf="@id/sourceLangSelector" />
+
+    <Spinner
+        android:id="@+id/targetLangSelector"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:contentDescription="@string/target_language"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="@id/buttonSwitchLang"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/buttonSwitchLang"
+        app:layout_constraintTop_toBottomOf="@id/textInputLayout" />
+
     <TextView
         android:id="@+id/targetText"
         android:layout_width="match_parent"
@@ -40,6 +82,7 @@
         android:gravity="top"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textInputLayout" />
+        app:layout_constraintTop_toBottomOf="@id/buttonSwitchLang" />
 </androidx.constraintlayout.widget.ConstraintLayout>

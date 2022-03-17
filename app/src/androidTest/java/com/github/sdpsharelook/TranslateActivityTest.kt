@@ -19,8 +19,26 @@ class TranslateActivityTest {
     fun testTranslateActivity() {
         Espresso.onView(ViewMatchers.withId(R.id.sourceText))
             .perform(ViewActions.typeText("Bonjour."))
-        Thread.sleep(10000);
+        Espresso.closeSoftKeyboard()
+        Thread.sleep(1000)
         Espresso.onView(ViewMatchers.withId(R.id.targetText))
             .check(ViewAssertions.matches(ViewMatchers.withText("Hello.")))
+
+        Espresso.onView(ViewMatchers.withId(R.id.sourceText))
+            .perform(ViewActions.clearText())
+            .perform(ViewActions.typeText("Hello."))
+        Espresso.closeSoftKeyboard()
+        Espresso.onView(ViewMatchers.withId(R.id.buttonSwitchLang))
+            .perform(ViewActions.click())
+        Thread.sleep(1000)
+        Espresso.onView(ViewMatchers.withId(R.id.targetText))
+            .check(ViewAssertions.matches(ViewMatchers.withText("Bonjour.")))
+
+        Espresso.onView(ViewMatchers.withId(R.id.targetLangSelector))
+            .perform(ViewActions.click())
+        Espresso.onView(ViewMatchers.withText("it")).perform(ViewActions.click())
+        Thread.sleep(1000)
+        Espresso.onView(ViewMatchers.withId(R.id.targetText))
+            .check(ViewAssertions.matches(ViewMatchers.withText("Ciao.")))
     }
 }

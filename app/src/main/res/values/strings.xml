@@ -5,4 +5,12 @@
     <string name="greetingString">Default Name Showing String: this should not be visible</string>
     <string name="source_text_hint">Enter text to translate…</string>
     <string name="translation_running">Translation…</string>
+    <string name="source_language">Source Language</string>
+    <string name="target_language">Target Language</string>
+    <string name="switch_arrow"><![CDATA[<->]]></string>
+    <string-array name="languages">
+        <item>Array Item One</item>
+        <item>Array Item Two</item>
+        <item>Array Item Three</item>
+    </string-array>
 </resources>

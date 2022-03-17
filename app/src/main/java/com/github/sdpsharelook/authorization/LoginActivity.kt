@@ -32,7 +32,7 @@ class LoginActivity : AppCompatActivity() {
         try {
             auth.signInWithEmailAndPassword(email, password).addOnSuccessListener { task ->
                 Toast.makeText(applicationContext, "Logged in !", Toast.LENGTH_SHORT).show()
-                greet(auth.currentUser?.displayName);
+                greet(auth.currentUser?.displayName)
             }.addOnFailureListener { exc ->
                 Toast.makeText(this, exc.message, Toast.LENGTH_LONG).show()
             }

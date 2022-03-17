@@ -16,7 +16,7 @@ import org.junit.runner.RunWith
 class TranslatorTest {
     @Test
     fun translatorTest() {
-        val t = Translator(TranslateLanguage.FRENCH, TranslateLanguage.ENGLISH);
+        val t = Translator(TranslateLanguage.FRENCH, TranslateLanguage.ENGLISH)
 
         t.translate("Bonjour.", object : TranslateListener {
             override fun onError(e: Exception) {
@@ -24,10 +24,10 @@ class TranslatorTest {
             }
 
             override fun onTranslated(translatedText: String) {
-                assertEquals("Hello.", translatedText);
+                assertEquals("Hello.", translatedText)
             }
         })
 
-        Thread.sleep(10000); // Wait for the callback to be executed.
+        Thread.sleep(10000) // Wait for the callback to be executed.
     }
 }

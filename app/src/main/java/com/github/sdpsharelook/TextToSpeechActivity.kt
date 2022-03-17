@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.view.View
 import android.widget.*
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import java.util.*
 
 import com.github.sdpsharelook.Utils.Companion.toast
@@ -15,6 +17,7 @@ class TextToSpeechActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_text_to_speech)
+        // Create text-to-speech object
         tts = TextToSpeech(this) {
             when (it) {
                 TextToSpeech.SUCCESS -> {

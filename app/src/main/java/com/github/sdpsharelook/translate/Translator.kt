@@ -63,7 +63,7 @@ class Translator(src: String, dst: String) {
      * @return translationResult : String
      */
     suspend fun translate(text: String): String {
-        downloadModelIfNeeded()
+        downloadModelIfNeeded().await()
         return translator.translate(text).await()
     }
 }

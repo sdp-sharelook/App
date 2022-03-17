@@ -23,39 +23,11 @@ class Translator(src: String, dst: String) {
         translator = Translation.getClient(options)
     }
 
-    private fun downloadModelIfNeeded(l: TranslateListener): Task<Void> {
-        val conditions = DownloadConditions.Builder()
-            .requireWifi()
-            .build()
-
-        return translator.downloadModelIfNeeded(conditions)
-            .addOnFailureListener { exception ->
-                l.onError(exception)
-            }
-    }
-
     private fun downloadModelIfNeeded(): Task<Void> {
         val conditions = DownloadConditions.Builder()
             .requireWifi()
             .build()
         return translator.downloadModelIfNeeded(conditions)
-    }
-
-    /** Translate the text from src language to dst language.
-     * @param text : String | Text in src language to translate in dst language
-     * @param l : TranslateListener |
-     */
-    fun translate(text: String, l: TranslateListener) {
-        downloadModelIfNeeded(l)
-            .addOnSuccessListener {
-                translator.translate(text)
-                    .addOnSuccessListener { translatedText ->
-                        l.onTranslated(translatedText)
-                    }
-                    .addOnFailureListener { exception ->
-                        l.onError(exception)
-                    }
-            }
     }
 
     /** Translate the text from src language to dst language using coroutines

@@ -17,26 +17,6 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class TranslatorTest {
     @Test
-    fun translatorTest() {
-        val t = Translator(TranslateLanguage.FRENCH, TranslateLanguage.ENGLISH)
-        var done = false
-
-        t.translate("Bonjour.", object : TranslateListener {
-            override fun onError(e: Exception) {
-                throw e
-            }
-
-            override fun onTranslated(translatedText: String) {
-                assertEquals("Hello.", translatedText)
-                done = true
-            }
-        })
-
-        while (!done)
-        Thread.sleep(100) // Wait for the callback to be executed.
-    }
-
-    @Test
     @ExperimentalCoroutinesApi
     fun translatorTestWithCoroutines() = runTest {
         val t = Translator(TranslateLanguage.FRENCH, TranslateLanguage.ENGLISH)

@@ -20,8 +20,9 @@ class SpeechRecognitionActivity : AppCompatActivity() {
 
     private lateinit var speechRecognizer: SpeechRecognizer
     private lateinit var textViewResult: TextView
-    private val speechRecognizerIntent = createIntent()
+    private val speechRecognizerIntent = createSRIntent()
     private val recognitionListener: RecognitionListener = object : RecognitionListener {
+        //https://medium.com/voice-tech-podcast/android-speech-to-text-tutorial-8f6fa71606ac
         private val console: ArrayList<String> = ArrayList()
         private fun print(message: String) {
             console.add(message)
@@ -42,7 +43,7 @@ class SpeechRecognitionActivity : AppCompatActivity() {
         }
 
         override fun onBufferReceived(results: ByteArray?) {
-            // print("buffer received : ${results.toString()}")
+            print("buffer received : ${results.toString()}")
         }
 
         override fun onEndOfSpeech() {
@@ -55,8 +56,11 @@ class SpeechRecognitionActivity : AppCompatActivity() {
         }
 
         override fun onResults(results: Bundle?) {
-            val data = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)?.joinToString("") ?: "null"
-            print(data)
+            val data =
+                results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)?.joinToString("")
+                    ?: "null"
+            print("result : \n\t$data")
+
         }
 
         override fun onPartialResults(partialResults: Bundle?) {
@@ -79,7 +83,12 @@ class SpeechRecognitionActivity : AppCompatActivity() {
     }
 
     private fun askPermissions() {
-        var permissionGranted = false
+        // https://developer.android.com/training/permissions/requesting#kotlin
+        fun errorPermission() {
+            toast("Please give us the audio permission to use this feature", this)
+            finish()
+        }
+
         val requestPermissionLauncher =
             registerForActivityResult(
                 ActivityResultContracts.RequestPermission()
@@ -87,16 +96,13 @@ class SpeechRecognitionActivity : AppCompatActivity() {
                 if (isGranted) {
                     // Permission is granted. Continue the action or workflow in your
                     // app.
-                    permissionGranted = true
                 } else {
                     // Explain to the user that the feature is unavailable because the
                     // features requires a permission that the user has denied. At the
                     // same time, respect the user's decision. Don't link to system
                     // settings in an effort to convince the user to change their
                     // decision.
-                    toast("Please give us the audio permission to use this feature ! ", this)
-                    permissionGranted = false
-                    finish()
+                    errorPermission()
                 }
             }
         when {
@@ -105,25 +111,26 @@ class SpeechRecognitionActivity : AppCompatActivity() {
                 Manifest.permission.RECORD_AUDIO
             ) == PackageManager.PERMISSION_GRANTED -> {
                 // You can use the API that requires the permission.
-                permissionGranted = true
             }
             shouldShowRequestPermissionRationale(Manifest.permission.RECORD_AUDIO) -> {
                 // In an educational UI, explain to the user why your app requires this
                 // permission for a specific feature to behave as expected. In this UI,
                 // include a "cancel" or "no thanks" button that allows the user to
                 // continue using your app without granting the permission.
-                permissionGranted = false
-                toast("Please give us the audio permission to use this feature", this)
+
+                requestPermissionLauncher.launch(
+                    Manifest.permission.RECORD_AUDIO
+                )
+            }
+            else -> {
+                errorPermission()
             }
         }
-        if (!permissionGranted)
-            requestPermissionLauncher.launch(
-                Manifest.permission.RECORD_AUDIO
-            )
     }
 
-    private fun createIntent(): Intent {
-        val intent: Intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+    private fun createSRIntent(): Intent {
+        // https://medium.com/voice-tech-podcast/android-speech-to-text-tutorial-8f6fa71606ac
+        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(
             RecognizerIntent.EXTRA_LANGUAGE_MODEL,
             RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
@@ -133,6 +140,7 @@ class SpeechRecognitionActivity : AppCompatActivity() {
     }
 
     fun startRecognition(view: View) {
+        // https://medium.com/voice-tech-podcast/android-speech-to-text-tutorial-8f6fa71606ac
         speechRecognizer.startListening(speechRecognizerIntent)
     }
 }

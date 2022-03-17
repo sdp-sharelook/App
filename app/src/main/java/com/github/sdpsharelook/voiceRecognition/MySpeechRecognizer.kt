@@ -7,9 +7,9 @@ import com.google.android.gms.tasks.Task
 import java.util.jar.Manifest
 
 
-class SpeechRecognizer(ctx: Context) {
+class MySpeechRecognizer(ctx: Context) {
     fun recognizeSpeech(): Task<String>? {
-        return null
+return null
     }
 
     private fun checkPermission() {

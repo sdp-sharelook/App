@@ -87,36 +87,24 @@ class SpeechRecognizer(val activity: AppCompatActivity) {
 
     private fun createGoogleRecognitionListener(listener: RecognitionListener): GoogleRecognitionListener {
         return object : android.speech.RecognitionListener {
-            override fun onReadyForSpeech(p0: Bundle?) {
-                listener.onReady()
-            }
+            override fun onReadyForSpeech(p0: Bundle?) { listener.onReady() }
 
-            override fun onBeginningOfSpeech() {
-                listener.onBegin()
-            }
+            override fun onBeginningOfSpeech() {listener.onBegin() }
 
             override fun onRmsChanged(p0: Float) {}
 
             override fun onBufferReceived(results: ByteArray?) {}
 
-            override fun onEndOfSpeech() {
-                listener.onEnd()
-            }
+            override fun onEndOfSpeech() {listener.onEnd() }
 
-            override fun onError(code: Int) {
-                listener.onError()
-            }
-
+            override fun onError(code: Int) { listener.onError() }
             override fun onResults(results: Bundle?) {
                 results?.getStringArrayList(GoogleSpeechRecognizer.RESULTS_RECOGNITION)?.let {
                     return listener.onSuccess(it.joinToString(""))
                 }
                 return listener.onError()
-
             }
-
             override fun onPartialResults(partialResults: Bundle?) {}
-
             override fun onEvent(p0: Int, p1: Bundle?) {}
         }
     }

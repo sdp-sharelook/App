@@ -11,6 +11,7 @@ import com.google.mlkit.nl.translate.TranslateLanguage
 
 
 class TranslateActivity : AppCompatActivity() {
+    // They array of all languages available took from TranslateLanguage.allLanguages()
     private val allLanguages = arrayOf("af", "sq", "ar", "be", "bg", "bn", "ca", "zh", "hr", "cs",
         "da", "nl", "en", "eo", "et", "fi", "fr", "gl", "ka", "de", "el", "gu", "ht", "he", "hi",
         "hu", "is", "id", "ga", "it", "ja", "kn", "ko", "lt", "lv", "mk", "mr", "ms", "mt", "no",
@@ -27,6 +28,7 @@ class TranslateActivity : AppCompatActivity() {
         val sourceText = findViewById<TextView>(R.id.sourceText)
         val buttonSwitchLang = findViewById<Button>(R.id.buttonSwitchLang)
 
+        // Filling spinners with available languages
         allLanguages.sort()
         val adapter = ArrayAdapter(
             this,
@@ -35,6 +37,7 @@ class TranslateActivity : AppCompatActivity() {
         sourceLangSelector.adapter = adapter
         targetLangSelector.adapter = adapter
 
+        // On create, we set the source language to FR, and the target to EN
         sourceLangSelector.setSelection(allLanguages.indexOf(TranslateLanguage.FRENCH))
         targetLangSelector.setSelection(allLanguages.indexOf(TranslateLanguage.ENGLISH))
 
@@ -42,6 +45,7 @@ class TranslateActivity : AppCompatActivity() {
             updateTranslation(afterTextChanged.toString())
         }
 
+        // Dynamically update the translation on language source or target changed
         val spinnerOnItemSelected = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
                 if (sourceText.text.isNotEmpty())
@@ -61,6 +65,9 @@ class TranslateActivity : AppCompatActivity() {
         }
     }
 
+    /** Call to update the text to translate and translate it.
+     * @param textToTranslate : String | The text to translate.
+     */
     private fun updateTranslation(textToTranslate : String) {
         val sourceLangSelector = findViewById<Spinner>(R.id.sourceLangSelector)
         val targetLangSelector = findViewById<Spinner>(R.id.targetLangSelector)

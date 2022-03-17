@@ -15,10 +15,11 @@
         tools:layout_editor_absoluteY="1dp">
 
         <Button
+            android:id="@+id/button_start_speech_recognition"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="startRecognition"
-            android:text="@string/start_speech_recognition"/>
+            android:text="@string/start_speech_recognition" />
 
         <TextView
             android:id="@+id/text_view_speech_recognition_result"

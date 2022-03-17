@@ -1,5 +1,13 @@
 <resources>
-    <string name="app_name">ShareLook</string>
+    <string name="appName">ShareLook</string>
+    <string name="greet">Greet</string>
+    <string name="speak">Speak</string>
+    <string name="textToSpeechHint" >Enter your text here</string>
+    <string name="textToSpeechRate">Speech rate</string>
+    <string name="textToSpeechLanguage">Language</string>
+    <string name="nameHint">Name</string>
+    <string name="textToSpeechButtonText">Text to speech</string>
+    <string name="pitchTextToSpeech">Pitch</string>
     <string name="name">Name</string>
     <string name="button">Button</string>
     <string name="greetingString">Default Name Showing String: this should not be visible</string>
@@ -8,9 +16,4 @@
     <string name="source_language">Source Language</string>
     <string name="target_language">Target Language</string>
     <string name="switch_arrow"><![CDATA[<->]]></string>
-    <string-array name="languages">
-        <item>Array Item One</item>
-        <item>Array Item Two</item>
-        <item>Array Item Three</item>
-    </string-array>
 </resources>

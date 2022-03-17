@@ -88,15 +88,21 @@ class SpeechRecognizer(val activity: AppCompatActivity) {
         val intent = createIntent(language)
         val recognitionListener = object : GoogleSpeechRecognitionListener {
 
-            override fun onReadyForSpeech(p0: Bundle?) {}
+            override fun onReadyForSpeech(p0: Bundle?) {
+                listener.onReady()
+            }
 
-            override fun onBeginningOfSpeech() {}
+            override fun onBeginningOfSpeech() {
+                listener.onBegin()
+            }
 
             override fun onRmsChanged(p0: Float) {}
 
             override fun onBufferReceived(results: ByteArray?) {}
 
-            override fun onEndOfSpeech() {}
+            override fun onEndOfSpeech() {
+                listener.onEnd()
+            }
 
             override fun onError(code: Int) {
                 listener.onError()

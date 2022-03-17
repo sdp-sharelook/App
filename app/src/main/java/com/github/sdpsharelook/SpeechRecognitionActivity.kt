@@ -16,7 +16,7 @@ class SpeechRecognitionActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_speech_recognition)
-        textViewResult = findViewById<TextView>(R.id.text_view_speech_recognition_result)
+        textViewResult = findViewById(R.id.text_view_speech_recognition_result)
         speechRecognizer = SpeechRecognizer(this)
     }
 
@@ -24,12 +24,28 @@ class SpeechRecognitionActivity : AppCompatActivity() {
     fun startRecognition(view: View) {
         // https://medium.com/voice-tech-podcast/android-speech-to-text-tutorial-8f6fa71606ac
         speechRecognizer.recognizeSpeech(object : RecognitionListener {
+            fun print(s: String) {
+                "${textViewResult.text}\n$s".also { textViewResult.text = it }
+            }
+
             override fun onSuccess(s: String) {
-                textViewResult.setText(s)
+                print(s)
+            }
+
+            override fun onEnd() {
+                print("end")
+            }
+
+            override fun onReady() {
+                print("ready")
+            }
+
+            override fun onBegin() {
+                print("start")
             }
 
             override fun onError() {
-                textViewResult.setText("error")
+                print("error")
             }
         })
     }

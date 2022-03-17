@@ -2,6 +2,8 @@ package com.github.sdpsharelook.translate
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.mlkit.nl.translate.TranslateLanguage
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -15,19 +17,10 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class TranslatorTest {
     @Test
-    fun translatorTest() {
+    @ExperimentalCoroutinesApi
+    fun translatorTestWithCoroutines() = runTest {
         val t = Translator(TranslateLanguage.FRENCH, TranslateLanguage.ENGLISH)
-
-        t.translate("Bonjour.", object : TranslateListener {
-            override fun onError(e: Exception) {
-                throw e
-            }
-
-            override fun onTranslated(translatedText: String) {
-                assertEquals("Hello.", translatedText)
-            }
-        })
-
-        Thread.sleep(10000) // Wait for the callback to be executed.
+        val translatedText = t.translate("Bonjour.")
+        assertEquals("Hello.", translatedText)
     }
 }

@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyBootcamp">
         <activity
-            android:name=".LoginActivity"
+            android:name=".authorization.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,7 +19,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SignUpActivity"
+            android:name=".authorization.SignUpActivity"
             android:exported="true">
         </activity>
         <activity

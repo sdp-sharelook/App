@@ -32,7 +32,7 @@
         app:layout_constraintTop_toBottomOf="@+id/email" />
 
     <Button
-        android:id="@+id/singUpButton"
+        android:id="@+id/loginButton"
         android:layout_width="401dp"
         android:layout_height="46dp"
         android:layout_marginTop="12dp"

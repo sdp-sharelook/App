@@ -1,4 +1,4 @@
-package com.github.sdpsharelook
+package com.github.sdpsharelook.authorization
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
+import com.github.sdpsharelook.GreetingActivity
+import com.github.sdpsharelook.R
 import com.google.firebase.auth.FirebaseAuth
 
 class SignUpActivity : AppCompatActivity() {
@@ -41,7 +43,7 @@ class SignUpActivity : AppCompatActivity() {
     }
     fun greet(name: String?){
         val tName = if(name.isNullOrBlank() || auth.currentUser!!.isAnonymous) "anonymous" else name
-        val intent = Intent(this,GreetingActivity::class.java).apply {
+        val intent = Intent(this, GreetingActivity::class.java).apply {
             putExtra(GREET_NAME_EXTRA, tName)
         }
         startActivity(intent)

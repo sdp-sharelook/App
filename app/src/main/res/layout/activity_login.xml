@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity">
+    tools:context=".authorization.LoginActivity">
 
     <EditText
         android:id="@+id/email"
@@ -31,7 +31,7 @@
         app:layout_constraintTop_toBottomOf="@+id/email" />
 
     <Button
-        android:id="@+id/singUpButton"
+        android:id="@+id/loginButton"
         android:layout_width="401dp"
         android:layout_height="46dp"
         android:layout_marginTop="12dp"
@@ -60,6 +60,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.4"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/singUpButton"
+        app:layout_constraintTop_toBottomOf="@+id/loginButton"
         tools:visibility="visible" />
 </androidx.constraintlayout.widget.ConstraintLayout>

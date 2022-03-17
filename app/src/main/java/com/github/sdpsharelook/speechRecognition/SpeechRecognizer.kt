@@ -3,7 +3,7 @@ package com.github.sdpsharelook.speechRecognition
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.speech.RecognitionListener as GoogleSpeechRecognitionListener
+import android.speech.RecognitionListener as GoogleRecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer as GoogleSpeechRecognizer
 import androidx.activity.result.contract.ActivityResultContracts
@@ -15,34 +15,35 @@ import java.util.*
 
 class SpeechRecognizer(val activity: AppCompatActivity) {
     private val speechRecognizer = GoogleSpeechRecognizer.createSpeechRecognizer(activity)
+    private val requestPermissionLauncher =
+        activity.registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted: Boolean ->
+            if (isGranted) {
+                // Permission is granted. Continue the action or workflow in your
+                // app.
+            } else {
+                // Explain to the user that the feature is unavailable because the
+                // features requires a permission that the user has denied. At the
+                // same time, respect the user's decision. Don't link to system
+                // settings in an effort to convince the user to change their
+                // decision.
+                errorPermission()
+            }
+        }
+
 
     init {
         askPermissions()
     }
 
+    private fun errorPermission() {
+        Utils.toast("Please give us the audio permission to use this feature", activity)
+        activity.finish()
+    }
+
     private fun askPermissions() {
         // https://developer.android.com/training/permissions/requesting#kotlin
-        fun errorPermission() {
-            Utils.toast("Please give us the audio permission to use this feature", activity)
-            activity.finish()
-        }
-
-        val requestPermissionLauncher =
-            activity.registerForActivityResult(
-                ActivityResultContracts.RequestPermission()
-            ) { isGranted: Boolean ->
-                if (isGranted) {
-                    // Permission is granted. Continue the action or workflow in your
-                    // app.
-                } else {
-                    // Explain to the user that the feature is unavailable because the
-                    // features requires a permission that the user has denied. At the
-                    // same time, respect the user's decision. Don't link to system
-                    // settings in an effort to convince the user to change their
-                    // decision.
-                    errorPermission()
-                }
-            }
         when {
             ContextCompat.checkSelfPermission(
                 activity,
@@ -84,10 +85,8 @@ class SpeechRecognizer(val activity: AppCompatActivity) {
         return intent
     }
 
-    fun recognizeSpeech(listener: RecognitionListener, language: String? = null) {
-        val intent = createIntent(language)
-        val recognitionListener = object : GoogleSpeechRecognitionListener {
-
+    private fun createGoogleRecognitionListener(listener: RecognitionListener): GoogleRecognitionListener {
+        return object : android.speech.RecognitionListener {
             override fun onReadyForSpeech(p0: Bundle?) {
                 listener.onReady()
             }
@@ -120,7 +119,12 @@ class SpeechRecognizer(val activity: AppCompatActivity) {
 
             override fun onEvent(p0: Int, p1: Bundle?) {}
         }
-        speechRecognizer.setRecognitionListener(recognitionListener)
+    }
+
+    fun recognizeSpeech(listener: RecognitionListener, language: String? = null) {
+        val intent = createIntent(language)
+        val googleListener = createGoogleRecognitionListener(listener)
+        speechRecognizer.setRecognitionListener(googleListener)
         speechRecognizer.startListening(intent)
     }
 }

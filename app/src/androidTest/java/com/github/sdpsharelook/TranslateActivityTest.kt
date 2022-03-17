@@ -1,44 +1,58 @@
 package com.github.sdpsharelook
 
-import androidx.test.espresso.Espresso
-import androidx.test.espresso.action.ViewActions
+import androidx.test.core.app.ActivityScenario
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.IdlingRegistry
+import androidx.test.espresso.IdlingResource
+import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.ext.junit.rules.ActivityScenarioRule
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import org.junit.Rule
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
+import org.junit.After
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
+
 @RunWith(AndroidJUnit4::class)
 class TranslateActivityTest {
-    @get:Rule
-    var testRule = ActivityScenarioRule(TranslateActivity::class.java)
+    private var mIdlingResource: IdlingResource? = null;
+
+    @Before
+    fun registerIdlingResource() {
+        ActivityScenario.launch(TranslateActivity::class.java).onActivity { activity ->
+            mIdlingResource = activity.getIdlingResource()
+            // To prove that the test fails, omit this call:
+            IdlingRegistry.getInstance().register(mIdlingResource)
+        }
+    }
 
     @Test
-    fun testTranslateActivity() {
-        Espresso.onView(ViewMatchers.withId(R.id.sourceText))
-            .perform(ViewActions.typeText("Bonjour."))
-        Espresso.closeSoftKeyboard()
-        Thread.sleep(1000)
-        Espresso.onView(ViewMatchers.withId(R.id.targetText))
-            .check(ViewAssertions.matches(ViewMatchers.withText("Hello.")))
+    @ExperimentalCoroutinesApi
+    fun testTranslateActivity() = runTest {
+        onView(withId(R.id.sourceText))
+            .perform(typeText("Bonjour."), closeSoftKeyboard())
+        onView(withId(R.id.targetText)).check(matches(withText("Hello.")))
 
-        Espresso.onView(ViewMatchers.withId(R.id.sourceText))
-            .perform(ViewActions.clearText())
-            .perform(ViewActions.typeText("Hello."))
-        Espresso.closeSoftKeyboard()
-        Espresso.onView(ViewMatchers.withId(R.id.buttonSwitchLang))
-            .perform(ViewActions.click())
-        Thread.sleep(1000)
-        Espresso.onView(ViewMatchers.withId(R.id.targetText))
-            .check(ViewAssertions.matches(ViewMatchers.withText("Bonjour.")))
+        onView(withId(R.id.sourceText)).perform(clearText())
+            .perform(typeText("Hello."), closeSoftKeyboard())
+        onView(withId(R.id.buttonSwitchLang)).perform(click())
+        onView(withId(R.id.targetText)).check(matches(withText("Bonjour.")))
 
-        Espresso.onView(ViewMatchers.withId(R.id.targetLangSelector))
-            .perform(ViewActions.click())
-        Espresso.onView(ViewMatchers.withText("it")).perform(ViewActions.click())
-        Thread.sleep(1000)
-        Espresso.onView(ViewMatchers.withId(R.id.targetText))
-            .check(ViewAssertions.matches(ViewMatchers.withText("Ciao.")))
+        onView(withId(R.id.targetLangSelector)).perform(click())
+        onView(withText("it")).perform(click())
+        onView(withId(R.id.targetText)).check(matches(withText("Ciao.")))
+    }
+
+    @After
+    fun unregisterIdlingResource() {
+        if (mIdlingResource != null) {
+            IdlingRegistry.getInstance().unregister(mIdlingResource)
+        }
     }
 }

@@ -3,11 +3,15 @@ package com.github.sdpsharelook
 import android.os.Bundle
 import android.view.View
 import android.widget.*
+import androidx.annotation.Nullable
+import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
-import com.github.sdpsharelook.translate.TranslateListener
+import androidx.test.espresso.IdlingResource
+import androidx.test.espresso.idling.CountingIdlingResource
 import com.github.sdpsharelook.translate.Translator
 import com.google.mlkit.nl.translate.TranslateLanguage
+import kotlinx.coroutines.*
 
 
 class TranslateActivity : AppCompatActivity() {
@@ -18,6 +22,9 @@ class TranslateActivity : AppCompatActivity() {
         "fa", "pl", "pt", "ro", "ru", "sk", "sl", "es", "sv", "sw", "tl", "ta", "te", "th","tr",
         "uk", "ur", "vi", "cy"
     )
+
+    @Nullable
+    private var mIdlingResource: CountingIdlingResource? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,14 +49,22 @@ class TranslateActivity : AppCompatActivity() {
         targetLangSelector.setSelection(allLanguages.indexOf(TranslateLanguage.ENGLISH))
 
         sourceText.addTextChangedListener { afterTextChanged ->
-            updateTranslation(afterTextChanged.toString())
+            mIdlingResource?.increment()
+            val scope = CoroutineScope(Dispatchers.IO)
+            scope.launch {
+                updateTranslation(afterTextChanged.toString())
+            }
         }
 
         // Dynamically update the translation on language source or target changed
         val spinnerOnItemSelected = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
-                if (sourceText.text.isNotEmpty())
-                    updateTranslation(sourceText.text.toString())
+                mIdlingResource?.increment()
+                val scope = CoroutineScope(Dispatchers.IO)
+                scope.launch {
+                    if (sourceText.text.isNotEmpty())
+                        updateTranslation(sourceText.text.toString())
+                }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -68,24 +83,27 @@ class TranslateActivity : AppCompatActivity() {
     /** Call to update the text to translate and translate it.
      * @param textToTranslate : String | The text to translate.
      */
-    private fun updateTranslation(textToTranslate : String) {
+    private suspend fun updateTranslation(textToTranslate : String) {
         val sourceLangSelector = findViewById<Spinner>(R.id.sourceLangSelector)
         val targetLangSelector = findViewById<Spinner>(R.id.targetLangSelector)
         val targetText = findViewById<TextView>(R.id.targetText)
 
-        val t = Translator(allLanguages[sourceLangSelector.selectedItemPosition], allLanguages[targetLangSelector.selectedItemPosition]);
+        val t = Translator( allLanguages[sourceLangSelector.selectedItemPosition],
+                            allLanguages[targetLangSelector.selectedItemPosition])
 
-        t.translate(textToTranslate, object : TranslateListener {
-            override fun onError(e: Exception) {
-                throw e
-            }
+        targetText.text = getString(R.string.translation_running)
+        targetText.text = t.translate(textToTranslate)
+        mIdlingResource?.decrement()
+    }
 
-            override fun onTranslated(translatedText: String) {
-                targetText.text = translatedText
-            }
-        })
-
-        if (targetText.text.isEmpty())
-            targetText.text = getString(R.string.translation_running)
+    /**
+     * Only called from test, creates and returns a new [CountingIdlingResource].
+     */
+    @VisibleForTesting
+    fun getIdlingResource(): IdlingResource {
+        if (mIdlingResource == null) {
+            mIdlingResource = CountingIdlingResource("Translation")
+        }
+        return mIdlingResource!!
     }
 }

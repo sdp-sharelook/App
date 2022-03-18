@@ -15,27 +15,15 @@ import kotlinx.coroutines.*
 
 
 class TranslateActivity : AppCompatActivity() {
-    // They array of all languages available took from TranslateLanguage.allLanguages()
-    private val allLanguages = arrayOf("af", "sq", "ar", "be", "bg", "bn", "ca", "zh", "hr", "cs",
-        "da", "nl", "en", "eo", "et", "fi", "fr", "gl", "ka", "de", "el", "gu", "ht", "he", "hi",
-        "hu", "is", "id", "ga", "it", "ja", "kn", "ko", "lt", "lv", "mk", "mr", "ms", "mt", "no",
-        "fa", "pl", "pt", "ro", "ru", "sk", "sl", "es", "sv", "sw", "tl", "ta", "te", "th","tr",
-        "uk", "ur", "vi", "cy"
-    )
-
+    private val allLanguages = TranslateLanguage.getAllLanguages().toMutableList()
     @Nullable
     private var mIdlingResource: CountingIdlingResource? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_translate)
-
-        val sourceLangSelector = findViewById<Spinner>(R.id.sourceLangSelector)
-        val targetLangSelector = findViewById<Spinner>(R.id.targetLangSelector)
-        val sourceText = findViewById<TextView>(R.id.sourceText)
-        val buttonSwitchLang = findViewById<Button>(R.id.buttonSwitchLang)
-
-        // Filling spinners with available languages
+    /** Filling spinners with available languages and initializing them.
+     * @param sourceLangSelector [Spinner] | The source language spinner.
+     * @param targetLangSelector [Spinner] | The target language spinner.
+     */
+    private fun fillAndInitializeSpinners(sourceLangSelector : Spinner, targetLangSelector : Spinner) {
         allLanguages.sort()
         val adapter = ArrayAdapter(
             this,
@@ -48,14 +36,7 @@ class TranslateActivity : AppCompatActivity() {
         sourceLangSelector.setSelection(allLanguages.indexOf(TranslateLanguage.FRENCH))
         targetLangSelector.setSelection(allLanguages.indexOf(TranslateLanguage.ENGLISH))
 
-        sourceText.addTextChangedListener { afterTextChanged ->
-            mIdlingResource?.increment()
-            val scope = CoroutineScope(Dispatchers.IO)
-            scope.launch {
-                updateTranslation(afterTextChanged.toString())
-            }
-        }
-
+        val sourceText = findViewById<TextView>(R.id.sourceText)
         // Dynamically update the translation on language source or target changed
         val spinnerOnItemSelected = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
@@ -72,6 +53,26 @@ class TranslateActivity : AppCompatActivity() {
 
         sourceLangSelector.onItemSelectedListener = spinnerOnItemSelected
         targetLangSelector.onItemSelectedListener = spinnerOnItemSelected
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_translate)
+
+        val sourceLangSelector = findViewById<Spinner>(R.id.sourceLangSelector)
+        val targetLangSelector = findViewById<Spinner>(R.id.targetLangSelector)
+        val sourceText = findViewById<TextView>(R.id.sourceText)
+        val buttonSwitchLang = findViewById<Button>(R.id.buttonSwitchLang)
+
+        fillAndInitializeSpinners(sourceLangSelector, targetLangSelector)
+
+        sourceText.addTextChangedListener { afterTextChanged ->
+            mIdlingResource?.increment()
+            val scope = CoroutineScope(Dispatchers.IO)
+            scope.launch {
+                updateTranslation(afterTextChanged.toString())
+            }
+        }
 
         buttonSwitchLang.setOnClickListener {
             val temp = sourceLangSelector.selectedItemPosition
@@ -81,7 +82,7 @@ class TranslateActivity : AppCompatActivity() {
     }
 
     /** Call to update the text to translate and translate it.
-     * @param textToTranslate : String | The text to translate.
+     * @param textToTranslate [String] | The text to translate.
      */
     private suspend fun updateTranslation(textToTranslate : String) {
         val sourceLangSelector = findViewById<Spinner>(R.id.sourceLangSelector)

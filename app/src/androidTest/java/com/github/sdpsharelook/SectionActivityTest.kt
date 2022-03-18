@@ -12,8 +12,10 @@ import androidx.test.rule.ActivityTestRule
 import androidx.test.runner.AndroidJUnit4
 import org.hamcrest.Description
 import org.hamcrest.Matcher
+import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.TypeSafeMatcher
+import org.hamcrest.core.IsInstanceOf
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -27,16 +29,16 @@ class SectionActivityTest {
     var mActivityTestRule = ActivityTestRule(MainActivity::class.java)
 
     @Test
-    fun sectionActivityTest() {
+    fun sectionActivityTest2() {
         val materialButton = onView(
             allOf(
-                withId(R.id.sectionButton), withText("Button"),
+                withId(R.id.sectionButton), withText("Sections"),
                 childAtPosition(
                     childAtPosition(
-                        withId(android.R.id.content),
+                        withClassName(`is`("androidx.constraintlayout.widget.ConstraintLayout")),
                         0
                     ),
-                    1
+                    7
                 ),
                 isDisplayed()
             )
@@ -67,14 +69,21 @@ class SectionActivityTest {
         )
         editText.check(matches(withText("Section name")))
 
-        val spinner = onView(
+        val imageView = onView(
             allOf(
-                withId(R.id.spinner_countries), withContentDescription("ShareLook"),
-                withParent(withParent(withId(android.R.id.content))),
+                withId(R.id.image_view_flag),
+                withParent(
+                    withParent(
+                        allOf(
+                            withId(R.id.spinner_countries),
+                            withContentDescription("ShareLook")
+                        )
+                    )
+                ),
                 isDisplayed()
             )
         )
-        spinner.check(matches(isDisplayed()))
+        imageView.check(matches(isDisplayed()))
 
         val button = onView(
             allOf(
@@ -100,6 +109,15 @@ class SectionActivityTest {
         )
         materialButton2.perform(click())
 
+        val imageView3 = onView(
+            allOf(
+                withId(R.id.sectionFlag),
+                withParent(withParent(withId(R.id.cardView))),
+                isDisplayed()
+            )
+        )
+        imageView3.check(matches(isDisplayed()))
+
         val textView = onView(
             allOf(
                 withId(R.id.sectionTitle), withText("kitchen"),
@@ -108,15 +126,6 @@ class SectionActivityTest {
             )
         )
         textView.check(matches(withText("kitchen")))
-
-        val imageView = onView(
-            allOf(
-                withId(R.id.sectionFlag),
-                withParent(withParent(withId(R.id.cardView))),
-                isDisplayed()
-            )
-        )
-        imageView.check(matches(isDisplayed()))
 
         val imageButton = onView(
             allOf(
@@ -127,38 +136,18 @@ class SectionActivityTest {
         )
         imageButton.check(matches(isDisplayed()))
 
-        val cardView = onView(
+        val viewGroup = onView(
             allOf(
-                withId(R.id.cardView),
-                childAtPosition(
-                    childAtPosition(
-                        withId(R.id.recyclerView),
-                        0
-                    ),
-                    0
+                withParent(
+                    allOf(
+                        withId(R.id.cardView),
+                        withParent(IsInstanceOf.instanceOf(android.widget.LinearLayout::class.java))
+                    )
                 ),
                 isDisplayed()
             )
         )
-        cardView.perform(click())
-
-        val textView2 = onView(
-            allOf(
-                withId(R.id.sectionTitle), withText("kitchen"),
-                withParent(withParent(withId(android.R.id.content))),
-                isDisplayed()
-            )
-        )
-        textView2.check(matches(withText("kitchen")))
-
-        val imageView2 = onView(
-            allOf(
-                withId(R.id.sectionFlag),
-                withParent(withParent(withId(android.R.id.content))),
-                isDisplayed()
-            )
-        )
-        imageView2.check(matches(isDisplayed()))
+        viewGroup.check(matches(isDisplayed()))
     }
 
     private fun childAtPosition(

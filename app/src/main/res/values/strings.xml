@@ -8,6 +8,14 @@
     <string name="nameHint">Name</string>
     <string name="textToSpeechButtonText">Text to speech</string>
     <string name="pitchTextToSpeech">Pitch</string>
+    <string name="name">Name</string>
+    <string name="button">Button</string>
+    <string name="greetingString">Default Name Showing String: this should not be visible</string>
+    <string name="source_text_hint">Enter text to translate…</string>
+    <string name="translation_running">Translation…</string>
+    <string name="source_language">Source Language</string>
+    <string name="target_language">Target Language</string>
+    <string name="switch_arrow"><![CDATA[<->]]></string>
     <string name="speech_recognition">Speech recognition</string>
     <string name="start_speech_recognition">Start speech recognition</string>
     <string name="the_result_of_the_speech_recognition_will_appear_here">The result of the speech recognition will appear here</string>

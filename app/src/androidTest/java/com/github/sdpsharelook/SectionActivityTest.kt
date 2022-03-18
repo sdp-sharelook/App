@@ -30,7 +30,7 @@ class SectionActivityTest {
     fun sectionActivityTest() {
         val materialButton = onView(
             allOf(
-                withId(R.id.mainGoButton), withText("Button"),
+                withId(R.id.sectionButton), withText("Button"),
                 childAtPosition(
                     childAtPosition(
                         withId(android.R.id.content),

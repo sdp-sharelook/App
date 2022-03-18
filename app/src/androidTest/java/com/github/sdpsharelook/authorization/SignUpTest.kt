@@ -1,6 +1,9 @@
 package com.github.sdpsharelook.authorization
 
 
+import android.os.Parcel
+import android.os.Parcelable
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.test.espresso.Espresso.onView
@@ -11,14 +14,21 @@ import androidx.test.runner.AndroidJUnit4
 import com.github.sdpsharelook.R
 import com.github.sdpsharelook.authorization.UserConstants.TEST_USER_EMAIL
 import com.github.sdpsharelook.authorization.UserConstants.TEST_USER_PASS
+import com.google.android.gms.tasks.Task
+import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.AuthResult
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthProvider
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.TypeSafeMatcher
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+
 
 @RunWith(AndroidJUnit4::class)
 class SignUpTest {
@@ -31,6 +41,7 @@ class SignUpTest {
 
     @Before
     fun testDeleteAuthAccounts() {
+        auth= FirebaseAuth.getInstance()
         if (auth.currentUser?.isEmailVerified == true && auth.currentUser?.email == NEW_USER_EMAIL) {
             auth.currentUser!!.delete()
         } else {
@@ -38,6 +49,10 @@ class SignUpTest {
                 auth.currentUser!!.delete()
             }
         }
+        auth.signOut()
+    }
+    @After
+    fun cleanUp(){
         auth.signOut()
     }
 
@@ -139,7 +154,8 @@ class SignUpTest {
                 assert(auth.currentUser!!.email == NEW_USER_EMAIL)
             }
         } else {
-            assert(auth.currentUser!!.email == NEW_USER_EMAIL)
+            Log.d("AUTH",auth.currentUser?.email.toString())
+            assert(auth.currentUser?.email == NEW_USER_EMAIL)
         }
     }
 

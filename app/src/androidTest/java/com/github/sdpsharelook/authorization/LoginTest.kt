@@ -54,6 +54,7 @@ class LoginSignUpTest {
             }
 
         }
+        loginRule.scenario.close()
     }
 
 

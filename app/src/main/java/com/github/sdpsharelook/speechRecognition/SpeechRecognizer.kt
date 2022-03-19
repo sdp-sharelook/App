@@ -51,18 +51,10 @@ class SpeechRecognizer(val activity: AppCompatActivity) {
             ) == PackageManager.PERMISSION_GRANTED -> {
                 // You can use the API that requires the permission.
             }
-            activity.shouldShowRequestPermissionRationale(android.Manifest.permission.RECORD_AUDIO) -> {
-                // In an educational UI, explain to the user why your app requires this
-                // permission for a specific feature to behave as expected. In this UI,
-                // include a "cancel" or "no thanks" button that allows the user to
-                // continue using your app without granting the permission.
-
+            else -> {
                 requestPermissionLauncher.launch(
                     android.Manifest.permission.RECORD_AUDIO
                 )
-            }
-            else -> {
-                errorPermission()
             }
         }
     }

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="Section.SectionDetail">
+
+
+    <TextView
+        android:id="@+id/sectionTitle"
+        android:layout_marginLeft="5dp"
+        android:layout_width="153dp"
+        android:layout_height="30dp"
+        android:layout_gravity="top"
+        android:text="Section name"
+        android:textColor="@color/black"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/sectionFlag"
+        android:layout_width="51dp"
+        android:layout_height="43dp"
+        android:layout_gravity="end"
+        app:srcCompat="@drawable/spain" />
+
+</LinearLayout>

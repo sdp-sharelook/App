@@ -29,31 +29,30 @@ import java.lang.IllegalArgumentException
 import kotlin.coroutines.coroutineContext
 
 class MockFirebaseAuth(p0: FirebaseApp) : FirebaseAuth(p0)
-object UserConstants{
+object UserConstants {
     const val TEST_USER_EMAIL = "testuser@gmail.com"
     const val TEST_USER_PASS = "123456"
 }
+
 @RunWith(AndroidJUnit4::class)
 class LoginSignUpTest {
 
-    @get:Rule var loginRule = ActivityScenarioRule(LoginActivity::class.java)
+    @get:Rule
+    var loginRule = ActivityScenarioRule(LoginActivity::class.java)
 
     @Before
     fun logOut() {
+        auth= TestAuth()
         auth.signOut()
     }
 
+
     @Test
     fun testLoginWithTestUser() {
-        auth.createUserWithEmailAndPassword(TEST_USER_EMAIL, TEST_USER_PASS).addOnCompleteListener {
-            onView(withId(R.id.email)).perform(typeText(TEST_USER_EMAIL))
-            onView(withId(R.id.password)).perform(typeText(TEST_USER_PASS))
-            onView(withId(R.id.loginButton)).perform(click())
-            auth.pendingAuthResult?.addOnCompleteListener {
-                assert(auth.currentUser!!.email == TEST_USER_EMAIL)
-            }
-
-        }
+        onView(withId(R.id.email)).perform(typeText(TEST_USER_EMAIL))
+        onView(withId(R.id.password)).perform(typeText(TEST_USER_PASS))
+        onView(withId(R.id.loginButton)).perform(click())
+        assert(auth.currentUser!!.email == TEST_USER_EMAIL)
         loginRule.scenario.close()
     }
 

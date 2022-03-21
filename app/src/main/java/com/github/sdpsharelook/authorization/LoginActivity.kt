@@ -10,16 +10,17 @@ import android.widget.Toast
 import com.github.sdpsharelook.GreetingActivity
 import com.github.sdpsharelook.R
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.*
 import java.lang.IllegalArgumentException
 
 const val GREET_NAME_EXTRA = "com.github.sdpsharelook.NAME"
-lateinit var auth: FirebaseAuth
+lateinit var auth: AuthProvider
 
 class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        auth = FirebaseAuth.getInstance()
+        auth = FireAuth()
     }
 
 
@@ -29,15 +30,26 @@ class LoginActivity : AppCompatActivity() {
         val password = findViewById<EditText>(R.id.password).text.toString()
 
         if (auth.currentUser != null) greet(auth.currentUser?.displayName)
-        try {
-            auth.signInWithEmailAndPassword(email, password).addOnSuccessListener { task ->
-                Toast.makeText(applicationContext, "Logged in !", Toast.LENGTH_SHORT).show()
-                greet(auth.currentUser?.displayName)
-            }.addOnFailureListener { exc ->
-                Toast.makeText(this, exc.message, Toast.LENGTH_LONG).show()
+
+        GlobalScope.launch {
+            val user = auth.signInWithEmailAndPassword(email, password)
+            when (user) {
+                is Result.Success<User> -> {
+                    runOnUiThread{
+                        Toast.makeText(applicationContext, "Logged in !", Toast.LENGTH_SHORT).show()
+                    }
+                    greet(user.data.displayName)
+                }
+                is Result.Error -> {
+                    runOnUiThread {
+                        Toast.makeText(
+                            applicationContext,
+                            user.exception.message,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
             }
-        }catch (e:IllegalArgumentException){
-            Toast.makeText(this,e.message,Toast.LENGTH_LONG).show()
         }
 
 

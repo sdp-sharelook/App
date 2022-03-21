@@ -1,9 +1,6 @@
 package com.github.sdpsharelook.authorization
 
 
-import android.os.Parcel
-import android.os.Parcelable
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.test.espresso.Espresso.onView
@@ -14,11 +11,6 @@ import androidx.test.runner.AndroidJUnit4
 import com.github.sdpsharelook.R
 import com.github.sdpsharelook.authorization.UserConstants.TEST_USER_EMAIL
 import com.github.sdpsharelook.authorization.UserConstants.TEST_USER_PASS
-import com.google.android.gms.tasks.Task
-import com.google.firebase.FirebaseApp
-import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthProvider
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
@@ -40,25 +32,18 @@ class SignUpTest {
 
 
     @Before
-    fun testDeleteAuthAccounts() {
-        auth= FirebaseAuth.getInstance()
-        if (auth.currentUser?.isEmailVerified == true && auth.currentUser?.email == NEW_USER_EMAIL) {
-            auth.currentUser!!.delete()
-        } else {
-            auth.signInWithEmailAndPassword(NEW_USER_EMAIL, NEW_USER_PASS).addOnSuccessListener {
-                auth.currentUser!!.delete()
-            }
-        }
-        auth.signOut()
+    fun setAuth() {
+        auth = TestAuth()
     }
+
     @After
-    fun cleanUp(){
+    fun cleanUp() {
         auth.signOut()
     }
 
 
     @Test
-    fun testSignUp(){
+    fun testSignUp() {
         val appCompatEditText = onView(
             allOf(
                 withId(R.id.email),
@@ -148,15 +133,7 @@ class SignUpTest {
             )
         )
         materialButton3.perform(click())
-        val pending = auth.pendingAuthResult
-        if (pending != null) {
-            pending.addOnCompleteListener {
-                assert(auth.currentUser!!.email == NEW_USER_EMAIL)
-            }
-        } else {
-            Log.d("AUTH",auth.currentUser?.email.toString())
-            assert(auth.currentUser?.email == NEW_USER_EMAIL)
-        }
+        assert(auth.currentUser!!.email == NEW_USER_EMAIL)
     }
 
     @Test

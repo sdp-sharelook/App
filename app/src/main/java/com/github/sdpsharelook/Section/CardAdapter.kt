@@ -3,6 +3,8 @@ package com.github.sdpsharelook.Section
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.github.sdpsharelook.R
+import com.github.sdpsharelook.databinding.ActivitySectionBinding
 import com.github.sdpsharelook.databinding.CardSectionBinding
 
 class CardAdapter(
@@ -19,7 +21,27 @@ class CardAdapter(
     }
 
     override fun onBindViewHolder(holder: CardViewHolder, position: Int) {
+        holder.onDeletClick = {
+            removeItem(it, position)
+        }
+
+        holder.onEditClick = {
+
+            editItem(it, position)
+        }
+
         holder.bindBook(sections[position])
+    }
+
+    private fun editItem(viewHolder: RecyclerView.ViewHolder, index: Int) {
+
+        sectionList.set(index, Section("t", R.drawable.us))
+        notifyItemRemoved(viewHolder.adapterPosition)
+    }
+
+    private fun removeItem(viewHolder: RecyclerView.ViewHolder, index: Int) {
+        sectionList.removeAt(index)
+        notifyItemRemoved(viewHolder.adapterPosition)
     }
 
     override fun getItemCount(): Int = sections.size

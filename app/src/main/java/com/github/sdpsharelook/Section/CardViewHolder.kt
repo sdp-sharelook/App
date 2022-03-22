@@ -2,6 +2,7 @@ package com.github.sdpsharelook.Section
 
 import androidx.recyclerview.widget.RecyclerView
 import com.github.sdpsharelook.databinding.CardSectionBinding
+import java.lang.ref.WeakReference
 
 
 class CardViewHolder(
@@ -20,6 +21,9 @@ class CardViewHolder(
 //        cardCellBinding.sectionTitle.setOnClickListener {
 //
 //        }
+        cardCellBinding.deleteButton.setOnClickListener{
+            onDeletClick?.let { onDeletClick -> onDeletClick(this) }
+        }
 
         cardCellBinding.editButton.setOnClickListener {
             onEditClick?.let { onEditClick -> onEditClick(this) }

@@ -1,15 +1,18 @@
 package com.github.sdpsharelook.Section
 
+import android.app.Dialog
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.github.sdpsharelook.R
 import com.github.sdpsharelook.databinding.ActivitySectionBinding
 import com.github.sdpsharelook.databinding.CardSectionBinding
+import com.github.sdpsharelook.databinding.PopupBinding
 
 class CardAdapter(
     private val sections: List<Section>,
-    private val clickListener: SectionClickListener
+    private val clickListener: SectionClickListener,
+    private val dialog: Dialog
 )
     : RecyclerView.Adapter<CardViewHolder>()
 
@@ -26,20 +29,23 @@ class CardAdapter(
         }
 
         holder.onEditClick = {
-
-            editItem(it, position)
+            editPosition = it.adapterPosition
+            edit = true
+            dialog.show()
         }
 
         holder.bindBook(sections[position])
     }
 
-    private fun editItem(viewHolder: RecyclerView.ViewHolder, index: Int) {
-
-        sectionList.set(index, Section("t", R.drawable.us))
-        notifyItemRemoved(viewHolder.adapterPosition)
+    fun editItem(section: Section) {
+        edit = false
+        sectionList.set(editPosition, section)
+        notifyItemChanged(editPosition)
+//        sectionList.set(viewHolder.adapterPosition, section)
+//        notifyItemChanged(viewHolder.adapterPosition)
     }
 
-    private fun removeItem(viewHolder: RecyclerView.ViewHolder, index: Int) {
+    fun removeItem(viewHolder: RecyclerView.ViewHolder, index: Int) {
         sectionList.removeAt(index)
         notifyItemRemoved(viewHolder.adapterPosition)
     }

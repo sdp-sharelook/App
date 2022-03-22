@@ -18,6 +18,9 @@ import com.github.sdpsharelook.databinding.ActivitySectionBinding
 import com.github.sdpsharelook.databinding.CardSectionBinding
 import com.github.sdpsharelook.databinding.PopupBinding
 
+var edit = false
+var editPosition = 0
+
 class SectionActivity : AppCompatActivity(), SectionClickListener {
 
     private lateinit var binding: ActivitySectionBinding
@@ -25,7 +28,7 @@ class SectionActivity : AppCompatActivity(), SectionClickListener {
     private lateinit var cardBinding: CardSectionBinding
 
     private lateinit var dialog: Dialog
-    private var edit = false
+
 
 
 
@@ -44,48 +47,39 @@ class SectionActivity : AppCompatActivity(), SectionClickListener {
         initList()
 
         dialog = Dialog(sectionActivity)
+        dialog.setContentView(popupBinding.root)
 
-        // set the spinner
+        // set up the spinner
         popupBinding.spinnerCountries.adapter = CountryAdapter(sectionActivity, mainCountryList)
-
-
-        binding.addingBtn.setOnClickListener {
-
-            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-//            Toast.makeText(this, "New Section added", Toast.LENGTH_SHORT).show()
-//            addSection("kitchen", R.drawable.spain)
-            dialog.setContentView(popupBinding.root)
-            dialog.show()
-        }
 
         // set up the recyclerView
         binding.recyclerView.layoutManager = LinearLayoutManager(applicationContext)
+        val cardAdapter = CardAdapter(sectionList, sectionActivity, dialog)
+        binding.recyclerView.adapter = cardAdapter
 
-        binding.recyclerView.apply {
-            adapter = CardAdapter(sectionList, sectionActivity)
+
+        binding.addingBtn.setOnClickListener {
+//            Toast.makeText(this, "New Section added", Toast.LENGTH_SHORT).show()
+//            addSection("kitchen", R.drawable.spain)
+            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog.show()
         }
 
-        // PopupBindings
 
         popupBinding.popupAddBtn.setOnClickListener{
-
             var sectionName = popupBinding.editSectionName.text.toString()
             var countryIndex = popupBinding.spinnerCountries.selectedItemPosition
 
             if (edit){
-                editSectionName(0, sectionName, countryIndex)
-                edit = false
+                cardAdapter.editItem(Section(sectionName, mainCountryList.get(countryIndex).flag))
             } else {
                 addSection(sectionName, mainCountryList.get(countryIndex).flag)
             }
+            Toast.makeText(this, "Section: " + sectionName + " saved", Toast.LENGTH_SHORT).show()
             dialog.dismiss()
         }
 
 
-        cardBinding.editButton.setOnClickListener {
-            print("edouard \n")
-            removeSection(0)
-        }
     }
 
     private fun initList() {

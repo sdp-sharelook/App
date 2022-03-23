@@ -31,9 +31,12 @@ class SpeechRecognizer(val activity: AppCompatActivity) {
             }
         }
 
-
+    /** Cancel the speech recognition (must call it before starting a new one)
+     */
     fun cancel() = speechRecognizer.cancel()
 
+    /** Function triggered when audio permission is not allowed
+     */
     private fun errorPermission() =
         Utils.toast("Please give us the audio permission to use this feature", activity)
 
@@ -70,14 +73,13 @@ class SpeechRecognizer(val activity: AppCompatActivity) {
         )
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
         intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
-
         return intent
     }
 
     /** Create the recognition listener from the library
      */
-    private fun createGoogleRecognitionListener(listener: RecognitionListener): GoogleRecognitionListener {
-        return object : android.speech.RecognitionListener {
+    private fun createGoogleRecognitionListener(listener: RecognitionListener): GoogleRecognitionListener =
+        object : android.speech.RecognitionListener {
             override fun onReadyForSpeech(p0: Bundle?) = listener.onReady()
 
             override fun onBeginningOfSpeech() = listener.onBegin()
@@ -102,7 +104,7 @@ class SpeechRecognizer(val activity: AppCompatActivity) {
 
             override fun onEvent(p0: Int, p1: Bundle?) {}
         }
-    }
+
 
     /** Start the speech recognition
      * @param listener: the listener for callback when the result is ready

@@ -15,7 +15,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
     }
 
 
@@ -28,20 +27,18 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    fun textToSpeech(view: View) {
+    fun textToSpeech(view: View) =
         startActivity(Intent(this, TextToSpeechActivity::class.java))
-    }
 
-    fun voiceRecognition(view: View) {
+
+    fun voiceRecognition(view: View) =
         startActivity(Intent(this, SpeechRecognitionActivity::class.java))
-    }
 
-    fun sectionActivity(view: View) {
-        val intent = Intent(this, SectionActivity::class.java)
-        startActivity(intent)
-    }
-    fun translatorActivity(view: View) {
-        val intent = Intent(this, TranslateActivity::class.java)
-        startActivity(intent)
-    }
+
+    fun sectionActivity(view: View) =
+        startActivity(Intent(this, SectionActivity::class.java))
+
+    fun translatorActivity(view: View) =
+        startActivity(Intent(this, TranslateActivity::class.java))
+
 }

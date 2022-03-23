@@ -1,6 +1,6 @@
 package com.github.sdpsharelook.storage
 
 interface Database {
-    fun saveFavourites(wordSaver: WordSaver)
-    fun fillFavourites(wordSaver: WordSaver)
+    suspend fun saveFavourites(wordSaver: WordSaver)
+    suspend fun fillFavourites(wordSaver: WordSaver)
 }

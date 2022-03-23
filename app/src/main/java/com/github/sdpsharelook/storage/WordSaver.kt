@@ -1,17 +1,21 @@
 package com.github.sdpsharelook.storage
 
 import com.github.sdpsharelook.Word
+import kotlinx.coroutines.runBlocking
 
 class WordSaver(private val database: Database) : HashMap<String, Word>() {
     init {
-        database.fillFavourites(this)
+        val self = this
+        runBlocking {
+            database.fillFavourites(self)
+        }
     }
 
-    fun save() {
+    suspend fun save() {
         database.saveFavourites(this)
     }
 
-    fun fill() {
+    suspend fun fill() {
         database.fillFavourites(this)
     }
 }

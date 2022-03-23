@@ -17,11 +17,13 @@ import com.github.sdpsharelook.textToSpeech.TextToSpeech
 import com.github.sdpsharelook.translate.Translator
 import com.google.mlkit.nl.translate.TranslateLanguage
 import kotlinx.coroutines.*
+import java.util.*
 
 
 class TranslateActivity : AppCompatActivity() {
     private val allLanguages = TranslateLanguage.getAllLanguages().toMutableList()
     private lateinit var targetText: TextView
+    private lateinit var tts: TextToSpeech
 
     @Nullable
     private var mIdlingResource: CountingIdlingResource? = null
@@ -40,18 +42,17 @@ class TranslateActivity : AppCompatActivity() {
         sourceText.addTextChangedListener { afterTextChanged ->
             mIdlingResource?.increment()
             val scope = CoroutineScope(Dispatchers.IO)
-            val downloadingLanguagesView = findViewById<View>(R.id.view_downloading_languages)
             scope.launch {
-                // FIXME hide and show downloadingLanguagesView doesn't work
-                // downloadingLanguagesView.visibility = View.VISIBLE
                 updateTranslation(afterTextChanged.toString())
-                // downloadingLanguagesView.visibility = View.GONE
             }
         }
         buttonSwitchLang.setOnClickListener {
             val temp = sourceLangSelector.selectedItemPosition
             sourceLangSelector.setSelection(targetLangSelector.selectedItemPosition)
             targetLangSelector.setSelection(temp)
+            val tempText = sourceText.text
+            sourceText.text = targetText.text
+            targetText.text = tempText
         }
         // speech recognition
         val sr = SpeechRecognizer(this)
@@ -88,7 +89,7 @@ class TranslateActivity : AppCompatActivity() {
 
         }
         // text to speech
-        val tts = TextToSpeech(this)
+        tts = TextToSpeech(this)
 
         findViewById<ImageButton>(R.id.imageButtonSpeak).setOnClickListener {
             // fixme replace "Bonjour" with sourceText.text.toString()
@@ -127,6 +128,7 @@ class TranslateActivity : AppCompatActivity() {
         // Dynamically update the translation on language source or target changed
         val spinnerOnItemSelected = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
+                tts.setLanguage(Locale.forLanguageTag(allLanguages[targetLangSelector.selectedItemPosition]))
                 mIdlingResource?.increment()
                 val scope = CoroutineScope(Dispatchers.IO)
                 scope.launch {
@@ -155,7 +157,7 @@ class TranslateActivity : AppCompatActivity() {
         )
 
         targetText.text = getString(R.string.translation_running)
-        targetText.text = t.translate(textToTranslate)
+        targetText.setText(t.translate(textToTranslate))
         mIdlingResource?.decrement()
     }
 

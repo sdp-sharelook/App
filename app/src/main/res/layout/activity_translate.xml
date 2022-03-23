@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".TranslateActivity">
 
     <TableLayout
@@ -10,14 +11,14 @@
         android:layout_height="match_parent">
 
         <TableRow
-            android:layout_height="10dp"
+
             android:gravity="center_vertical"
             android:padding="5dp">
 
             <ImageButton
                 android:id="@+id/imageButtonHamburger"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="50dp"
                 android:background="#00000000"
                 android:contentDescription="@string/menu"
                 android:src="@drawable/ic_hamburger_menu" />
@@ -26,25 +27,6 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_weight="1" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:id="@+id/view_downloading_languages">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/downloading_languages" />
-
-                <ProgressBar
-                    android:id="@+id/progressBar"
-                    style="?android:attr/progressBarStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
         </TableRow>
 
         <RelativeLayout
@@ -74,14 +56,13 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <ImageButton
-                style="@style/Theme.AppCompat.smallImageButton"
                 android:id="@+id/imageButtonListen"
+                style="@style/Theme.AppCompat.smallImageButton"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
-                android:src="@drawable/microphone"
                 android:layout_margin="15dp"
                 android:contentDescription="@string/listen"
-                />
+                android:src="@drawable/microphone" />
         </RelativeLayout>
 
         <TableRow
@@ -106,8 +87,7 @@
                 android:id="@+id/buttonSwitchLang"
                 style="@style/Theme.AppCompat.smallImageButton"
                 android:contentDescription="@string/switch_languages"
-                android:src="@drawable/switch_languages"
-                />
+                android:src="@drawable/switch_languages" />
 
             <Spinner
                 android:id="@+id/targetLangSelector"
@@ -123,31 +103,33 @@
                 android:textAlignment="center" />
         </TableRow>
 
-        <RelativeLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
-
             <TextView
                 android:id="@+id/targetText"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 android:textSize="20sp"
-                android:textAlignment="center"
-                />
-
+                android:textAlignment="center"/>
             <ImageButton
                 android:id="@+id/imageButtonSpeak"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
+                style="@style/Theme.AppCompat.smallImageButton"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 android:layout_margin="15dp"
                 android:contentDescription="@string/speak"
-                style="@style/Theme.AppCompat.smallImageButton"
-                android:src="@drawable/speaker"/>
-        </RelativeLayout>
+                android:src="@drawable/speaker" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </TableLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

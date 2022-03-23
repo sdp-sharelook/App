@@ -62,6 +62,7 @@ class TextToSpeech(val ctx: Context) {
     fun setupSpinnerLanguages(spinner: Spinner?) {
         bindSpinnerLanguages(putLanguagesInSpinner(spinner), spinner)
     }
+    fun setLanguage(loc:Locale) = tts?.setLanguage(loc)
 
     fun bindSeekBars(seekBarPitch: SeekBar?, seekBarSpeechRate: SeekBar?) {
         // spinner?.adapter = adapter

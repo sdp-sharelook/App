@@ -1,4 +1,4 @@
-package com.github.sdpsharelook
+package com.github.sdpsharelook.storage
 
 interface Database {
     fun saveFavourites(wordSaver: WordSaver)

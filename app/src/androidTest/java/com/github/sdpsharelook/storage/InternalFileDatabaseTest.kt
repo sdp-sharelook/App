@@ -1,7 +1,8 @@
-package com.github.sdpsharelook
+package com.github.sdpsharelook.storage
 
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.github.sdpsharelook.Word
 import org.junit.Test
 import org.junit.runner.RunWith
 

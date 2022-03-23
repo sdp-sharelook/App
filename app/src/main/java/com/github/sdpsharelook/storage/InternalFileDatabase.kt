@@ -1,6 +1,7 @@
-package com.github.sdpsharelook
+package com.github.sdpsharelook.storage
 
 import android.content.Context
+import com.github.sdpsharelook.Word
 import java.io.File
 
 class InternalFileDatabase(private val context: Context) : Database {

@@ -82,7 +82,7 @@ class TranslateActivity : AppCompatActivity() {
 
                 override fun onError() {
                     Toast.makeText(ctx, "Error recognition", Toast.LENGTH_SHORT).show()
-                    sourceText.setText("...")
+                    sourceText.setText("")
                     sourceText.isEnabled = true
                 }
             })

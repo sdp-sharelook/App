@@ -35,19 +35,24 @@ class TranslateActivityTest {
     @Test
     @ExperimentalCoroutinesApi
     fun testTranslateActivity() = runTest {
+        fun selectLanguage(lang: String, spinnerId: Int) {
+            onView(withId(spinnerId)).perform(click())
+            onData(allOf(`is`(instanceOf(String::class.java)), `is`(lang))).perform(click())
+        }
+
+        selectLanguage("fr", R.id.sourceLangSelector)
+        selectLanguage("en", R.id.targetLangSelector)
         onView(withId(R.id.sourceText))
             .perform(typeText("Bonjour."), closeSoftKeyboard())
+
         onView(withId(R.id.targetText)).check(matches(withText("Hello.")))
 
-        onView(withId(R.id.sourceText)).perform(clearText())
-            .perform(typeText("Hello."), closeSoftKeyboard())
         onView(withId(R.id.buttonSwitchLang)).perform(click())
         onView(withId(R.id.targetText)).check(matches(withText("Bonjour.")))
 
-        onView(withId(R.id.targetLangSelector)).perform(click())
-        onData(allOf(`is`(instanceOf(String::class.java)), `is`("it")))
-            .perform(click())
+        selectLanguage("it", R.id.targetLangSelector)
         onView(withId(R.id.targetText)).check(matches(withText("Ciao.")))
+
     }
 
     @After

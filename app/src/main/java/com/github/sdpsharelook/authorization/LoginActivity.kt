@@ -3,15 +3,12 @@ package com.github.sdpsharelook.authorization
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import com.github.sdpsharelook.GreetingActivity
 import com.github.sdpsharelook.R
-import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.*
-import java.lang.IllegalArgumentException
 
 const val GREET_NAME_EXTRA = "com.github.sdpsharelook.NAME"
 lateinit var auth: AuthProvider

@@ -1,32 +1,20 @@
 package com.github.sdpsharelook.authorization
 
 
-import android.content.Intent
-import android.service.autofill.Validators.not
-import android.util.Log
-import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.*
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.intent.Intents
-import androidx.test.espresso.intent.matcher.BundleMatchers.hasEntry
-import androidx.test.espresso.matcher.RootMatchers.withDecorView
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.sdpsharelook.R
 import com.github.sdpsharelook.authorization.UserConstants.TEST_USER_EMAIL
 import com.github.sdpsharelook.authorization.UserConstants.TEST_USER_PASS
-import com.google.android.gms.tasks.Task
 import com.google.firebase.FirebaseApp
-import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.lang.IllegalArgumentException
-import kotlin.coroutines.coroutineContext
 
 class MockFirebaseAuth(p0: FirebaseApp) : FirebaseAuth(p0)
 object UserConstants {

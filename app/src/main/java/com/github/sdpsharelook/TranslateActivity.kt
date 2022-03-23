@@ -60,7 +60,7 @@ class TranslateActivity : AppCompatActivity() {
             sr.cancel()
             sr.recognizeSpeech(object : RecognitionListener {
                 override fun onResults(s: String) {
-                    if (s.isEmpty())
+                    if (s.trim().isEmpty())
                         sourceText.setText("...")
 
                     sourceText.setText(s)
@@ -82,6 +82,7 @@ class TranslateActivity : AppCompatActivity() {
                 override fun onError() {
                     Toast.makeText(ctx, "Error recognition", Toast.LENGTH_SHORT).show()
                     sourceText.setText("...")
+                    sourceText.isEnabled = true
                 }
             })
 

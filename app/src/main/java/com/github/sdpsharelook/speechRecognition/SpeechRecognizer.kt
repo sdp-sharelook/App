@@ -19,6 +19,7 @@ import kotlin.coroutines.suspendCoroutine
 class SpeechRecognizer(val activity: AppCompatActivity) {
     private var hasPermissions = false
     private val speechRecognizer = GoogleSpeechRecognizer.createSpeechRecognizer(activity)
+
     private val requestPermissionLauncher =
         activity.registerForActivityResult(
             ActivityResultContracts.RequestPermission()
@@ -31,37 +32,33 @@ class SpeechRecognizer(val activity: AppCompatActivity) {
         }
 
 
-    fun cancel() {
-        speechRecognizer.cancel()
-    }
+    fun cancel() = speechRecognizer.cancel()
 
-    private fun errorPermission() {
+    private fun errorPermission() =
         Utils.toast("Please give us the audio permission to use this feature", activity)
-        // activity.finish()
-    }
 
-    private fun checkPermissions() {
-        // https://developer.android.com/training/permissions/requesting#kotlin
-        when {
-            ContextCompat.checkSelfPermission(
-                activity,
+    /** start the permission asking procedure if needed
+     */
+    fun checkPermissions() = when {
+        ContextCompat.checkSelfPermission(
+            activity,
+            android.Manifest.permission.RECORD_AUDIO
+        ) == PackageManager.PERMISSION_GRANTED -> {
+
+        }
+        else -> {
+            requestPermissionLauncher.launch(
                 android.Manifest.permission.RECORD_AUDIO
-            ) == PackageManager.PERMISSION_GRANTED -> {
-                // You can use the API that requires the permission.
-            }
-            else -> {
-                requestPermissionLauncher.launch(
-                    android.Manifest.permission.RECORD_AUDIO
-                )
-            }
+            )
         }
     }
 
+    /**
+     * Create the intent to start the speech recognizer
+     * @param language: the language to put in the intent (free form by default)
+     */
     private fun createIntent(language: String? = null): Intent {
-        // https://medium.com/voice-tech-podcast/android-speech-to-text-tutorial-8f6fa71606ac
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
-        // set language; free form if null :
-        // https://stackoverflow.com/questions/10538791/how-to-set-the-language-in-speech-recognition-on-android
         language?.let {
             intent.putExtra(
                 RecognizerIntent.EXTRA_LANGUAGE_MODEL,
@@ -77,6 +74,8 @@ class SpeechRecognizer(val activity: AppCompatActivity) {
         return intent
     }
 
+    /** Create the recognition listener from the library
+     */
     private fun createGoogleRecognitionListener(listener: RecognitionListener): GoogleRecognitionListener {
         return object : android.speech.RecognitionListener {
             override fun onReadyForSpeech(p0: Bundle?) = listener.onReady()
@@ -111,6 +110,10 @@ class SpeechRecognizer(val activity: AppCompatActivity) {
         }
     }
 
+    /** Start the speech recognition
+     * @param listener: the listener for callback when the result is ready
+     * @param language: to eventually specify the language (free form by default)
+     */
     fun recognizeSpeech(listener: RecognitionListener, language: String? = null) {
         val intent = createIntent(language)
         val googleListener = createGoogleRecognitionListener(listener)
@@ -118,37 +121,4 @@ class SpeechRecognizer(val activity: AppCompatActivity) {
         speechRecognizer.setRecognitionListener(googleListener)
         speechRecognizer.startListening(intent)
     }
-
-    suspend fun recognizeSpeechCoroutine(language: String? = null): String =
-        suspendCoroutine { cont ->
-            checkPermissions()
-            val listener = object : android.speech.RecognitionListener {
-                override fun onReadyForSpeech(p0: Bundle?) {}
-
-                override fun onBeginningOfSpeech() {}
-
-                override fun onRmsChanged(p0: Float) {}
-
-                override fun onBufferReceived(results: ByteArray?) {}
-
-                override fun onEndOfSpeech() {}
-
-                override fun onError(code: Int) {
-                    cont.resumeWithException(Exception())
-                }
-
-                override fun onResults(results: Bundle?) {
-                    results?.getStringArrayList(GoogleSpeechRecognizer.RESULTS_RECOGNITION)?.let {
-                        cont.resume(it.joinToString(""))
-                    }
-                    cont.resumeWithException(Exception())
-                }
-
-                override fun onPartialResults(partialResults: Bundle?) {}
-
-                override fun onEvent(p0: Int, p1: Bundle?) {}
-            }
-            speechRecognizer.setRecognitionListener(listener)
-            speechRecognizer.startListening(createIntent(language))
-        }
 }

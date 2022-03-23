@@ -36,8 +36,12 @@ class MainActivity : AppCompatActivity() {
         startActivity(Intent(this, SpeechRecognitionActivity::class.java))
     }
 
-    fun sectionAcitivity(view: View) {
+    fun sectionActivity(view: View) {
         val intent = Intent(this, SectionActivity::class.java)
+        startActivity(intent)
+    }
+    fun translatorActivity(view: View) {
+        val intent = Intent(this, TranslateActivity::class.java)
         startActivity(intent)
     }
 }

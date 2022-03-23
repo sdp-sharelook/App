@@ -1,88 +1,151 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".TranslateActivity">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+    <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:inputType="textMultiLine"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/sourceText"
+        <TableRow
+            android:layout_height="10dp"
+            android:gravity="center_vertical"
+            android:padding="5dp">
+
+            <ImageButton
+                android:id="@+id/imageButtonHamburger"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#00000000"
+                android:contentDescription="@string/menu"
+                android:src="@drawable/ic_hamburger_menu" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/view_downloading_languages">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/downloading_languages" />
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </TableRow>
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="top"
-            android:hint="@string/source_text_hint"
-            android:textColorHint="#757575" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
-    <Spinner
-        android:id="@+id/sourceLangSelector"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:contentDescription="@string/source_language"
-        android:textAlignment="center"
-        app:layout_constraintBottom_toBottomOf="@id/buttonSwitchLang"
-        app:layout_constraintEnd_toStartOf="@id/buttonSwitchLang"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:inputType="textMultiLine">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/buttonSwitchLang"
-        android:layout_width="59dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="@string/switch_arrow"
-        app:layout_constraintBottom_toTopOf="@id/targetText"
-        app:layout_constraintEnd_toStartOf="@+id/targetLangSelector"
-        app:layout_constraintStart_toEndOf="@+id/sourceLangSelector"
-        app:layout_constraintTop_toTopOf="@id/sourceLangSelector" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/sourceText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="top"
+                    android:hint="@string/source_text_hint"
+                    android:textColorHint="#757575" />
 
-    <Spinner
-        android:id="@+id/targetLangSelector"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:contentDescription="@string/target_language"
-        android:textAlignment="center"
-        app:layout_constraintBottom_toBottomOf="@id/buttonSwitchLang"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/buttonSwitchLang"
-        app:layout_constraintTop_toBottomOf="@id/textInputLayout" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-    <TextView
-        android:id="@+id/targetText"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:gravity="top"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/buttonSwitchLang" />
+            <ImageButton
+                style="@style/Theme.AppCompat.smallImageButton"
+                android:id="@+id/imageButtonListen"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:src="@drawable/microphone"
+                android:layout_margin="15dp"
+                android:contentDescription="@string/listen"
+                />
+        </RelativeLayout>
+
+        <TableRow
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <Spinner
+                android:id="@+id/sourceLangSelector"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_weight="1"
+                android:contentDescription="@string/source_language"
+                android:minHeight="48dp"
+                android:textAlignment="center" />
+
+            <ImageButton
+                android:id="@+id/buttonSwitchLang"
+                style="@style/Theme.AppCompat.smallImageButton"
+                android:contentDescription="@string/switch_languages"
+                android:src="@drawable/switch_languages"
+                />
+
+            <Spinner
+                android:id="@+id/targetLangSelector"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_weight="1"
+                android:contentDescription="@string/target_language"
+                android:minHeight="48dp"
+                android:textAlignment="center" />
+        </TableRow>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/targetText"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:gravity="top" />
+
+            <ImageButton
+                android:id="@+id/imageButtonSpeak"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="15dp"
+                android:contentDescription="@string/speak"
+                style="@style/Theme.AppCompat.smallImageButton"
+                android:src="@drawable/speaker"/>
+        </RelativeLayout>
+    </TableLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -28,7 +28,7 @@ class SpeechRecognitionActivity : AppCompatActivity() {
                 "${textViewResult.text}\n$s".also { textViewResult.text = it }
             }
 
-            override fun onSuccess(s: String) {
+            override fun onResults(s: String) {
                 print(s)
             }
 

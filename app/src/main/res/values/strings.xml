@@ -19,4 +19,8 @@
     <string name="speech_recognition">Speech recognition</string>
     <string name="start_speech_recognition">Start speech recognition</string>
     <string name="the_result_of_the_speech_recognition_will_appear_here">The result of the speech recognition will appear here</string>
+    <string name="switch_languages">Switch languages</string>
+    <string name="menu">menu</string>
+    <string name="downloading_languages">downloading languages...</string>
+    <string name="listen">Listen</string>
 </resources>

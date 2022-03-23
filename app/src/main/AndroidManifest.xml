@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.github.sdpsharelook" >
+    package="com.github.sdpsharelook">
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
     <queries>
         <intent>
             <action android:name="android.intent.action.TTS_SERVICE" />
@@ -10,7 +11,6 @@
         <intent>
             <action android:name="android.speech.RecognitionService" />
         </intent>
-
     </queries>
 
     <application
@@ -21,13 +21,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyBootcamp">
         <activity
+            android:name=".NavigationMenuActivity"
+            android:exported="false" />
+        <activity
             android:name=".Section.SectionDetail"
             android:exported="false" />
         <activity
             android:name=".Section.SectionActivity"
             android:exported="false" />
         <activity
-            android:name=".TranslateActivity"
+            android:name=".MainActivity"
             android:exported="false" />
         <activity
             android:name=".SpeechRecognitionActivity"
@@ -39,7 +42,7 @@
             android:name=".GreetingActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".TranslateActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

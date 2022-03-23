@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/layout_signup"
     android:onClick="signUp"
     tools:context=".SignUpActivity">
 
@@ -64,8 +65,9 @@
         android:layout_marginEnd="10dp"
         app:helperTextEnabled="true"
         app:helperTextTextColor="@android:color/holo_red_light"
-        app:layout_constraintEnd_toEndOf="parent"
         app:counterMaxLength="10"
+        app:counterEnabled="true"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/emailBox">
@@ -75,6 +77,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Phone Number"
+            android:maxLength="10"
             android:inputType="phone" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -121,7 +124,8 @@
             android:id="@+id/lastName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Last Name" />
+            android:hint="Last Name"
+            android:inputType="textPersonName" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
@@ -159,7 +163,8 @@
             android:id="@+id/firstName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="First Name" />
+            android:hint="First Name"
+            android:inputType="textPersonName" />
     </com.google.android.material.textfield.TextInputLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

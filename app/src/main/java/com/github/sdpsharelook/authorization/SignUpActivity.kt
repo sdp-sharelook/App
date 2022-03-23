@@ -23,17 +23,16 @@ class SignUpActivity : AppCompatActivity() {
         firstNameListener()
         lastNameListener()
         emailListener()
-        phoneListener()
         prelimPasswordListener()
         passwordListener()
         auth = FireAuth()
     }
 
-    fun firstNameListener() {
+    private fun firstNameListener() {
         binding.firstName.setOnFocusChangeListener{ _, focus ->
             if (!focus) {
                 if(binding.firstName.text.toString() != "") {
-                    binding.firstNameBox.helperText = null;
+                    binding.firstNameBox.helperText = null
                 } else {
                     binding.firstNameBox.helperText = "Required"
                 }
@@ -41,11 +40,11 @@ class SignUpActivity : AppCompatActivity() {
         }
     }
 
-    fun lastNameListener() {
+    private fun lastNameListener() {
         binding.lastName.setOnFocusChangeListener{ _, focus ->
             if (!focus) {
                 if(binding.lastName.text.toString() != "") {
-                    binding.lastNameBox.helperText = null;
+                    binding.lastNameBox.helperText = null
                 } else {
                     binding.lastNameBox.helperText = "Required"
                 }
@@ -53,11 +52,11 @@ class SignUpActivity : AppCompatActivity() {
         }
     }
 
-    fun emailListener() {
-        var regex = "/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}$/i".toRegex()
+    private fun emailListener() {
+        val regex = "(([^<>()\\[\\]\\\\.,;:\\s@\"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))".toRegex()
         binding.email.setOnFocusChangeListener{_, focus ->
             if(!focus) {
-                if (binding.lastName.text.toString() == "") {
+                if (binding.email.text.toString() == "") {
                     binding.emailBox.helperText = "Required"
                 } else
                 if(!binding.email.text.toString().matches(regex)) {
@@ -70,32 +69,56 @@ class SignUpActivity : AppCompatActivity() {
 
     }
 
-    fun phoneListener() {
-    }
-
-    fun prelimPasswordListener() {
-        var upperCase = "(?=.*?[A-Z])".toRegex()
-        var lowerCase = "(?=.*?[a-z])".toRegex()
-        var oneDigit = "(?=.*?[0-9])".toRegex()
-        var specialChar = "(?=.*?[#?!@\$ %^&*-])".toRegex()
-        var minLength8 = ".{8,}".toRegex()
-        binding.phoneNumber.setOnFocusChangeListener{ _, focus ->
+    private fun prelimPasswordListener() {
+        val upperCase = "(.*?[A-Z].*)".toRegex()
+        val lowerCase = "(.*?[a-z].*)".toRegex()
+        val oneDigit = "(.*?[0-9].*)".toRegex()
+        val specialChar = "(.*?[#?!@\$ %^&*-].*)".toRegex()
+        val minLength8 = ".{8,}".toRegex()
+        binding.prelimpassword.setOnFocusChangeListener{ _, focus ->
             if (!focus) {
-                var string = binding.phoneNumber.text.toString()
-                if(string == "") {
-                    binding.lastNameBox.helperText = "Required";
+                binding.prelimpassword.text.toString()
+                if(binding.prelimpassword.text.toString() == "") {
+                    binding.prelimPasswordBox.helperText = "Required"
                 } else
-                if(string.matches)
-
+                if(!binding.prelimpassword.text.toString().matches(upperCase)) {
+                    binding.prelimPasswordBox.helperText = "Must contain an uppercase letter"
+                } else
+                if(!binding.prelimpassword.text.toString().matches(lowerCase)) {
+                    binding.prelimPasswordBox.helperText = "Must contain a lowercase letter"
+                } else
+                if(!binding.prelimpassword.text.toString().matches(oneDigit)) {
+                    binding.prelimPasswordBox.helperText = "Must contain at least one digit"
+                } else
+                if(!binding.prelimpassword.text.toString().matches(specialChar)) {
+                    binding.prelimPasswordBox.helperText = "Must contain at least one special character"
+                } else
+                if(!binding.prelimpassword.text.toString().matches(minLength8)) {
+                    binding.prelimPasswordBox.helperText = "Must contain at least 8 characters"
+                }
                 else {
-                    binding.lastNameBox.helperText = null
+                    binding.prelimPasswordBox.helperText = null
                 }
             }
         }
     }
 
-    fun passwordListener() {
-
+    private fun passwordListener() {
+        binding.password.setOnFocusChangeListener{_, focus ->
+            if(!focus) {
+                when {
+                    binding.password.text.toString() == "" -> {
+                        binding.passwordBox.helperText = "Required"
+                    }
+                    binding.password.text.toString() != binding.prelimpassword.text.toString() -> {
+                        binding.passwordBox.helperText = "Passwords do not match"
+                    }
+                    else -> {
+                        binding.passwordBox.helperText = null
+                    }
+                }
+            }
+        }
     }
 
     fun signUp(view: View) {

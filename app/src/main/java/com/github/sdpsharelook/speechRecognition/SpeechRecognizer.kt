@@ -91,20 +91,14 @@ class SpeechRecognizer(val activity: AppCompatActivity) {
 
             override fun onError(code: Int) = listener.onError()
 
-
-            override fun onResults(results: Bundle?) {
+            fun catchResults(results: Bundle?) =
                 results?.getStringArrayList(GoogleSpeechRecognizer.RESULTS_RECOGNITION)?.let {
-                    return listener.onResults(it.joinToString(""))
-                }
-                listener.onError()
-            }
+                    listener.onResults(it.joinToString(""))
+                } ?: listener.onError()
 
-            override fun onPartialResults(results: Bundle?) {
-                results?.getStringArrayList(GoogleSpeechRecognizer.RESULTS_RECOGNITION)?.let {
-                    return listener.onResults(it.joinToString(""))
-                }
-                listener.onError()
-            }
+            override fun onResults(results: Bundle?) = catchResults(results)
+
+            override fun onPartialResults(results: Bundle?) = catchResults(results)
 
             override fun onEvent(p0: Int, p1: Bundle?) {}
         }

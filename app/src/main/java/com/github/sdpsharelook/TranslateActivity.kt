@@ -91,7 +91,7 @@ class TranslateActivity : AppCompatActivity() {
 
         findViewById<ImageButton>(R.id.imageButtonSpeak).setOnClickListener {
             // fixme replace "Bonjour" with sourceText.text.toString()
-            tts.speak(sourceText.text.toString())
+            tts.speak(targetText.text.toString())
         }
         // hamburger menu
         findViewById<ImageButton>(R.id.imageButtonHamburger).setOnClickListener {

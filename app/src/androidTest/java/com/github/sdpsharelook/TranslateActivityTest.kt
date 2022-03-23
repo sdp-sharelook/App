@@ -1,6 +1,7 @@
 package com.github.sdpsharelook
 
 import androidx.test.core.app.ActivityScenario
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
@@ -52,9 +53,9 @@ class TranslateActivityTest {
 
         selectLanguage("it", R.id.targetLangSelector)
         onView(withId(R.id.targetText)).check(matches(withText("Ciao.")))
-
+        onView(withId(R.id.imageButtonHamburger)).perform(click())
+        onView(withId(R.id.button_back)).perform(click())
     }
-
     @After
     fun unregisterIdlingResource() {
         if (mIdlingResource != null) {

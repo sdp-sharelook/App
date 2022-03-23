@@ -21,7 +21,7 @@ class SpeechRecognitionActivity : AppCompatActivity() {
     }
 
 
-    fun startRecognition(view: View) {
+    fun startRecognition(@Suppress("UNUSED_PARAMETER")view: View) {
         // https://medium.com/voice-tech-podcast/android-speech-to-text-tutorial-8f6fa71606ac
         speechRecognizer.recognizeSpeech(object : RecognitionListener {
             fun print(s: String) {

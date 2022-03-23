@@ -24,7 +24,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
 
-    fun logIn(view: View) {
+    fun logIn(@Suppress("UNUSED_PARAMETER")view: View) {
         //TODO: add e-mail and password verification before login button is pressed
         val email = findViewById<EditText>(R.id.email).text.toString()
         val password = findViewById<EditText>(R.id.password).text.toString()
@@ -64,7 +64,7 @@ class LoginActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    fun goToSignUp(view: View) {
+    fun goToSignUp(@Suppress("UNUSED_PARAMETER")view: View) {
         startActivity(Intent(this, SignUpActivity::class.java).apply { })
     }
 }

@@ -21,7 +21,7 @@ class TextToSpeechActivity : AppCompatActivity() {
         )
     }
 
-    fun speak(view: View) {
+    fun speak(@Suppress("UNUSED_PARAMETER")view: View) {
         val editText = findViewById<EditText>(R.id.edit_text_input_tts)
         val message = editText.text.toString()
         tts.speak(message)

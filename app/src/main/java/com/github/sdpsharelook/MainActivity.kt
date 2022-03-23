@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    fun greet(view: View) {
+    fun greet(@Suppress("UNUSED_PARAMETER")view: View) {
         val editText = findViewById<EditText>(R.id.edit_text_name)
         val name = editText?.text.toString()
         val intent = Intent(this, GreetingActivity::class.java).apply {
@@ -28,15 +28,15 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    fun textToSpeech(view: View) {
+    fun textToSpeech(@Suppress("UNUSED_PARAMETER")view: View) {
         startActivity(Intent(this, TextToSpeechActivity::class.java))
     }
 
-    fun voiceRecognition(view: View) {
+    fun voiceRecognition(@Suppress("UNUSED_PARAMETER")view: View) {
         startActivity(Intent(this, SpeechRecognitionActivity::class.java))
     }
 
-    fun sectionAcitivity(view: View) {
+    fun sectionAcitivity(@Suppress("UNUSED_PARAMETER")view: View) {
         val intent = Intent(this, SectionActivity::class.java)
         startActivity(intent)
     }

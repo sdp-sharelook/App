@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     //startActivity(Intent(this, TextToSpeechActivity::class.java))
 
 
+
     fun voiceRecognition(view: View) {}
     // startActivity(Intent(this, SpeechRecognitionActivity::class.java))
 
@@ -40,5 +41,4 @@ class MainActivity : AppCompatActivity() {
 
     fun translatorActivity(view: View) =
         startActivity(Intent(this, TranslateActivity::class.java))
-
 }

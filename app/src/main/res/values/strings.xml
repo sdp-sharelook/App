@@ -24,5 +24,7 @@
     <string name="menu">menu</string>
     <string name="downloading_languages">downloading languages...</string>
     <string name="listen">Listen</string>
-
+    <string name="sectionsButtonName">Sections</string>
+    <string name="translateButtonName">Translate</string>
+    <string name="unrecognized_source_language">Source language unrecognized.</string>
 </resources>

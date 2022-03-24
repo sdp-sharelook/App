@@ -29,6 +29,7 @@ class TranslateActivity : AppCompatActivity() {
     private var mIdlingResource: CountingIdlingResource? = null
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_translate)
@@ -104,6 +105,12 @@ class TranslateActivity : AppCompatActivity() {
     }
 
 
+
+    companion object {
+        const val autoDetectName = "auto"
+    }
+
+
     /** Filling spinners with available languages and initializing them.
      * @param sourceLangSelector [Spinner] | The source language spinner.
      * @param targetLangSelector [Spinner] | The target language spinner.
@@ -113,6 +120,7 @@ class TranslateActivity : AppCompatActivity() {
         targetLangSelector: Spinner
     ) {
         allLanguages.sort()
+        allLanguages.add(0, autoDetectName)
         val adapter = ArrayAdapter(
             this,
             android.R.layout.simple_spinner_dropdown_item, allLanguages
@@ -121,7 +129,7 @@ class TranslateActivity : AppCompatActivity() {
         targetLangSelector.adapter = adapter
 
         // On create, we set the source language to FR, and the target to EN
-        sourceLangSelector.setSelection(allLanguages.indexOf(TranslateLanguage.FRENCH))
+        sourceLangSelector.setSelection(allLanguages.indexOf(autoDetectName))
         targetLangSelector.setSelection(allLanguages.indexOf(TranslateLanguage.ENGLISH))
 
         val sourceText = findViewById<TextView>(R.id.sourceText)
@@ -134,6 +142,8 @@ class TranslateActivity : AppCompatActivity() {
                 scope.launch {
                     if (sourceText.text.isNotEmpty())
                         updateTranslation(sourceText.text.toString())
+                    else
+                        mIdlingResource?.decrement()
                 }
             }
 
@@ -150,11 +160,21 @@ class TranslateActivity : AppCompatActivity() {
     private suspend fun updateTranslation(textToTranslate: String) {
         val sourceLangSelector = findViewById<Spinner>(R.id.sourceLangSelector)
         val targetLangSelector = findViewById<Spinner>(R.id.targetLangSelector)
+        val targetText = findViewById<TextView>(R.id.targetText)
+        var sourceLang = allLanguages[sourceLangSelector.selectedItemPosition]
+        val destLang = allLanguages[targetLangSelector.selectedItemPosition]
 
-        val t = Translator(
-            allLanguages[sourceLangSelector.selectedItemPosition],
-            allLanguages[targetLangSelector.selectedItemPosition]
-        )
+        if (sourceLang == autoDetectName) {
+            sourceLang = Translator.detectLanguage(textToTranslate)
+
+            if (!allLanguages.contains(sourceLang)) {
+                targetText.text = getString(R.string.unrecognized_source_language)
+                mIdlingResource?.decrement()
+                return
+            }
+        }
+
+        val t = Translator(sourceLang, destLang)
 
         targetText.text = getString(R.string.translation_running)
         targetText.setText(t.translate(textToTranslate))

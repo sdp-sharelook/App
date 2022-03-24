@@ -2,6 +2,7 @@ package com.github.sdpsharelook.translate
 
 import com.google.android.gms.tasks.Task
 import com.google.mlkit.common.model.DownloadConditions
+import com.google.mlkit.nl.languageid.LanguageIdentification
 import com.google.mlkit.nl.translate.Translation
 import com.google.mlkit.nl.translate.Translator
 import com.google.mlkit.nl.translate.TranslatorOptions
@@ -37,5 +38,11 @@ class Translator(src: String, dst: String) {
     suspend fun translate(text: String): String {
         downloadModelIfNeeded().await()
         return translator.translate(text).await()
+    }
+
+    companion object {
+        suspend fun detectLanguage(text: String) : String {
+            return LanguageIdentification.getClient().identifyLanguage(text).await()
+        }
     }
 }

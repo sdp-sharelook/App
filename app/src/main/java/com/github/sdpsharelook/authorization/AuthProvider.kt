@@ -6,7 +6,6 @@ import com.github.sdpsharelook.authorization.TestUserConstants.TEST_USER_PASS
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseUser
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.tasks.await
 
 data class User(
@@ -15,11 +14,7 @@ data class User(
     val isAnonymous: Boolean = true
 )
 
-sealed class Result<out R> {
-    data class Success<out T>(val data: T) : Result<T>()
-    data class Error(val exception: Exception) : Result<Nothing>()
-    data class Cancel(val exception: CancellationException) : Result<Nothing>()
-}
+
 
 interface AuthProvider {
     suspend fun createUserWithEmailAndPassword(email: String, password: String): Result<User>
@@ -43,19 +38,19 @@ open class TestAuth : AuthProvider {
         email: String,
         password: String
     ): Result<User> {
-        if (email == TEST_USER_EMAIL) return Result.Error(exception = IllegalArgumentException("email already in use"))
+        if (email == TEST_USER_EMAIL) return Result.failure(exception = IllegalArgumentException("email already in use"))
 
         Log.d("REGISTER","registering user")
         currentUser = User(email)
-        return Result.Success(User(email))
+        return Result.success(User(email))
     }
 
     override suspend fun signInWithEmailAndPassword(email: String, password: String): Result<User> {
         if (email == TEST_USER_EMAIL && password == TEST_USER_PASS) {
             currentUser = User(email)
-            return Result.Success(User(email))
+            return Result.success(User(email))
         }
-        return Result.Error(exception = FirebaseAuthException("could not login", "no such login "))
+        return Result.failure(exception = FirebaseAuthException("could not login", "no such login "))
 
     }
 
@@ -81,9 +76,9 @@ class FireAuth : AuthProvider {
         return try {
             val res = auth.createUserWithEmailAndPassword(email, password).await()
             val user = res.user
-            Result.Success(firebaseToAppUser(user!!))
+            Result.success(firebaseToAppUser(user!!))
         } catch (e: Exception) {
-            Result.Error(e)
+            Result.failure(e)
         }
 
     }
@@ -92,9 +87,9 @@ class FireAuth : AuthProvider {
         return try {
             val res = auth.signInWithEmailAndPassword(email, password).await()
             val user = res.user
-            Result.Success(firebaseToAppUser(user!!))
+            Result.success(firebaseToAppUser(user!!))
         } catch (e: Exception) {
-            Result.Error(e)
+            Result.failure(e)
         }
     }
 

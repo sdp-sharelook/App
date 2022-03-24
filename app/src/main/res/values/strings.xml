@@ -11,6 +11,7 @@
     <string name="name">Name</string>
     <string name="button">Button</string>
     <string name="greetingString">Default Name Showing String: this should not be visible</string>
+    <string name="loginFailedString">Login has failed for some reason</string>
     <string name="source_text_hint">Enter text to translate…</string>
     <string name="translation_running">Translation…</string>
     <string name="source_language">Source Language</string>
@@ -23,4 +24,5 @@
     <string name="menu">menu</string>
     <string name="downloading_languages">downloading languages...</string>
     <string name="listen">Listen</string>
+
 </resources>

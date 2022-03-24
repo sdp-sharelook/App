@@ -29,7 +29,6 @@ class TranslateActivity : AppCompatActivity() {
     private var mIdlingResource: CountingIdlingResource? = null
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_translate)
@@ -90,7 +89,7 @@ class TranslateActivity : AppCompatActivity() {
 
         }
         // text to speech
-        tts = TextToSpeech(this)
+        tts = TextToSpeech(ctx)
 
         findViewById<ImageButton>(R.id.imageButtonSpeak).setOnClickListener {
             // fixme replace "Bonjour" with sourceText.text.toString()
@@ -98,12 +97,11 @@ class TranslateActivity : AppCompatActivity() {
         }
         // hamburger menu
         findViewById<ImageButton>(R.id.imageButtonHamburger).setOnClickListener {
-            val intent = Intent(this, NavigationMenuActivity::class.java)
-            startActivity(intent)
+            val intent = Intent(ctx, NavigationMenuActivity::class.java)
+            ctx.startActivity(intent)
         }
 
     }
-
 
 
     companion object {

@@ -10,7 +10,5 @@ class NavigationMenuActivity : AppCompatActivity() {
         setContentView(R.layout.activity_navigation_menu)
     }
 
-    fun back(view: View) {
-        finish()
-    }
+    fun back(view: View) = finish()
 }

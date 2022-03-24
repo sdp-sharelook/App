@@ -17,10 +17,12 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class TranslatorTest {
     @Test
+
     @ExperimentalCoroutinesApi
     fun translatorTestWithCoroutines() = runTest {
         val t = Translator(TranslateLanguage.FRENCH, TranslateLanguage.ENGLISH)
         val translatedText = t.translate("Bonjour.")
         assertEquals("Hello.", translatedText)
+
     }
 }

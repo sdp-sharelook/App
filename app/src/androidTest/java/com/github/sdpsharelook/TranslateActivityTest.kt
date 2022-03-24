@@ -46,6 +46,7 @@ class TranslateActivityTest {
             onData(allOf(`is`(instanceOf(String::class.java)), `is`(lang))).perform(click())
         }
 
+        // simple translate
         selectLanguage("fr", R.id.sourceLangSelector)
         selectLanguage("en", R.id.targetLangSelector)
         onView(withId(R.id.sourceText))
@@ -71,7 +72,7 @@ class TranslateActivityTest {
         delay(2000)
 
         // listen
-        /*onView(withId(R.id.imageButtonListen)).perform(click())
+        onView(withId(R.id.imageButtonListen)).perform(click())
         getInstrumentation().waitForIdleSync()
         delay(2000)
 
@@ -80,11 +81,15 @@ class TranslateActivityTest {
             context,
             android.Manifest.permission.RECORD_AUDIO
         )
+        PermissionRequester().apply {
+            addPermissions(android.Manifest.permission.RECORD_AUDIO)
+            requestPermissions()
+        }
+
         delay(50)
         onView(withId(R.id.sourceText)).check(matches(withText("...")))
         onView(withId(R.id.sourceText)).check(matches(not(isEnabled())))
-        delay(1000)*/
-
+        delay(1000)
     }
 
     @After

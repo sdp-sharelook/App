@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package com.github.sdpsharelook.storage
 
 import com.google.android.gms.tasks.Continuation
@@ -7,6 +10,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+
+
 
 interface RTTRef {
     fun child(pathString: String): RTTRef

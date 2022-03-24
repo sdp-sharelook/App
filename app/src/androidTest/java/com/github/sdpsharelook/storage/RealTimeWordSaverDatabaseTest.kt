@@ -11,7 +11,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class RealTimeDatabaseTest {
+class RealTimeWordSaverDatabaseTest {
 
     var storedValue : Any? = null
 
@@ -19,7 +19,7 @@ class RealTimeDatabaseTest {
     @ExperimentalCoroutinesApi
     fun testSaving() = runTest {
         val uid = "1"
-        val words = WordSaver(RealTimeDatabase(uid, object : RTTRoot {
+        val words = WordSaver(RealTimeWordSaverDatabase(uid, object : RTTRoot {
             override val reference: RTTRef
                 get() = object : RTTRef {
                     override fun child(pathString: String): RTTRef {

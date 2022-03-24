@@ -4,7 +4,7 @@ import android.content.Context
 import com.github.sdpsharelook.Word
 import java.io.File
 
-class InternalFileDatabase(private val context: Context) : Database {
+class InternalFileWordSaverDatabase(private val context: Context) : WordSaverDatabase {
     override suspend fun saveFavourites(wordSaver: WordSaver) {
         val file = File(context.filesDir, "favouriteWords.txt")
         @Suppress("BlockingMethodInNonBlockingContext") // there is a bug where kotlin thinks this is blocking because it throws IOException

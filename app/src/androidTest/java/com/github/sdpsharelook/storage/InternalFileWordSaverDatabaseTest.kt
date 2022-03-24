@@ -10,12 +10,12 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class InternalFileDatabaseTest {
+class InternalFileWordSaverDatabaseTest {
 
     @Test
     @ExperimentalCoroutinesApi
     fun testSaving() = runTest {
-        val words = WordSaver(InternalFileDatabase(ApplicationProvider.getApplicationContext()))
+        val words = WordSaver(InternalFileWordSaverDatabase(ApplicationProvider.getApplicationContext()))
         val key = "Test"
         val testWord = Word(
             key,

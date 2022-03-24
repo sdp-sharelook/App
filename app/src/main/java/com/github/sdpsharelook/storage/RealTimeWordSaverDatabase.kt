@@ -3,10 +3,18 @@ package com.github.sdpsharelook.storage
 import com.github.sdpsharelook.Word
 import kotlinx.coroutines.tasks.await
 
-class RealTimeDatabase(
+/**
+ * Real time database implementation of [WordSaverDatabase]
+ *
+ * @constructor Create [RealTimeWordSaverDatabase]
+ *
+ * @param uid unique identifier of user in firebase auth
+ * @param root possible injection of database root
+ */
+class RealTimeWordSaverDatabase(
     uid: String,
     root: RTTRoot = FireDataBase()
-) : Database {
+) : WordSaverDatabase {
     private val favReference = root.reference.child("users").child(uid).child("wordlists").child("favourites")
 
     override suspend fun saveFavourites(wordSaver: WordSaver) {

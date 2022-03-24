@@ -7,12 +7,19 @@ import androidx.appcompat.app.AppCompatActivity
 import com.github.sdpsharelook.R
 import com.github.sdpsharelook.databinding.ActivityDatabaseViewBinding
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import kotlinx.coroutines.*
+import com.google.firebase.database.ValueEventListener
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class DatabaseViewActivity : AppCompatActivity() {
 
-    private val firebaseRTTRepository = FirebaseRTTRepository(FirebaseDatabase.getInstance("https://billinguee-default-rtdb.europe-west1.firebasedatabase.app/"), "test")
+    private val firebaseDatabase =
+        FirebaseDatabase.getInstance("https://billinguee-default-rtdb.europe-west1.firebasedatabase.app/")
+    private val firebaseRTTRepository = FirebaseRTTRepository(firebaseDatabase, "test")
     private lateinit var binding: ActivityDatabaseViewBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,11 +35,27 @@ class DatabaseViewActivity : AppCompatActivity() {
                 .setAction("Action", null).show()
         }
 
-        findViewById<TextView>(R.id.database_contents).apply { text = context.getString(R.string.default_database_content) }
+        findViewById<TextView>(R.id.database_contents).apply {
+            text = context.getString(R.string.default_database_content)
+        }
     }
 
-    fun fetchValues(@Suppress("UNUSED_PARAMETER")view: View) {
-        GlobalScope.launch(Dispatchers.IO) {
+    fun fetchValues(@Suppress("UNUSED_PARAMETER") view: View) {
+        val ref = firebaseDatabase.getReference("test")
+        ref.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                findViewById<TextView>(R.id.database_contents).apply { text =
+                    snapshot.value as CharSequence?
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {
+                throw error.toException()
+            }
+        })
+    }
+
+    fun fetchValuesAsync(@Suppress("UNUSED_PARAMETER") view: View) {
+        CoroutineScope(Dispatchers.IO).launch(Dispatchers.IO) {
             firebaseRTTRepository.fetchValues().collect {
                 when {
                     it.isSuccess -> {
@@ -46,4 +69,5 @@ class DatabaseViewActivity : AppCompatActivity() {
             }
         }
     }
+
 }

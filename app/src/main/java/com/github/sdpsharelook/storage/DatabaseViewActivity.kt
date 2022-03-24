@@ -1,18 +1,18 @@
 package com.github.sdpsharelook.storage
 
 import android.os.Bundle
+import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.github.sdpsharelook.R
 import com.github.sdpsharelook.databinding.ActivityDatabaseViewBinding
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.database.FirebaseDatabase
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class DatabaseViewActivity : AppCompatActivity() {
 
-    private val firebaseRTTRepository = FirebaseRTTRepository(FirebaseDatabase.getInstance(), "test")
+    private val firebaseRTTRepository = FirebaseRTTRepository(FirebaseDatabase.getInstance("https://billinguee-default-rtdb.europe-west1.firebasedatabase.app/"), "test")
     private lateinit var binding: ActivityDatabaseViewBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,7 +29,10 @@ class DatabaseViewActivity : AppCompatActivity() {
         }
 
         findViewById<TextView>(R.id.database_contents).apply { text = context.getString(R.string.default_database_content) }
-        GlobalScope.launch {
+    }
+
+    fun fetchValues(@Suppress("UNUSED_PARAMETER")view: View) {
+        GlobalScope.launch(Dispatchers.IO) {
             firebaseRTTRepository.fetchValues().collect {
                 when {
                     it.isSuccess -> {

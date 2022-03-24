@@ -32,6 +32,7 @@
                 app:popupTheme="@style/Theme.MyBootcamp.PopupOverlay" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <include layout="@layout/content_scrolling" />
@@ -45,5 +46,12 @@
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|end"
         app:srcCompat="@android:drawable/ic_dialog_email" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="fetchValues"
+        android:text="@string/button" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

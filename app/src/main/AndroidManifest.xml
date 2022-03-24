@@ -42,6 +42,9 @@
             android:name=".authorization.LoginActivity"
             android:exported="true" />
         <activity
+            android:name=".authorization.SignUpActivity"
+            android:exported="true" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

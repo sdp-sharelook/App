@@ -34,5 +34,12 @@ class AuthProviderTest {
             assert(result.isFailure)
         }
     }
+    @Test
+    fun signUpAlreadyUsedEmail(){
+        runTest{
+            val result = auth.createUserWithEmailAndPassword(TEST_USER_EMAIL, TEST_USER_PASS)
+            assert(result.isFailure)
+        }
+    }
 
 }

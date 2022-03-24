@@ -50,7 +50,7 @@ open class TestAuth : AuthProvider {
             currentUser = User(email)
             return Result.success(User(email))
         }
-        return Result.failure(exception = FirebaseAuthException("could not login", "no such login "))
+        return Result.failure( exception =  IllegalArgumentException("could not login, no such login "))
 
     }
 

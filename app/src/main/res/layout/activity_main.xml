@@ -69,7 +69,7 @@
             app:barrierDirection="top" />
 
         <Button
-            android:id="@+id/sectionButton2"
+            android:id="@+id/databaseButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="databaseActivity"

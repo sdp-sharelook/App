@@ -14,10 +14,10 @@ import kotlinx.coroutines.flow.callbackFlow
  * to be used like this:
  * ```
  *  viewModelScope.launch {
- *      firebaseRTTDirectory.fetchNotifications().collect {
+ *      firebaseRTTDirectory.fetchValues().collect {
  *          when {
  *              it.isSuccess -> {
- *                  val list = it.getOrNull()
+ *                  val value = it.getOrNull()
  *              }
  *              it.isFailure -> {
  *                  it.exceptionOrNull()?.printStackTrace()

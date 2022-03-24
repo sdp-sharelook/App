@@ -10,6 +10,7 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.runner.AndroidJUnit4
 import com.github.sdpsharelook.R
+import com.github.sdpsharelook.authorization.TestUserConstants.TEST_USER_PASS2
 import com.github.sdpsharelook.authorization.UserConstants.TEST_USER_EMAIL
 import com.github.sdpsharelook.authorization.UserConstants.TEST_USER_PASS
 import org.hamcrest.Description
@@ -45,6 +46,19 @@ class SignUpTest {
     @Test
     fun testSignUpTest() {
         onView(withId(R.id.layout_signup)).check(matches(isDisplayed()))
+        onView(withId(R.id.email)).check(matches(isDisplayed()))
+        onView(withId(R.id.emailBox)).check(matches(isDisplayed()))
+        onView(withId(R.id.firstName)).check(matches(isDisplayed()))
+        onView(withId(R.id.firstNameBox)).check(matches(isDisplayed()))
+        onView(withId(R.id.lastName)).check(matches(isDisplayed()))
+        onView(withId(R.id.lastNameBox)).check(matches(isDisplayed()))
+        onView(withId(R.id.password)).check(matches(isDisplayed()))
+        onView(withId(R.id.passwordBox)).check(matches(isDisplayed()))
+        onView(withId(R.id.prelimpassword)).check(matches(isDisplayed()))
+        onView(withId(R.id.prelimPasswordBox)).check(matches(isDisplayed()))
+        onView(withId(R.id.phoneNumber)).check(matches(isDisplayed()))
+        onView(withId(R.id.phoneNumberBox)).check(matches(isDisplayed()))
+        onView(withId(R.id.loginButton)).check(matches(isDisplayed()))
     }
 
 //    @Test
@@ -123,7 +137,7 @@ class SignUpTest {
 //            )
 //        )
 //        appCompatEditText4.perform(closeSoftKeyboard())
-//
+//2
 //        val materialButton3 = onView(
 //            allOf(
 //                withId(R.id.loginButton), withText("Sign Up !"),

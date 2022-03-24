@@ -33,12 +33,6 @@
             android:name=".MainActivity"
             android:exported="false" />
         <activity
-            android:name=".SpeechRecognitionActivity"
-            android:exported="false" />
-        <activity
-            android:name=".TextToSpeechActivity"
-            android:exported="false" />
-        <activity
             android:name=".GreetingActivity"
             android:exported="false" />
         <activity

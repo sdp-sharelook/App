@@ -20,5 +20,7 @@
     <string name="speech_recognition">Speech recognition</string>
     <string name="start_speech_recognition">Start speech recognition</string>
     <string name="the_result_of_the_speech_recognition_will_appear_here">The result of the speech recognition will appear here</string>
-
+    <string name="sectionsButtonName">Sections</string>
+    <string name="translateButtonName">Translate</string>
+    <string name="unrecognized_source_language">Source language unrecognized.</string>
 </resources>

@@ -40,4 +40,8 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this, SectionActivity::class.java)
         startActivity(intent)
     }
+
+    fun translateActivity(view : View) {
+        startActivity(Intent(this, TranslateActivity::class.java))
+    }
 }

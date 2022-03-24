@@ -62,5 +62,17 @@
             android:layout_height="wrap_content"
             android:onClick="sectionAcitivity"
             android:text="Sections" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:barrierDirection="top" />
+
+        <Button
+            android:id="@+id/sectionButton2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="databaseActivity"
+            android:text="@string/database" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

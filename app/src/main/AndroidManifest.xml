@@ -3,6 +3,7 @@
     package="com.github.sdpsharelook">
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
     <queries>
         <intent>
             <action android:name="android.intent.action.TTS_SERVICE" />
@@ -19,6 +20,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyBootcamp">
+        <activity
+            android:name=".storage.DatabaseViewActivity"
+            android:exported="false"
+            android:label="@string/title_activity_database_view"
+            android:theme="@style/Theme.MyBootcamp.NoActionBar" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

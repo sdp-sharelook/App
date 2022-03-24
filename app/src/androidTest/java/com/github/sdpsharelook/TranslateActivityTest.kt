@@ -71,7 +71,7 @@ class TranslateActivityTest {
         delay(2000)
 
         // listen
-        onView(withId(R.id.imageButtonListen)).perform(click())
+        /*onView(withId(R.id.imageButtonListen)).perform(click())
         getInstrumentation().waitForIdleSync()
         delay(2000)
 
@@ -83,7 +83,7 @@ class TranslateActivityTest {
         delay(50)
         onView(withId(R.id.sourceText)).check(matches(withText("...")))
         onView(withId(R.id.sourceText)).check(matches(not(isEnabled())))
-        delay(1000)
+        delay(1000)*/
 
     }
 

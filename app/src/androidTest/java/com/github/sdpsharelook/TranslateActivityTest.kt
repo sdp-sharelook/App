@@ -99,6 +99,12 @@ class TranslateActivityTest {
         delay(1000)
     }
 
+    @Test
+    fun testCannotSwitchWhenSourceLanguageIsAuto() {
+        selectSourceLanguage("auto")
+        selectTargetLanguage("en")
+        onView(withId(R.id.buttonSwitchLang)).check(matches(not(isEnabled())))
+    }
         
     @Test
     fun testSwitchSourceOrTargetLanguageMustRunTranslation() {

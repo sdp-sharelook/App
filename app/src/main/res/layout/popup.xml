@@ -11,11 +11,11 @@
     <Button
         android:id="@+id/popup_add_btn"
         android:layout_width="match_parent"
-        android:layout_marginRight="30dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
         android:layout_marginTop="70dp"
-        android:layout_height="wrap_content"
-        android:text="Add" />
+        android:layout_marginRight="30dp"
+        android:text="Save" />
 
     <Spinner
         android:id="@+id/spinner_countries"

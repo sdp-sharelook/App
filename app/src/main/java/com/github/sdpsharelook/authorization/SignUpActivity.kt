@@ -148,8 +148,7 @@ class SignUpActivity : AppCompatActivity() {
         val lastNameValid = binding.lastName.error == null
         val emailValid = binding.email.error == null
         val prelimPassValid = binding.prelimPasswordBox.helperText == null
-        val passValid = binding.password.error == null
-        val inbetween = binding.password.text == binding.prelimpassword.text
+        val passValid = binding.password.error == null && binding.passwordBox.helperText ==  null
         if (firstNameValid && lastNameValid && emailValid && prelimPassValid && passValid) {
             signUp(view)
         } else {

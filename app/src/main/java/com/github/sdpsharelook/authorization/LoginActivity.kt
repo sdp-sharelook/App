@@ -8,8 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.github.sdpsharelook.GreetingActivity
 import com.github.sdpsharelook.R
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 const val GREET_NAME_EXTRA = "com.github.sdpsharelook.NAME"
 lateinit var auth: AuthProvider

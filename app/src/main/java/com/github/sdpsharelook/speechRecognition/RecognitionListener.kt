@@ -1,7 +1,7 @@
 package com.github.sdpsharelook.speechRecognition
 
 interface RecognitionListener {
-    fun onSuccess(s: String)
+    fun onResults(s: String)
     fun onReady()
     fun onBegin()
     fun onEnd()

@@ -16,7 +16,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
     }
 
 
@@ -29,18 +28,20 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    fun textToSpeech(@Suppress("UNUSED_PARAMETER")view: View) {
-        startActivity(Intent(this, TextToSpeechActivity::class.java))
-    }
+    fun textToSpeech(@Suppress("UNUSED_PARAMETER")view: View) {}
+    //startActivity(Intent(this, TextToSpeechActivity::class.java))
 
-    fun voiceRecognition(@Suppress("UNUSED_PARAMETER")view: View) {
-        startActivity(Intent(this, SpeechRecognitionActivity::class.java))
-    }
 
-    fun sectionAcitivity(@Suppress("UNUSED_PARAMETER")view: View) {
-        val intent = Intent(this, SectionActivity::class.java)
-        startActivity(intent)
-    }
+
+    fun voiceRecognition(@Suppress("UNUSED_PARAMETER")view: View) {}
+    // startActivity(Intent(this, SpeechRecognitionActivity::class.java))
+
+
+    fun sectionActivity(@Suppress("UNUSED_PARAMETER")view: View) =
+        startActivity(Intent(this, SectionActivity::class.java))
+
+    fun translatorActivity(@Suppress("UNUSED_PARAMETER")view: View) =
+        startActivity(Intent(this, TranslateActivity::class.java))
 
     fun databaseActivity(@Suppress("UNUSED_PARAMETER")view: View) {
         startActivity(Intent(this, DatabaseViewActivity::class.java))

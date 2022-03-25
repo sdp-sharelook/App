@@ -60,8 +60,20 @@
             android:id="@+id/sectionButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="sectionAcitivity"
-            android:text="Sections" />
+            android:onClick="sectionActivity"
+            android:text="@string/sectionsButtonName" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:barrierDirection="top" />
+
+        <Button
+            android:id="@+id/translateButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="translatorActivity"
+            android:text="@string/translateButtonName" />
 
         <androidx.constraintlayout.widget.Barrier
             android:layout_width="match_parent"

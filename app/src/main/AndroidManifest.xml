@@ -3,7 +3,6 @@
     package="com.github.sdpsharelook">
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-
     <queries>
         <intent>
             <action android:name="android.intent.action.TTS_SERVICE" />
@@ -26,15 +25,6 @@
             android:label="@string/title_activity_database_view"
             android:theme="@style/Theme.MyBootcamp.NoActionBar" />
         <activity
-            android:name=".MainActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".Section.SectionDetail"
             android:exported="false" />
         <activity
@@ -42,12 +32,6 @@
             android:exported="false" />
         <activity
             android:name=".TranslateActivity"
-            android:exported="false" />
-        <activity
-            android:name=".SpeechRecognitionActivity"
-            android:exported="false" />
-        <activity
-            android:name=".TextToSpeechActivity"
             android:exported="false" />
         <activity
             android:name=".GreetingActivity"
@@ -58,6 +42,17 @@
         <activity
             android:name=".authorization.SignUpActivity"
             android:exported="true" />
-    </application>
+        <activity
+            android:name=".NavigationMenuActivity"
+            android:exported="true" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
 </manifest>

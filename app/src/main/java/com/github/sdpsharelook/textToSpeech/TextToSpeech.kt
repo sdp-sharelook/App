@@ -28,7 +28,7 @@ class TextToSpeech(val ctx: Context) {
         }
     }
 
-    private fun putLanguagesInSpinner(spinner: Spinner?): Map<String, String> {
+    /*private fun putLanguagesInSpinner(spinner: Spinner?): Map<String, String> {
         val languages = tts?.availableLanguages ?: setOf()
         val nameToTag = languages.map { it.displayLanguage to it.toLanguageTag() }.toMap()
         val adapter: ArrayAdapter<String> =
@@ -37,9 +37,9 @@ class TextToSpeech(val ctx: Context) {
                     ?: listOf("No language available"))
         spinner?.setAdapter(adapter)
         return nameToTag
-    }
+    }*/
 
-    private fun bindSpinnerLanguages(nameToTag: Map<String, String>?, spinner: Spinner?) {
+    /*private fun bindSpinnerLanguages(nameToTag: Map<String, String>?, spinner: Spinner?) {
         spinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
@@ -57,13 +57,13 @@ class TextToSpeech(val ctx: Context) {
             override fun onNothingSelected(parent: AdapterView<*>) {
             }
         }
-    }
+    }*/
 
-    fun setupSpinnerLanguages(spinner: Spinner?) {
-        bindSpinnerLanguages(putLanguagesInSpinner(spinner), spinner)
-    }
+    /*    fun setupSpinnerLanguages(spinner: Spinner?) {
+            bindSpinnerLanguages(putLanguagesInSpinner(spinner), spinner)
+        }*/
 
-    fun bindSeekBars(seekBarPitch: SeekBar?, seekBarSpeechRate: SeekBar?) {
+    /*fun bindSeekBars(seekBarPitch: SeekBar?, seekBarSpeechRate: SeekBar?) {
         // spinner?.adapter = adapter
         val seekBarsListener = object : SeekBar.OnSeekBarChangeListener {
 
@@ -81,10 +81,13 @@ class TextToSpeech(val ctx: Context) {
 
         seekBarPitch?.setOnSeekBarChangeListener(seekBarsListener)
         seekBarSpeechRate?.setOnSeekBarChangeListener(seekBarsListener)
-    }
+    }*/
 
-    fun speak(message: String) {
+    fun setLanguage(loc: Locale) = tts?.setLanguage(loc)
+
+
+    fun speak(message: String) =
         tts?.speak(message, GoogleTextToSpeech.QUEUE_FLUSH, null, null)
             ?: Utils.toast("The TextToSpeech object is null", ctx)
-    }
+
 }

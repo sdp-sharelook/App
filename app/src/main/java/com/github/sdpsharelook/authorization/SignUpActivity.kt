@@ -137,9 +137,6 @@ class SignUpActivity : AppCompatActivity() {
 
     private fun isPasswordValid() : String? {
         when {
-//            binding.password.text.toString() == "" -> {
-//                return "Required"
-//            }
             binding.password.text.toString() != binding.prelimpassword.text.toString() -> {
                 return "Passwords do not match"
             }

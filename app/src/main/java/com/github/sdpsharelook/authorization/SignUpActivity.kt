@@ -62,7 +62,6 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun emailListener() {
-        val regex = "(([^<>()\\[\\]\\\\.,;:\\s@\"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))".toRegex()
         binding.email.setOnFocusChangeListener{_, focus ->
             if(!focus) {
                 binding.email.error = isEmailValid()
@@ -84,11 +83,6 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun prelimPasswordListener() {
-        val upperCase = "(.*?[A-Z].*)".toRegex()
-        val lowerCase = "(.*?[a-z].*)".toRegex()
-        val oneDigit = "(.*?[0-9].*)".toRegex()
-        val specialChar = "(.*?[#?!()@\$ %^&*-].*)".toRegex()
-        val minLength8 = ".{8,}".toRegex()
         binding.prelimpassword.setOnFocusChangeListener{ _, focus ->
             if (!focus) {
                 binding.prelimpassword.error = isPrelimPassword()

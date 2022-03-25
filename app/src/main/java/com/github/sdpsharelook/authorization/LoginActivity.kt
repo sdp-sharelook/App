@@ -1,11 +1,11 @@
 package com.github.sdpsharelook.authorization
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.github.sdpsharelook.GreetingActivity
 import com.github.sdpsharelook.R
 import kotlinx.coroutines.*
@@ -30,27 +30,25 @@ class LoginActivity : AppCompatActivity() {
 
         GlobalScope.launch {
             val user = auth.signInWithEmailAndPassword(email, password)
-            when (user) {
-                is Result.Success<User> -> {
-                    runOnUiThread{
-                        Toast.makeText(applicationContext, "Logged in !", Toast.LENGTH_SHORT).show()
-                    }
-                    greet(user.data.displayName)
+            if (user.isSuccess) {
+
+
+                runOnUiThread {
+                    Toast.makeText(applicationContext, "Logged in !", Toast.LENGTH_SHORT).show()
                 }
-                is Result.Error -> {
-                    runOnUiThread {
-                        Toast.makeText(
-                            applicationContext,
-                            user.exception.message,
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                greet(user.getOrThrow().displayName)
+            } else {
+                runOnUiThread {
+                    Toast.makeText(
+                        applicationContext,
+                        user.exceptionOrNull()!!.message,
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
-
-
     }
+
 
     fun greet(name: String?) {
         val tName =

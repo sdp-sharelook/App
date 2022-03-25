@@ -1,33 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.github.sdpsharelook">
+    package="com.github.sdpsharelook" >
+
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.TTS_SERVICE" />
+        </intent>
+        <intent>
+            <action android:name="android.speech.RecognitionService" />
+        </intent>
+
+    </queries>
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:label="@string/appName"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyBootcamp">
         <activity
+            android:name=".Section.SectionDetail"
+            android:exported="false" />
+        <activity
+            android:name=".Section.SectionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".TranslateActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SpeechRecognitionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".TextToSpeechActivity"
+            android:exported="false" />
+        <activity
+            android:name=".GreetingActivity"
+            android:exported="false" />
+        <activity
             android:name=".authorization.LoginActivity"
+            android:exported="true" />
+        <activity
+            android:name=".authorization.SignUpActivity"
+            android:exported="true" />
+        <activity
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".authorization.SignUpActivity"
-            android:exported="true">
-        </activity>
-        <activity
-            android:name=".GreetingActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity"
-            android:exported="true">
         </activity>
     </application>
 

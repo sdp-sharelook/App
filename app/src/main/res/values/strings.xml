@@ -27,4 +27,6 @@
     <string name="sectionsButtonName">Sections</string>
     <string name="translateButtonName">Translate</string>
     <string name="unrecognized_source_language">Source language unrecognized.</string>
+    <string name="loginButton">login</string>
+    <string name="languages">Languages</string>
 </resources>

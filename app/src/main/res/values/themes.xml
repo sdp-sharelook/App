@@ -21,4 +21,8 @@
         <item name="android:adjustViewBounds">true</item>
         <item name="android:background">@color/transparent</item>
     </style>
+
+    <style name="Theme.AppCompat.spinnerButton" parent="Widget.AppCompat.Button">
+        <item name="android:drawableEnd">@drawable/ic_spinner_arrow</item>
+    </style>
 </resources>

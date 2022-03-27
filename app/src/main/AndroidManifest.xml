@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.github.sdpsharelook" >
+    package="com.github.sdpsharelook">
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
     <queries>
         <intent>
             <action android:name="android.intent.action.TTS_SERVICE" />
@@ -10,7 +11,6 @@
         <intent>
             <action android:name="android.speech.RecognitionService" />
         </intent>
-
     </queries>
 
     <application
@@ -51,4 +51,5 @@
             </intent-filter>
         </activity>
     </application>
+
 </manifest>

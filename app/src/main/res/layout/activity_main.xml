@@ -1,55 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="com.github.sdpsharelook.MainActivity"
-        android:padding="5dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="15dp"
+    tools:context="com.github.sdpsharelook.MainActivity">
 
     <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:hint="@string/nameHint"
-                android:ems="10"
-                android:id="@+id/edit_text_name"
-                android:autofillHints="name"/>
-
-        <Button
-                android:text="@string/greet"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/button_greet"
-                android:onClick="greet" />
-
-        <androidx.constraintlayout.widget.Barrier
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:barrierDirection="top" />
-
-        <Button
-                android:text="@string/textToSpeechButtonText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/button_text_to_speech"
-                android:onClick="textToSpeech" />
-
-        <androidx.constraintlayout.widget.Barrier
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:barrierDirection="top" />
-
-        <Button
+            android:id="@+id/edit_text_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="voiceRecognition"
-            android:text="@string/speech_recognition" />
+            android:autofillHints="name"
+            android:ems="10"
+            android:hint="@string/nameHint"
+            android:inputType="textPersonName" />
+
+        <Button
+            android:id="@+id/button_greet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="greet"
+            android:text="@string/greet"
+            android:backgroundTint="@color/white"
+            android:textColor="@color/black" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:barrierDirection="top" />
 
         <androidx.constraintlayout.widget.Barrier
             android:layout_width="match_parent"
@@ -61,7 +45,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="sectionActivity"
-            android:text="@string/sectionsButtonName" />
+            android:text="@string/sectionsButtonName"
+            android:backgroundTint="@color/white"
+            android:textColor="@color/black" />
 
         <androidx.constraintlayout.widget.Barrier
             android:layout_width="match_parent"
@@ -73,6 +59,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="translatorActivity"
-            android:text="@string/translateButtonName" />
+            android:text="@string/translateButtonName"
+            android:backgroundTint="@color/white"
+            android:textColor="@color/black" />
+
+        <Button
+            android:id="@+id/loginButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="loginActivity"
+            android:text="@string/loginButton"
+            android:backgroundTint="@color/white"
+            android:textColor="@color/black" />
+
+        <Button
+            android:id="@+id/languagesButton"
+            android:theme="@style/Theme.AppCompat.spinnerButton"
+            android:backgroundTint="@color/white"
+            android:textColor="@color/black"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="languagesPopup"
+            android:text="@string/languages" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

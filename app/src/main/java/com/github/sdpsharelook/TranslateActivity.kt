@@ -10,14 +10,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.test.espresso.IdlingResource
 import androidx.test.espresso.idling.CountingIdlingResource
-import com.github.sdpsharelook.Section.SectionActivity
+import com.github.sdpsharelook.language.Language
 import com.github.sdpsharelook.speechRecognition.RecognitionListener
 import com.github.sdpsharelook.speechRecognition.SpeechRecognizer
 import com.github.sdpsharelook.textToSpeech.TextToSpeech
 import com.github.sdpsharelook.translate.Translator
 import com.google.mlkit.nl.translate.TranslateLanguage
 import kotlinx.coroutines.*
-import java.util.*
 
 
 class TranslateActivity : AppCompatActivity() {
@@ -27,16 +26,22 @@ class TranslateActivity : AppCompatActivity() {
 
     @Nullable
     private var mIdlingResource: CountingIdlingResource? = null
+    private lateinit var sourceText: TextView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_translate)
         targetText = findViewById(R.id.targetText)
-        // original translator activity
+        sourceText = findViewById(R.id.sourceText)
+        initTranslator()
+        initTextToSpeech()
+        initSpeechRecognizer()
+    }
+
+    private fun initTranslator() {
         val sourceLangSelector = findViewById<Spinner>(R.id.sourceLangSelector)
         val targetLangSelector = findViewById<Spinner>(R.id.targetLangSelector)
-        val sourceText = findViewById<TextView>(R.id.sourceText)
         val buttonSwitchLang = findViewById<ImageButton>(R.id.buttonSwitchLang)
         fillAndInitializeSpinners(sourceLangSelector, targetLangSelector)
         sourceText.addTextChangedListener { afterTextChanged ->
@@ -54,18 +59,32 @@ class TranslateActivity : AppCompatActivity() {
             sourceText.text = targetText.text
             targetText.text = tempText
         }
-        // speech recognition
-        val sr = SpeechRecognizer(this)
+    }
+
+    private fun initTextToSpeech() {
         val ctx = this
+        tts = TextToSpeech(this)
+
+        findViewById<ImageButton>(R.id.imageButtonSpeak).setOnClickListener {
+            tts.speak(targetText.text.toString())
+        }
+        // hamburger menu
+        findViewById<ImageButton>(R.id.imageButtonHamburger).setOnClickListener {
+            val intent = Intent(ctx, NavigationMenuActivity::class.java)
+            ctx.startActivity(intent)
+        }
+    }
+
+    private fun initSpeechRecognizer() {
+        val ctx = this
+        val sr = SpeechRecognizer(this)
         findViewById<ImageButton>(R.id.imageButtonListen).setOnClickListener {
             sr.cancel()
             sr.recognizeSpeech(object : RecognitionListener {
-                override fun onResults(s: String) {
-                    if (s.trim().isEmpty())
-                        sourceText.setText("...")
+                override fun onResults(s: String) =
+                    if (s.trim().isEmpty()) sourceText.setText("...")
+                    else sourceText.setText(s)
 
-                    sourceText.setText(s)
-                }
 
                 override fun onReady() {
                     sourceText.isEnabled = false
@@ -88,19 +107,6 @@ class TranslateActivity : AppCompatActivity() {
             })
 
         }
-        // text to speech
-        tts = TextToSpeech(ctx)
-
-        findViewById<ImageButton>(R.id.imageButtonSpeak).setOnClickListener {
-            // fixme replace "Bonjour" with sourceText.text.toString()
-            tts.speak(targetText.text.toString())
-        }
-        // hamburger menu
-        findViewById<ImageButton>(R.id.imageButtonHamburger).setOnClickListener {
-            val intent = Intent(ctx, NavigationMenuActivity::class.java)
-            ctx.startActivity(intent)
-        }
-
     }
 
 
@@ -134,7 +140,8 @@ class TranslateActivity : AppCompatActivity() {
         // Dynamically update the translation on language source or target changed
         val spinnerOnItemSelected = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
-                tts.setLanguage(Locale.forLanguageTag(allLanguages[targetLangSelector.selectedItemPosition]))
+                tts.language =
+                    Language.forLanguageTag(allLanguages[targetLangSelector.selectedItemPosition])
                 mIdlingResource?.increment()
                 val scope = CoroutineScope(Dispatchers.IO)
                 scope.launch {

@@ -18,7 +18,7 @@ class CountryAdapter(context: Context, countryList: List<CountryItem>) : ArrayAd
         return initView(position, convertView, parent)
     }
 
-    private fun initView(position: Int, convertView: View?, parent: ViewGroup ) : View {
+    private fun initView(position: Int, @Suppress("UNUSED_PARAMETER")convertView: View?, parent: ViewGroup ) : View {
         val currentCountry = getItem(position)
         val view = LayoutInflater.from(context).inflate(R.layout.country_spinner_row, parent, false)
         view.findViewById<ImageView>(R.id.image_view_flag).setImageResource(currentCountry!!.flag)

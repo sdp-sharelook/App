@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import com.github.sdpsharelook.Section.SectionActivity
+import com.github.sdpsharelook.textDetection.TextDetectionActivity
 
 
 const val EXTRA_MESSAGE = "com.github.sdpsharelook.NAME"
@@ -41,4 +42,7 @@ class MainActivity : AppCompatActivity() {
 
     fun translatorActivity(view: View) =
         startActivity(Intent(this, TranslateActivity::class.java))
+
+    fun textDetectionActivity(view: View) =
+        startActivity(Intent(this, TextDetectionActivity::class.java))
 }

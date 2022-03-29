@@ -62,8 +62,6 @@ class SectionActivity : AppCompatActivity(), SectionClickListener {
 
 
         binding.addingBtn.setOnClickListener {
-//            Toast.makeText(this, "New Section added", Toast.LENGTH_SHORT).show()
-//            addSection("kitchen", R.drawable.spain)
             dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             dialog.show()
         }

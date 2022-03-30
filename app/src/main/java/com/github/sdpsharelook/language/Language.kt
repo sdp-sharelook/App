@@ -1,44 +1,49 @@
 package com.github.sdpsharelook.language
 
 import android.content.Context
+import com.github.sdpsharelook.R
 import com.github.sdpsharelook.speechRecognition.SpeechRecognizer
 import com.github.sdpsharelook.textToSpeech.TextToSpeech
 import com.google.mlkit.nl.translate.TranslateLanguage
 import java.util.*
 
-data class Language(val locale: Locale) {
-    val displayName: String = locale.displayName
-    val languageTag: String = locale.toLanguageTag()
+data class Language(
+    val tag: String,
+    val availableForTranslator: Boolean = true,
+    val availableForTTS: Boolean = true,
+    val availableForSR: Boolean = true
+) {
+    val locale: Locale? =
+        when (tag) {
+            AUTO_TAG -> null
+            else -> Locale.forLanguageTag(tag)
+        }
+    val displayName: String = locale?.displayName ?: AUTO_TAG
 
     /**@param ctx [Context] : the context of the app
      * return [Int] : the id of the flag or 0 if it doesn't exists
      */
     fun flagId(ctx: Context) =
-        ctx.resources.getIdentifier(
-            languageTag,
-            "raw",
-            ctx.getPackageName()
-        )
-
+        when (tag) {
+            AUTO_TAG -> R.drawable.ic_auto
+            else -> {
+                ctx.resources.getIdentifier(
+                    tag,
+                    "raw",
+                    ctx.getPackageName()
+                )
+            }
+        }
 
     companion object {
-        fun forLanguageTag(tag: String) = Language(Locale.forLanguageTag(tag))
+        val AUTO_TAG: String = "auto"
         val translatorAvailableLanguages: Set<Language> =
             TranslateLanguage.getAllLanguages().map {
-                Language(Locale.forLanguageTag(it))
+                Language(it)
             }.toSet()
 
-
-        fun ttsAvailableLanguages(tts: TextToSpeech): Set<Language> =
-            tts.availableLanguages
-
-        suspend fun srAvailableLanguages(sr: SpeechRecognizer) =
-            sr.availableLanguages()
-
-        val default by lazy { Language(Locale.getDefault()) }
+        val default by lazy { Language(Locale.getDefault().toLanguageTag()) }
+        val auto = Language(AUTO_TAG)
     }
 
-    val isAvailableForTranslator by lazy { translatorAvailableLanguages.contains(this) }
-    fun isAvailableForTTS(tts: TextToSpeech) = tts.isLanguageAvailable(this)
-    suspend fun isAvailableForSR(sr: SpeechRecognizer) = sr.availableLanguages().contains(this)
 }

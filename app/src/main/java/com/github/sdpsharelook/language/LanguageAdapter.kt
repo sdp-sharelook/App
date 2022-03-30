@@ -12,16 +12,19 @@ import com.github.sdpsharelook.speechRecognition.SpeechRecognizer
 import com.github.sdpsharelook.textToSpeech.TextToSpeech
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.util.*
 
 class LanguageAdapter(
     private val ctx: Context,
     private val languages: Set<Language>,
-    private val sr: SpeechRecognizer? = null,
-    private val tts: TextToSpeech? = null
 ) : BaseAdapter() {
 
-    private val sortedLanguages = languages.sortedBy { it.displayName }.toList()
+    private val sortedLanguages =
+        when {
+            Language.auto in languages ->
+                listOf(Language.auto) + (languages.filterNot { it == Language.auto }
+                    .sortedBy { it.displayName }.toList())
+            else -> languages.sortedBy { it.displayName }.toList()
+        }
 
     override fun getCount(): Int = languages.size
 
@@ -36,23 +39,18 @@ class LanguageAdapter(
             if (flagId != 0)
                 findViewById<ImageView>(R.id.image_view_flag).setImageResource(flagId)
 
-            sr?.let {
-                // fixme this doesn't looks to work
-                val view = this
-                GlobalScope.launch {
-                    if (language.isAvailableForSR(it))
-                        view.findViewById<ImageView>(R.id.image_view_available_sr).visibility =
-                            View.VISIBLE
-                }
-            }
 
-            tts?.let {
-                if (language.isAvailableForTTS(it))
-                    findViewById<ImageView>(R.id.image_view_available_tts).visibility = View.VISIBLE
-            }
+            if (language.availableForSR)
+                findViewById<ImageView>(R.id.image_view_available_sr).visibility =
+                    View.VISIBLE
+
+            if (language.availableForTTS)
+                findViewById<ImageView>(R.id.image_view_available_tts).visibility = View.VISIBLE
+
             findViewById<TextView>(R.id.text_view_display_name).text = language.displayName
-            findViewById<TextView>(R.id.text_view_tag_name).text = language.languageTag
-            if (language.isAvailableForTranslator)
-                findViewById<ImageView>(R.id.image_view_available_translator).visibility=View.VISIBLE
+            findViewById<TextView>(R.id.text_view_tag_name).text = language.tag
+            if (language.availableForTranslator)
+                findViewById<ImageView>(R.id.image_view_available_translator).visibility =
+                    View.VISIBLE
         }
 }

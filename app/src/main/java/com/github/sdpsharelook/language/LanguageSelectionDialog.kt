@@ -11,34 +11,32 @@ import androidx.core.widget.addTextChangedListener
 import com.github.sdpsharelook.R
 import com.github.sdpsharelook.speechRecognition.SpeechRecognizer
 import com.github.sdpsharelook.textToSpeech.TextToSpeech
+import kotlin.coroutines.Continuation
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class LanguageSelectionDialog private constructor(
     private val activity: AppCompatActivity,
-    private val sr : SpeechRecognizer?=null
+    private val languages: Set<Language>
 ) : Dialog(activity) {
-    private val tts: TextToSpeech= TextToSpeech(activity)
 
     private fun search(text: String): LanguageAdapter =
         LanguageAdapter(
             activity,
-            Language.translatorAvailableLanguages.filter {
-                it.displayName.lowercase().contains(text.lowercase())
-            }.toSet(),
-            sr,
-            tts
+            languages.filter { it.displayName.lowercase().contains(text.lowercase()) }.toSet()
         )
 
-    private fun buildDialog() {
+    private fun buildDialog(continuation: Continuation<Language?>) {
         getWindow()?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         setContentView(R.layout.dialog_language_selection)
         val dialog = this
-
+        setOnCancelListener { continuation.resume(null) }
         val listView = findViewById<ListView>(R.id.list_view_languages).apply {
             adapter = search("")
             setOnItemClickListener { adapterView, view, i, l ->
                 dialog.dismiss()
                 val language = adapter.getItem(i) as Language
-                Toast.makeText(activity, language.toString(), Toast.LENGTH_SHORT).show()
+                continuation.resume(language)
             }
         }
         findViewById<EditText>(R.id.edit_text_search_language).let {
@@ -48,15 +46,15 @@ class LanguageSelectionDialog private constructor(
         }
     }
 
-    private fun selectLanguage() {
-        buildDialog()
+    private suspend fun selectLanguage(): Language? = suspendCoroutine { cont ->
+        buildDialog(cont)
         show()
     }
 
     companion object {
-        fun selectLanguage(
+        suspend fun selectLanguage(
             activity: AppCompatActivity,
-            sr : SpeechRecognizer?=null
-        ) = LanguageSelectionDialog(activity, sr).selectLanguage()
+            languages: Set<Language> = Language.translatorAvailableLanguages
+        ): Language? = LanguageSelectionDialog(activity, languages).selectLanguage()
     }
 }

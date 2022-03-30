@@ -1,9 +1,7 @@
 package com.github.sdpsharelook
 
-import android.icu.text.CaseMap
 import androidx.core.content.PermissionChecker
 import androidx.test.core.app.ActivityScenario
-import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
@@ -12,7 +10,6 @@ import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.runner.permission.PermissionRequester
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -39,13 +36,13 @@ class TranslateActivityTest {
     }
 
     private fun selectSourceLanguage(srcLang: String) {
-        onView(withId(R.id.sourceLangSelector)).perform(click())
+        onView(withId(R.id.button_source_lang)).perform(click())
         onData(allOf(`is`(instanceOf(String::class.java)), `is`(srcLang)))
             .perform(click())
     }
 
     private fun selectTargetLanguage(targetLang: String) {
-        onView(withId(R.id.targetLangSelector)).perform(click())
+        onView(withId(R.id.button_target_lang)).perform(click())
         onData(allOf(`is`(instanceOf(String::class.java)), `is`(targetLang)))
             .perform(click())
     }
@@ -59,8 +56,8 @@ class TranslateActivityTest {
         }
 
         // simple translate
-        selectLanguage("fr", R.id.sourceLangSelector)
-        selectLanguage("en", R.id.targetLangSelector)
+        selectLanguage("fr", R.id.button_source_lang)
+        selectLanguage("en", R.id.button_target_lang)
         onView(withId(R.id.sourceText))
             .perform(typeText("Bonjour."), closeSoftKeyboard())
 
@@ -69,7 +66,7 @@ class TranslateActivityTest {
         onView(withId(R.id.buttonSwitchLang)).perform(click())
    
         // change target lang
-        selectLanguage("it", R.id.targetLangSelector)
+        selectLanguage("it", R.id.button_target_lang)
         onView(withId(R.id.targetText)).check(matches(withText("Ciao.")))
 
         // menu
@@ -136,8 +133,8 @@ class TranslateActivityTest {
         onView(withId(R.id.sourceText)).perform(clearText())
             .perform(typeText("Hello."), closeSoftKeyboard())
         onView(withId(R.id.buttonSwitchLang)).perform(click())
-        onView(withId(R.id.sourceLangSelector)).check(matches(withSpinnerText("en")))
-        onView(withId(R.id.targetLangSelector)).check(matches(withSpinnerText("fr")))
+        onView(withId(R.id.button_source_lang)).check(matches(withSpinnerText("en")))
+        onView(withId(R.id.button_target_lang)).check(matches(withSpinnerText("fr")))
         onView(withId(R.id.targetText)).check(matches(withText("Bonjour.")))
     }
 

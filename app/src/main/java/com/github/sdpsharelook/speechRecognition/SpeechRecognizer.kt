@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.github.sdpsharelook.language.Language
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.coroutines.EmptyCoroutineContext
@@ -27,9 +28,8 @@ class SpeechRecognizer(val activity: AppCompatActivity) {
     private val speechRecognizer by lazy { GoogleSpeechRecognizer.createSpeechRecognizer(activity) }
 
 
-
-        /** Function triggered when audio permission is not allowed
-         */
+    /** Function triggered when audio permission is not allowed
+     */
     fun errorPermission() =
         Toast.makeText(
             activity,
@@ -73,7 +73,6 @@ class SpeechRecognizer(val activity: AppCompatActivity) {
                     RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                     RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
                 )
-                putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
             }
         }
 
@@ -111,7 +110,7 @@ class SpeechRecognizer(val activity: AppCompatActivity) {
      * @param language: to eventually specify the language (free form by default)
      */
     fun recognizeSpeech(listener: RecognitionListener, language: String? = null) {
-        val intent = createRecognizerIntent(language)
+        val intent = createRecognizerIntent()
         val googleListener = createGoogleRecognitionListener(listener)
         checkPermissions()
         if (hasPermissions) {
@@ -124,7 +123,7 @@ class SpeechRecognizer(val activity: AppCompatActivity) {
      */
     fun cancel() = speechRecognizer.cancel()
 
-    private var _availableLanguages: Set<Language>? = null
+    /*private var _availableLanguages: Set<Language>? = null
     suspend fun availableLanguages(): Set<Language> =
         _availableLanguages ?: suspendCoroutine { cont ->
             val br = object : BroadcastReceiver() {
@@ -133,7 +132,7 @@ class SpeechRecognizer(val activity: AppCompatActivity) {
                     if (results.containsKey(RecognizerIntent.EXTRA_SUPPORTED_LANGUAGES)) {
                         val availableLanguages =
                             results.getStringArrayList(RecognizerIntent.EXTRA_SUPPORTED_LANGUAGES)
-                                ?.map { Language.forLanguageTag(it) }?.toSet() ?: setOf()
+                                ?.map { Language(it) }?.toSet() ?: setOf()
                         _availableLanguages = availableLanguages
                         cont.resume(availableLanguages)
                     } else cont.resume(setOf())
@@ -142,17 +141,13 @@ class SpeechRecognizer(val activity: AppCompatActivity) {
             val intent = Intent(RecognizerIntent.EXTRA_SUPPORTED_LANGUAGES)
             val filter = IntentFilter(RecognizerIntent.EXTRA_SUPPORTED_LANGUAGES)
             activity.apply { registerReceiver(br, filter); startActivity(intent) }
-        }
+        }*/
 
     private var _language: Language? = null
     var language
         get() = _language
         set(language) {
-            val sr = this
-            CoroutineScope(EmptyCoroutineContext).launch {
-                if (language?.isAvailableForSR(sr) == true)
-                    _language = language
-                else _language = null
-            }
+            _language=language
+            //  TODO : set the language in the speechrecognizer
         }
 }

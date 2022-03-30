@@ -16,7 +16,7 @@ class TextToSpeech(ctx: Context) {
 
     val availableLanguages
         get() =
-            if (ttsCreated) tts.availableLanguages.map { Language(it) }.toSet()
+            if (ttsCreated) tts.availableLanguages.map { Language(it.toLanguageTag()) }.toSet()
             else setOf()
 
     fun isLanguageAvailable(language: Language) =
@@ -28,7 +28,7 @@ class TextToSpeech(ctx: Context) {
         set(language) {
             _language = language
             language?.let {
-                if (it.isAvailableForTTS(this) && ttsCreated)
+                if (isLanguageAvailable(it) && ttsCreated)
                     tts.setLanguage(it.locale)
                 else _language = null
             }

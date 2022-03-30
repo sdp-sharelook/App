@@ -2,20 +2,27 @@ package com.github.sdpsharelook
 
 import androidx.core.content.PermissionChecker
 import androidx.test.core.app.ActivityScenario
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.IdlingResource
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.CursorMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.runner.permission.PermissionRequester
+import com.github.sdpsharelook.language.Language
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
+import org.hamcrest.Description
+import org.hamcrest.Matcher
+import org.hamcrest.Matchers
 import org.hamcrest.Matchers.*
+import org.hamcrest.TypeSafeMatcher
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -35,49 +42,55 @@ class TranslateActivityTest {
         }
     }
 
+    fun withTag(tagMatcher: Matcher<String>): Matcher<Language> =
+        object : TypeSafeMatcher<Language>() {
+            override fun describeTo(description: Description?) {
+
+            }
+
+            override fun matchesSafely(item: Language?): Boolean =
+                item?.let {
+                    tagMatcher.matches(it.tag)
+                } ?: false
+        }
+
+
     private fun selectSourceLanguage(srcLang: String) {
         onView(withId(R.id.button_source_lang)).perform(click())
-        onData(allOf(`is`(instanceOf(String::class.java)), `is`(srcLang)))
-            .perform(click())
+        onData(withTag(containsString(srcLang))).perform(click())
     }
 
     private fun selectTargetLanguage(targetLang: String) {
-        onView(withId(R.id.button_target_lang)).perform(click())
-        onData(allOf(`is`(instanceOf(String::class.java)), `is`(targetLang)))
-            .perform(click())
+        onView(withId(R.id.button_source_lang)).perform(click())
+        onData(withTag(containsString(targetLang))).perform(click())
     }
 
     @Test
     @ExperimentalCoroutinesApi
-    fun testTranslateActivity() = runTest {
-        fun selectLanguage(lang: String, spinnerId: Int) {
-            onView(withId(spinnerId)).perform(click())
-            onData(allOf(`is`(instanceOf(String::class.java)), `is`(lang))).perform(click())
-        }
-
+    fun testTranslatorIntegration() = runTest {
         // simple translate
-        selectLanguage("fr", R.id.button_source_lang)
-        selectLanguage("en", R.id.button_target_lang)
+        selectSourceLanguage("fr")
+        selectTargetLanguage("en")
         onView(withId(R.id.sourceText))
             .perform(typeText("Bonjour."), closeSoftKeyboard())
 
         onView(withId(R.id.targetText)).check(matches(withText("Hello.")))
         // switch button change
         onView(withId(R.id.buttonSwitchLang)).perform(click())
-   
+
         // change target lang
-        selectLanguage("it", R.id.button_target_lang)
+        selectTargetLanguage("it")
         onView(withId(R.id.targetText)).check(matches(withText("Ciao.")))
 
         // menu
         onView(withId(R.id.imageButtonHamburger)).perform(click())
         onView(withId(R.id.button_back)).perform(click())
 
-        // speak
-        onView(withId(R.id.imageButtonSpeak)).perform(click())
-        delay(2000)
+    }
 
-        // listen
+    @Test
+    @ExperimentalCoroutinesApi
+    fun testSpeechRecognizerIntegration() = runTest {
         onView(withId(R.id.imageButtonListen)).perform(click())
         getInstrumentation().waitForIdleSync()
         delay(2000)
@@ -96,9 +109,18 @@ class TranslateActivityTest {
         delay(1000)
     }
 
-        
     @Test
-    fun testSwitchSourceOrTargetLanguageMustRunTranslation() {
+    @ExperimentalCoroutinesApi
+    fun testTextToSpeechButton() = runTest {
+        // speak
+        onView(withId(R.id.imageButtonSpeak)).perform(click())
+        delay(2000)
+    }
+
+
+    @Test
+    @ExperimentalCoroutinesApi
+    fun testSwitchSourceOrTargetLanguageMustRunTranslation() = runTest {
         selectSourceLanguage("fr")
         selectTargetLanguage("en")
         onView(withId(R.id.sourceText))
@@ -110,7 +132,8 @@ class TranslateActivityTest {
     }
 
     @Test
-    fun testAutoDetectShouldBeFriendlyIfLanguageIsNotRecognized() {
+    @ExperimentalCoroutinesApi
+    fun testAutoDetectShouldBeFriendlyIfLanguageIsNotRecognized() = runTest {
         selectSourceLanguage("auto")
         selectTargetLanguage("en")
         onView(withId(R.id.sourceText))
@@ -119,15 +142,18 @@ class TranslateActivityTest {
     }
 
     @Test
-    fun testAutoDetectShouldCorrectlyDetectSourceLanguage() {
+    @ExperimentalCoroutinesApi
+    fun testAutoDetectShouldCorrectlyDetectSourceLanguage() = runTest {
         selectSourceLanguage("auto")
         selectTargetLanguage("en")
         onView(withId(R.id.sourceText))
             .perform(typeText("Bonjour."), closeSoftKeyboard())
         onView(withId(R.id.targetText)).check(matches(withText("Hello.")))
-    }   
+    }
+
     @Test
-    fun testSwitchButtonMustSwitchLanguagesAndRunTranslation() {
+    @ExperimentalCoroutinesApi
+    fun testSwitchButtonMustSwitchLanguagesAndRunTranslation() = runTest {
         selectSourceLanguage("fr")
         selectTargetLanguage("en")
         onView(withId(R.id.sourceText)).perform(clearText())

@@ -10,6 +10,7 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
 import androidx.test.runner.AndroidJUnit4
+import com.github.sdpsharelook.textDetection.TextDetectionActivity
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.`is`
@@ -26,25 +27,10 @@ class TextDetectionActivityTest {
 
     @Rule
     @JvmField
-    var mActivityTestRule = ActivityTestRule(MainActivity::class.java)
+    var mActivityTestRule = ActivityTestRule(TextDetectionActivity::class.java)
 
     @Test
     fun textDetectionActivityTest() {
-        val materialButton = onView(
-            allOf(
-                withId(R.id.textDetectionButton), withText("Text detection"),
-                childAtPosition(
-                    childAtPosition(
-                        withClassName(`is`("androidx.constraintlayout.widget.ConstraintLayout")),
-                        0
-                    ),
-                    11
-                ),
-                isDisplayed()
-            )
-        )
-        materialButton.perform(click())
-
         val materialButton2 = onView(
             allOf(
                 withId(R.id.captureButton), withText("Capture"),

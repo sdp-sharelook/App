@@ -1,16 +1,11 @@
 package com.github.sdpsharelook.storage
 
 import android.os.Bundle
-import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.github.sdpsharelook.R
 import com.github.sdpsharelook.databinding.ActivityDatabaseViewBinding
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,7 +13,7 @@ import kotlinx.coroutines.withContext
 
 class DatabaseViewActivity : AppCompatActivity() {
 
-    private val repository = RealtimeFirebaseRepository("test")
+    private val repository: IRepository<Any> = RTDBAnyRepository()
     private lateinit var binding: ActivityDatabaseViewBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,7 +39,7 @@ class DatabaseViewActivity : AppCompatActivity() {
     }
 
     private suspend fun fetchRepositoryValues() {
-        repository.fetchValues().collect {
+        repository.flow().collect {
             when {
                 it.isSuccess -> {
                     val message = it.getOrNull().toString()

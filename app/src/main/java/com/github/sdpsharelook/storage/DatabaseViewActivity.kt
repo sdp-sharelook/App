@@ -14,12 +14,11 @@ import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class DatabaseViewActivity : AppCompatActivity() {
 
-    private val firebaseDatabase =
-        FirebaseDatabase.getInstance("https://billinguee-default-rtdb.europe-west1.firebasedatabase.app/")
-    private val firebaseRTTRepository = FirebaseRTTRepository(firebaseDatabase, "test")
+    private val repository = RealtimeFirebaseRepository("test")
     private lateinit var binding: ActivityDatabaseViewBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,36 +37,27 @@ class DatabaseViewActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.database_contents).apply {
             text = context.getString(R.string.default_database_content)
         }
+
+        CoroutineScope(Dispatchers.IO).launch {
+            fetchRepositoryValues()
+        }
     }
 
-    fun fetchValues(@Suppress("UNUSED_PARAMETER") view: View) {
-        val ref = firebaseDatabase.getReference("test")
-        ref.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                findViewById<TextView>(R.id.database_contents).apply { text =
-                    snapshot.value as CharSequence?
+    private suspend fun fetchRepositoryValues() {
+        repository.fetchValues().collect {
+            when {
+                it.isSuccess -> {
+                    val message = it.getOrNull().toString()
+                    withContext(Dispatchers.Main) {
+                        findViewById<TextView>(R.id.database_contents).apply {
+                            text = message
+                        }
+                    }
                 }
-            }
-            override fun onCancelled(error: DatabaseError) {
-                throw error.toException()
-            }
-        })
-    }
-
-    fun fetchValuesAsync(@Suppress("UNUSED_PARAMETER") view: View) {
-        CoroutineScope(Dispatchers.IO).launch(Dispatchers.IO) {
-            firebaseRTTRepository.fetchValues().collect {
-                when {
-                    it.isSuccess -> {
-                        val message = it.getOrNull().toString()
-                        findViewById<TextView>(R.id.database_contents).apply { text = message }
-                    }
-                    it.isFailure -> {
-                        it.exceptionOrNull()?.printStackTrace()
-                    }
+                it.isFailure -> {
+                    it.exceptionOrNull()?.printStackTrace()
                 }
             }
         }
     }
-
 }

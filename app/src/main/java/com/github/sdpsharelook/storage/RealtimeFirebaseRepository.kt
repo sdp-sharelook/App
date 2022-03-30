@@ -10,31 +10,17 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 
 /**
- * Firebase Realtime Database implementation using the repository design pattern,
- * to be used like this:
- * ```
- *  viewModelScope.launch {
- *      firebaseRTTDirectory.fetchValues().collect {
- *          when {
- *              it.isSuccess -> {
- *                  val value = it.getOrNull()
- *              }
- *              it.isFailure -> {
- *                  it.exceptionOrNull()?.printStackTrace()
- *              }
- *          }
- *      }
- *  }
- * ```
+ * Firebase Realtime Database implementation using the repository design pattern
  *
  * @property firebaseDatabase
  * @property path
- * @constructor Create [FirebaseRTTRepository]
+ * @constructor Create [RealtimeFirebaseRepository]
  */
-class FirebaseRTTRepository(
-    private val firebaseDatabase: FirebaseDatabase,
+class RealtimeFirebaseRepository(
     private val path: String
 ) : RealTimeDatabaseRepository {
+
+    private val firebaseDatabase: FirebaseDatabase by lazy { FirebaseDatabase.getInstance("https://billinguee-default-rtdb.europe-west1.firebasedatabase.app/") }
 
     /**
      * @return a producer of whatever changes in the database at [path]

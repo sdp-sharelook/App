@@ -7,6 +7,7 @@ import android.media.Image
 import android.os.Bundle
 import android.provider.MediaStore
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.drawToBitmap
 import com.github.sdpsharelook.databinding.ActivityTextDetectionBinding
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
@@ -31,7 +32,11 @@ class TextDetectionActivity : AppCompatActivity() {
 
 //        inputImage = imageFromMediaImage(ImageProxy.image, 0 )
         binding.captureButton.setOnClickListener{
-            dispatchTakePictureIntent()
+//            dispatchTakePictureIntent()
+            val image = binding.imageView.drawToBitmap()
+            inputImage = InputImage.fromBitmap(image, 0)
+            binding.detectButton.isEnabled = true
+            binding.textData.text = "Detect text on the image"
         }
 
         binding.detectButton.setOnClickListener{

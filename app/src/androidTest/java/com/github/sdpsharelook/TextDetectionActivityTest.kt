@@ -10,7 +10,6 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
 import androidx.test.runner.AndroidJUnit4
-import com.github.sdpsharelook.textDetection.TextDetectionActivity
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.`is`
@@ -27,10 +26,24 @@ class TextDetectionActivityTest {
 
     @Rule
     @JvmField
-    var mActivityTestRule = ActivityTestRule(TextDetectionActivity::class.java)
+    var mActivityTestRule = ActivityTestRule(MainActivity::class.java)
 
     @Test
     fun textDetectionActivityTest() {
+        val materialButton = onView(
+            allOf(
+                withId(R.id.textDetectionButton), withText("Text detection"),
+                childAtPosition(
+                    childAtPosition(
+                        withClassName(`is`("androidx.constraintlayout.widget.ConstraintLayout")),
+                        0
+                    ),
+                    11
+                ),
+                isDisplayed()
+            )
+        )
+        materialButton.perform(click())
 
         val materialButton2 = onView(
             allOf(
@@ -49,15 +62,6 @@ class TextDetectionActivityTest {
             )
         )
         materialButton2.perform(click())
-
-        val imageView = onView(
-            allOf(
-                withId(R.id.imageView),
-                withParent(withParent(withId(android.R.id.content))),
-                isDisplayed()
-            )
-        )
-        imageView.check(matches(isDisplayed()))
 
         val textView = onView(
             allOf(
@@ -102,12 +106,12 @@ class TextDetectionActivityTest {
 
         val textView2 = onView(
             allOf(
-                withId(R.id.text_data), withText("Aucun Text"),
+                withId(R.id.text_data), withText("I'm a normal text\nI'm a bold text"),
                 withParent(withParent(withId(android.R.id.content))),
                 isDisplayed()
             )
         )
-        textView2.check(matches(withText("Aucun Text")))
+        textView2.check(matches(withText("I'm a normal text\nI'm a bold text")))
     }
 
     private fun childAtPosition(

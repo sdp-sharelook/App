@@ -30,6 +30,7 @@ class TextDetectionActivity : AppCompatActivity() {
 
         binding.detectButton.isEnabled = false
 
+// This is when we will use the camera
 //        inputImage = imageFromMediaImage(ImageProxy.image, 0 )
         binding.captureButton.setOnClickListener{
 //            dispatchTakePictureIntent()
@@ -52,34 +53,34 @@ class TextDetectionActivity : AppCompatActivity() {
                     })
         }
     }
+/** All the comment code will maybe usefull to capture photo with the camera*/
+//    val REQUEST_IMAGE_CAPTURE = 1
 
-    val REQUEST_IMAGE_CAPTURE = 1
-
-    private fun dispatchTakePictureIntent() {
-        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        try {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
-        } catch (e: ActivityNotFoundException) {
-            // display error state to the user
-            binding.textData.text = e.toString()
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            val image = data?.extras?.get("data") as Bitmap
-            inputImage = InputImage.fromBitmap(image, 0)
-            binding.imageView.setImageBitmap(image)
-            binding.detectButton.isEnabled = true
-            binding.textData.text = "Detect text on the image"
-        }
-    }
-
-    private fun imageFromMediaImage(mediaImage: Image, rotation: Int) :InputImage {
-        return InputImage.fromMediaImage(mediaImage, rotation)
-    }
+//    private fun dispatchTakePictureIntent() {
+//        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+//        try {
+//            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+//        } catch (e: ActivityNotFoundException) {
+//            // display error state to the user
+//            binding.textData.text = e.toString()
+//        }
+//    }
+//
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//
+//        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+//            val image = data?.extras?.get("data") as Bitmap
+//            inputImage = InputImage.fromBitmap(image, 0)
+//            binding.imageView.setImageBitmap(image)
+//            binding.detectButton.isEnabled = true
+//            binding.textData.text = "Detect text on the image"
+//        }
+//    }
+//
+//    private fun imageFromMediaImage(mediaImage: Image, rotation: Int) :InputImage {
+//        return InputImage.fromMediaImage(mediaImage, rotation)
+//    }
 
     private fun processTextBlock(result: Text) {
         if (result.text.isBlank()){

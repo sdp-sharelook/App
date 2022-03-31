@@ -41,10 +41,10 @@ class TranslateActivity : AppCompatActivity() {
         initTranslator()
         initTextToSpeech()
         initSpeechRecognizer()
-        findViewById<Button>(R.id.button_source_lang).apply {
+        findViewById<Button>(R.id.buttonSourceLang).apply {
             setOnClickListener { selectLanguage(this) }
         }
-        findViewById<Button>(R.id.button_target_lang).apply {
+        findViewById<Button>(R.id.buttonTargetLang).apply {
             setOnClickListener { selectLanguage(this) }
         }
         val ctx = this
@@ -56,14 +56,14 @@ class TranslateActivity : AppCompatActivity() {
 
     private fun setSource(language: Language) {
         sourceLanguage = language
-        val buttonSource = findViewById<Button>(R.id.button_source_lang)
+        val buttonSource = findViewById<Button>(R.id.buttonSourceLang)
         buttonSource.setText(language.displayName)
         // speechRecognizer.language = language
     }
 
     private fun setTarget(language: Language) {
         targetLanguage = language
-        val buttonTarget = findViewById<Button>(R.id.button_target_lang)
+        val buttonTarget = findViewById<Button>(R.id.buttonTargetLang)
         buttonTarget.setText(language.displayName)
         // speechRecognizer.language = language
     }
@@ -71,8 +71,8 @@ class TranslateActivity : AppCompatActivity() {
 
     private fun selectLanguage(button: Button) {
         val activity = this
-        val buttonSource = findViewById<Button>(R.id.button_source_lang)
-        val buttonTarget = findViewById<Button>(R.id.button_target_lang)
+        val buttonSource = findViewById<Button>(R.id.buttonSourceLang)
+        val buttonTarget = findViewById<Button>(R.id.buttonTargetLang)
         CoroutineScope(Dispatchers.Main).launch {
             when (button) {
                 buttonSource -> {

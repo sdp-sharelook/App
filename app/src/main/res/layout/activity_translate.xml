@@ -66,7 +66,7 @@
             android:gravity="center_vertical">
 
             <Button
-                android:id="@+id/button_source_lang"
+                android:id="@+id/buttonSourceLang"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -89,7 +89,7 @@
                 android:src="@drawable/ic_switch_languages" />
 
             <Button
-                android:id="@+id/button_target_lang"
+                android:id="@+id/buttonTargetLang"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"

@@ -48,6 +48,7 @@ class TextDetectionActivity : AppCompatActivity() {
                     })
                 .addOnFailureListener(
                     OnFailureListener { e -> // Task failed with an exception
+                        e.printStackTrace()
                     })
         }
     }

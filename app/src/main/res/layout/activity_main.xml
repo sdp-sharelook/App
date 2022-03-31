@@ -8,42 +8,46 @@
         android:padding="5dp">
 
     <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="-4dp"
+        tools:layout_editor_absoluteY="0dp">
 
         <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:hint="@string/nameHint"
-                android:ems="10"
-                android:id="@+id/edit_text_name"
-                android:autofillHints="name"/>
+            android:id="@+id/edit_text_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="name"
+            android:ems="10"
+            android:hint="@string/nameHint"
+            android:inputType="textPersonName"
+            android:minHeight="48dp" />
 
         <Button
-                android:text="@string/greet"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/button_greet"
-                android:onClick="greet" />
+            android:id="@+id/button_greet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="greet"
+            android:text="@string/greet" />
 
         <androidx.constraintlayout.widget.Barrier
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:barrierDirection="top" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:barrierDirection="top" />
 
         <Button
-                android:text="@string/textToSpeechButtonText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/button_text_to_speech"
-                android:onClick="textToSpeech" />
+            android:id="@+id/button_text_to_speech"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="textToSpeech"
+            android:text="@string/textToSpeechButtonText" />
 
         <androidx.constraintlayout.widget.Barrier
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:barrierDirection="top" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:barrierDirection="top" />
 
         <Button
             android:layout_width="match_parent"
@@ -86,5 +90,22 @@
             android:layout_height="wrap_content"
             android:onClick="databaseActivity"
             android:text="@string/database" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:barrierDirection="top" />
+
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="302dp"
+        android:layout_height="170dp"
+        android:layout_marginTop="84dp"
+        android:layout_marginEnd="44dp"
+        android:contentDescription="TODO"
+        android:src="@drawable/logo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 </androidx.constraintlayout.widget.ConstraintLayout>

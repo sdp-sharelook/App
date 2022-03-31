@@ -3,6 +3,7 @@
     package="com.github.sdpsharelook">
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
     <queries>
         <intent>
             <action android:name="android.intent.action.TTS_SERVICE" />
@@ -14,11 +15,12 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/logo"
         android:label="@string/appName"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/ic_svg_path"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MyBootcamp">
+        android:theme="@style/AppTheme">
+
         <activity
             android:name=".storage.DatabaseViewActivity"
             android:exported="false"
@@ -47,7 +49,12 @@
             android:exported="true" />
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="false">
+        </activity>
+        <activity
+            android:name=".SplashScreenActivity"
+            android:exported="true"
+            android:theme="@style/Theme.App.Starting">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -55,4 +62,5 @@
             </intent-filter>
         </activity>
     </application>
+
 </manifest>

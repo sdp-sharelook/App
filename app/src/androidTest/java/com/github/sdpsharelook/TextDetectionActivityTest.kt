@@ -31,6 +31,14 @@ class TextDetectionActivityTest {
 
     @Test
     fun textDetectionActivityTest() {
+
+        val detectButton = onView(
+            allOf(
+                withId(R.id.detectButton), isDisplayed()
+            )
+        )
+        detectButton.check(matches(isNotEnabled()))
+
         val materialButton2 = onView(
             allOf(
                 withId(R.id.captureButton), withText("Capture"),
@@ -48,6 +56,8 @@ class TextDetectionActivityTest {
             )
         )
         materialButton2.perform(click())
+
+        detectButton.check(matches(isEnabled()))
 
         val textView = onView(
             allOf(
@@ -97,7 +107,7 @@ class TextDetectionActivityTest {
                 isDisplayed()
             )
         )
-        textView2.check(matches(withText("Recorded")))
+        textView2.check(matches(isDisplayed()))
     }
 
     private fun childAtPosition(

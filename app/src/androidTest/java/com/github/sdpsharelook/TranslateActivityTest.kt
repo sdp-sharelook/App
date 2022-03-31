@@ -61,7 +61,7 @@ class TranslateActivityTest {
     }
 
     private fun selectTargetLanguage(targetLang: String) {
-        onView(withId(R.id.button_source_lang)).perform(click())
+        onView(withId(R.id.button_target_lang)).perform(click())
         onData(withTag(containsString(targetLang))).perform(click())
     }
 

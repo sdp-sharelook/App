@@ -156,8 +156,8 @@ class TranslateActivityTest {
         onView(withId(R.id.sourceText)).perform(clearText())
             .perform(typeText("Hello."), closeSoftKeyboard())
         onView(withId(R.id.buttonSwitchLang)).perform(click())
-        onView(withId(R.id.buttonSourceLang)).check(matches(withText("en")))
-        onView(withId(R.id.buttonTargetLang)).check(matches(withText("fr")))
+        onView(withId(R.id.buttonSourceLang)).check(matches(withText(Language("en").displayName)))
+        onView(withId(R.id.buttonTargetLang)).check(matches(withText(Language("fr").displayName)))
         onView(withId(R.id.targetText)).check(matches(withText("Bonjour.")))
     }
 

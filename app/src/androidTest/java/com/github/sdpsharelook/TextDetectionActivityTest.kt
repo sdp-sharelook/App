@@ -97,7 +97,7 @@ class TextDetectionActivityTest {
                 isDisplayed()
             )
         )
-        textView2.check(matches(withText("I'm a normal text\nI'm a bold text")))
+        textView2.check(matches(withText("Recorded")))
     }
 
     private fun childAtPosition(

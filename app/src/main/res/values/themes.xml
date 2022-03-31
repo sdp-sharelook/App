@@ -14,6 +14,15 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="Theme.MyBootcamp.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.MyBootcamp.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.MyBootcamp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
     <style name="Theme.AppCompat.smallImageButton" parent="Widget.AppCompat.ImageButton">
         <item name="android:layout_width">48dp</item>
         <item name="android:layout_height">wrap_content</item>

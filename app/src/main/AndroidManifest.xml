@@ -19,7 +19,7 @@
         android:label="@string/appName"
         android:roundIcon="@drawable/ic_svg_path"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/Theme.Sherlook">
 
         <activity
             android:name=".storage.DatabaseViewActivity"
@@ -49,7 +49,8 @@
             android:exported="true" />
         <activity
             android:name=".MainActivity"
-            android:exported="false">
+            android:exported="false"
+            android:theme="@style/Theme.Sherlook">
         </activity>
         <activity
             android:name=".SplashScreenActivity"

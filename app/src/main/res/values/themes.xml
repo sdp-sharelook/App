@@ -39,8 +39,12 @@
         <item name="android:adjustViewBounds">true</item>
         <item name="android:background">@color/transparent</item>
     </style>
+    <style name ="ShapeAppearanceOverlay.CornerSize50">
+        <item name="cornerSize">50%</item>
+    </style>
 
-    <style name="AppTheme" parent="Theme.Material3.Light.NoActionBar">
+    <style name="Theme.Sherlook" parent="Theme.Material3.Light.NoActionBar">
+        <item name="android:statusBarColor"> @color/md_theme_light_onPrimaryContainer</item>
         <item name="colorPrimary">@color/md_theme_light_primary</item>
         <item name="colorOnPrimary">@color/md_theme_light_onPrimary</item>
         <item name="colorPrimaryContainer">@color/md_theme_light_primaryContainer</item>

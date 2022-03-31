@@ -2,44 +2,58 @@ package com.github.sdpsharelook.storage
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.sdpsharelook.Word
-import com.google.android.gms.tasks.Task
-import com.google.android.gms.tasks.Tasks
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class RealTimeWordSaverDatabaseTest {
 
-    var storedValue : Any? = null
+    val uid = "test"
+    private val repository = object : IRepository<List<String>> {
+        lateinit var stored: Set<String>
+
+        override fun flow(name: String): Flow<Result<List<String>?>> {
+            assertEquals(uid, name)
+            return flowOf(Result.success(stored.toList()))
+        }
+
+        override suspend fun insert(name: String, entity: List<String>) {
+            assertEquals(uid, name)
+            stored = stored + entity
+        }
+
+        override suspend fun read(name: String): List<String> {
+            assertEquals(uid, name)
+            return stored.toList()
+        }
+
+        override suspend fun update(name: String, entity: List<String>) {
+            assertEquals(uid, name)
+            stored = entity.toSet()
+        }
+
+        override suspend fun delete(name: String) {
+            assertEquals(uid, name)
+            stored = emptySet()
+        }
+    }
+
+    @Before
+    fun setUp() {
+        repository.stored = emptySet()
+    }
 
     @Test
     @ExperimentalCoroutinesApi
     fun testSaving() = runTest {
-        val uid = "1"
-        val words = WordSaver(RealTimeWordSaverDatabase(uid, object : RTTRoot {
-            override val reference: RTTRef
-                get() = object : RTTRef {
-                    override fun child(pathString: String): RTTRef {
-                        assert(pathString == "users" || pathString == uid || pathString == "wordlists" || pathString == "favourites")
-                        return this
-                    }
-
-                    override fun setValue(value: Any?): Task<Void?> {
-                        storedValue = value
-                        return Tasks.forResult(null)
-                    }
-
-                    override fun get(): Task<SnapshotProvider> {
-                        return Tasks.forResult(object : SnapshotProvider {
-                            override fun getValue(): Any? = storedValue
-                        })
-                    }
-
-                }
-        }))
+        val wordSaverDatabase = RealTimeWordSaverDatabase(uid, repository)
+        val words = WordSaver(wordSaverDatabase)
         val key = "Test"
         val testWord = Word(
             key,

@@ -34,11 +34,11 @@ class DatabaseViewActivity : AppCompatActivity() {
         }
 
         CoroutineScope(Dispatchers.IO).launch {
-            fetchRepositoryValues()
+            collectDBFlow()
         }
     }
 
-    private suspend fun fetchRepositoryValues() {
+    private suspend fun collectDBFlow() {
         repository.flow().collect {
             when {
                 it.isSuccess -> {

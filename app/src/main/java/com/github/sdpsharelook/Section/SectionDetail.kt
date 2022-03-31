@@ -8,6 +8,8 @@ class SectionDetail : AppCompatActivity() {
 
     private lateinit var binding: ActivitySectionDetailBinding
 
+    private val wordList = mutableListOf<SectionWord>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySectionDetailBinding.inflate(layoutInflater)
@@ -20,6 +22,12 @@ class SectionDetail : AppCompatActivity() {
             binding.sectionTitle.text = section.title
             binding.sectionFlag.setImageResource(section.flag)
         }
+
+        binding.wordList.adapter = SectionWordAdapter(this, wordList)
+    }
+
+    fun addSectionWord(sw : SectionWord) {
+        wordList.add(sw)
     }
 
     private fun sectionFromId(sectionID: Int): Section? {

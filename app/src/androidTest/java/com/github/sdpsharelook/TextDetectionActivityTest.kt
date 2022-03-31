@@ -92,7 +92,7 @@ class TextDetectionActivityTest {
 
         val textView2 = onView(
             allOf(
-                withId(R.id.text_data), withText("I'm a normal text\nI'm a bold text"),
+                withId(R.id.text_data),
                 withParent(withParent(withId(android.R.id.content))),
                 isDisplayed()
             )

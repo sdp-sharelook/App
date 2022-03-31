@@ -8,27 +8,37 @@
     tools:context="com.github.sdpsharelook.MainActivity">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
         <EditText
-            android:id="@+id/edit_text_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:autofillHints="name"
-            android:ems="10"
-            android:hint="@string/nameHint"
-            android:inputType="textPersonName" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:hint="@string/nameHint"
+                android:ems="10"
+                android:id="@+id/edit_text_name"
+                android:autofillHints="name"/>
 
         <Button
-            android:id="@+id/button_greet"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="greet"
-            android:text="@string/greet"
-            android:backgroundTint="@color/white"
-            android:textColor="@color/black" />
+                android:text="@string/greet"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/button_greet"
+                android:onClick="greet" />
+
+        <androidx.constraintlayout.widget.Barrier
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:barrierDirection="top" />
+
+        <Button
+                android:text="@string/textToSpeechButtonText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/button_text_to_speech"
+                android:onClick="textToSpeech" />
 
         <androidx.constraintlayout.widget.Barrier
             android:layout_width="match_parent"
@@ -81,5 +91,11 @@
             android:layout_height="wrap_content"
             android:onClick="languagesPopup"
             android:text="@string/languages" />
+        <Button
+            android:id="@+id/databaseButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="databaseActivity"
+            android:text="@string/database" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

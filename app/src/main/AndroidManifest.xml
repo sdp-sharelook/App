@@ -15,7 +15,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/logo"
+        android:icon="@drawable/ic_svg_path"
         android:label="@string/appName"
         android:roundIcon="@drawable/ic_svg_path"
         android:supportsRtl="true"

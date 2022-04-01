@@ -1,10 +1,15 @@
 package com.github.sdpsharelook
 
 
+import android.graphics.Bitmap
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultRegistry
+import androidx.activity.result.contract.ActivityResultContract
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.ViewAssertion
@@ -83,6 +88,23 @@ class OtherCameraTest {
         //After we inject the image we see whether it's correctly handled
         //and put in the imageView
     }
+
+    @Test
+    fun activityResultTest {
+        val expectedResult = Bitmap.createBitmap(1, 1, Bitmap.Config.RGBA_F16)
+
+        val testRegistry = object : ActivityResultRegistry() {
+            override fun <Uri, Boolean> onLaunch(
+                requestCode: Int,
+                contract: ActivityResultContract<Uri, Boolean>,
+                uri: Uri
+            ) {
+                dispatchResult(requestCode, expectedResult)
+            }
+        }
+
+    }
+
 
 
     private fun withDrawable(resourceId: Int) : TypeSafeMatcher<View> {

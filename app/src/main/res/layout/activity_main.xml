@@ -74,5 +74,12 @@
             android:layout_height="wrap_content"
             android:onClick="translatorActivity"
             android:text="@string/translateButtonName" />
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="cameraActivity"
+            android:text="camera" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

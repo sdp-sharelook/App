@@ -10,6 +10,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultRegistry
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityOptionsCompat
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.ViewAssertion
@@ -82,28 +83,29 @@ class OtherCameraTest {
         materialButton2.perform(click())
         intended(IntentMatchers.hasAction("android.media.action.IMAGE_CAPTURE"))
         Intents.release()
-        //pressBack()
-
 
         //After we inject the image we see whether it's correctly handled
         //and put in the imageView
     }
 
-    @Test
-    fun activityResultTest {
-        val expectedResult = Bitmap.createBitmap(1, 1, Bitmap.Config.RGBA_F16)
-
-        val testRegistry = object : ActivityResultRegistry() {
-            override fun <Uri, Boolean> onLaunch(
-                requestCode: Int,
-                contract: ActivityResultContract<Uri, Boolean>,
-                uri: Uri
-            ) {
-                dispatchResult(requestCode, expectedResult)
-            }
-        }
-
-    }
+//    @Test
+//    fun activityResultTest {
+//        // Create an expected result Bitmap
+//        val expectedResult = Bitmap.createBitmap(1, 1, Bitmap.Config.RGBA_F16)
+//
+//        // Create the test ActivityResultRegistry
+//        val testRegistry = object : ActivityResultRegistry() {
+//            override fun <Uri, Boolean> onLaunch(
+//                requestCode: Int,
+//                contract: ActivityResultContract<Uri, Boolean>,
+//                input: Uri,
+//                options: ActivityOptionsCompat?
+//            ) {
+//                dispatchResult(requestCode, expectedResult)
+//            }
+//        }
+//
+//    }
 
 
 

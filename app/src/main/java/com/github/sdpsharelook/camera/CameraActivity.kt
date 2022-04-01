@@ -49,14 +49,11 @@ class CameraActivity : AppCompatActivity() {
     }
 
     fun takePic() {
-        //val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        //if (intent.resolveActivity(packageManager) != null) {
-            tempImageUri = FileProvider.getUriForFile(this, "camera", createImage())
-            checkPermissions(Manifest.permission.CAMERA)
-            if (checkPerms()) {
-                cameraLauncher.launch(tempImageUri)
-            }
-        //}
+        tempImageUri = FileProvider.getUriForFile(this, "camera", createImage())
+        checkPermissions(Manifest.permission.CAMERA)
+        if (checkPerms()) {
+            cameraLauncher.launch(tempImageUri)
+        }
     }
 
     private var tempImageUri: Uri? = null
@@ -98,51 +95,10 @@ class CameraActivity : AppCompatActivity() {
             )
         }
     }
-//    fun checkPermissions(uri: Uri?) {
-//        val permission1 = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-//        val permission2 = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-//        val permission3 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-//        if (permission1 != PackageManager.PERMISSION_GRANTED) {
-//            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), 1)
-//        }
-//        if (permission2 != PackageManager.PERMISSION_GRANTED){
-//            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1)
-//        }
-//        if (permission3 != PackageManager.PERMISSION_GRANTED) {
-//            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1)
-//        }
-//        cameraLauncher.launch(uri)
-//    }
-
     fun checkPerms(): Boolean {
         val permission1 = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
-        //val permission2 = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-        //val permission3 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-
-        return permission1 //&& permission2 && permission3
+        return permission1
     }
-//    fun dispatchCameraIntent(view: View) {
-//        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-//        if (intent.resolveActivity(packageManager) != null) {
-//            var photoFile: File? = null
-//            photoFile = createImage()
-//            if (photoFile != null) {
-//                var photoUri = FileProvider.getUriForFile(this, "camera", photoFile)
-//                realPhotoUri.launch(photoUri)
-//            }
-//        }
-//    }
-
-//    private val realPhotoUri = registerForActivityResult(ActivityResultContracts.TakePicture()) {it ->
-//        if (it) {
-//            val file = File(currentPath)
-//            val uri = Uri.fromFile(file)
-//            val imageView = findViewById<ImageView>(R.id.cameraImageView)
-//            imageView.setImageURI(uri)
-//        } else {
-//            showAlert("Error while taking picture")
-//        }
-//    }
 
     private fun createImage(): File {
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())

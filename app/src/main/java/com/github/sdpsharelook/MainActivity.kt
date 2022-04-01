@@ -12,8 +12,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.github.sdpsharelook.Section.SectionActivity
+
+import com.github.sdpsharelook.textDetection.TextDetectionActivity
+
 import com.github.sdpsharelook.storage.DatabaseViewActivity
 import com.google.android.material.navigation.NavigationView
+
 
 
 const val EXTRA_MESSAGE = "com.github.sdpsharelook.NAME"
@@ -62,7 +66,11 @@ class MainActivity : AppCompatActivity() {
     fun translatorActivity(@Suppress("UNUSED_PARAMETER")view: View) =
         startActivity(Intent(this, TranslateActivity::class.java))
 
+    fun textDetectionActivity(view: View) =
+        startActivity(Intent(this, TextDetectionActivity::class.java))
+
     fun databaseActivity(@Suppress("UNUSED_PARAMETER")view: View) {
         startActivity(Intent(this, DatabaseViewActivity::class.java))
     }
+
 }

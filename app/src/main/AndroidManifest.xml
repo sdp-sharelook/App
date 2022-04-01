@@ -1,3 +1,4 @@
+
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.github.sdpsharelook">
@@ -20,7 +21,9 @@
         android:roundIcon="@drawable/ic_svg_path"
         android:supportsRtl="true"
         android:theme="@style/Theme.Sherlook">
-
+        <activity
+            android:name=".textDetection.TextDetectionActivity"
+            android:exported="false" />
         <activity
             android:name=".storage.DatabaseViewActivity"
             android:exported="false"
@@ -63,5 +66,6 @@
             </intent-filter>
         </activity>
     </application>
+
 
 </manifest>

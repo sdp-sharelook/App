@@ -6,10 +6,13 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.tasks.await
+import java.lang.UnsupportedOperationException
 
 class RTDBWordListRepository : IRepository<List<String>> {
 
     private val firebaseDatabase: FirebaseDatabase by lazy { FirebaseDatabase.getInstance("https://billinguee-default-rtdb.europe-west1.firebasedatabase.app/") }
+    private val reference: DatabaseReference by lazy { firebaseDatabase.reference.child("wordlists") }
 
     /**
      * Gets an asynchronous data stream any updated [List] of [String]s
@@ -25,7 +28,7 @@ class RTDBWordListRepository : IRepository<List<String>> {
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                val list = listOfNotNull(snapshot.getValue<String>(),"changed")
+                val list = listOfNotNull(snapshot.getValue<String>(), "changed")
                 this@callbackFlow.trySendBlocking(Result.success(list))
             }
 
@@ -54,18 +57,21 @@ class RTDBWordListRepository : IRepository<List<String>> {
      * @param entity Entity
      */
     override suspend fun insert(name: String, entity: List<String>) {
-        TODO("Not yet implemented")
+        val databaseReference =
+            if (name == "test") firebaseDatabase.getReference(name) else reference.child(name)
+        entity.forEach { databaseReference.push().setValue(it).await() }
     }
 
     /**
      * Read data at [name] once asynchronously.
      *
      * @param name identifier of entity
-     * @return [List<String>] or null
+     * @return [List] or null
      */
     override suspend fun read(name: String): List<String>? {
-        TODO("Not yet implemented")
+        throw UnsupportedOperationException("Use flow function for lists")
     }
+
 
     /**
      * Update data entry at [name].
@@ -76,7 +82,9 @@ class RTDBWordListRepository : IRepository<List<String>> {
      * @param entity Entity
      */
     override suspend fun update(name: String, entity: List<String>) {
-        TODO("Not yet implemented")
+        val databaseReference =
+            if (name == "test") firebaseDatabase.getReference(name) else reference.child(name)
+        databaseReference.setValue(entity).await()
     }
 
     /**
@@ -85,7 +93,9 @@ class RTDBWordListRepository : IRepository<List<String>> {
      * @param name identifier of entity
      */
     override suspend fun delete(name: String) {
-        TODO("Not yet implemented")
+        val databaseReference =
+            if (name == "test") firebaseDatabase.getReference(name) else reference.child(name)
+        databaseReference.removeValue().await()
     }
 
 }

@@ -21,6 +21,7 @@ import com.github.sdpsharelook.databinding.PopupBinding
 var edit = false
 var editPosition = 0
 
+
 class SectionActivity : AppCompatActivity(), SectionClickListener {
 
     private lateinit var binding: ActivitySectionBinding
@@ -28,6 +29,8 @@ class SectionActivity : AppCompatActivity(), SectionClickListener {
     private lateinit var cardBinding: CardSectionBinding
 
     private lateinit var dialog: Dialog
+    var mainCountryList = initList()
+
 
 
 
@@ -59,8 +62,6 @@ class SectionActivity : AppCompatActivity(), SectionClickListener {
 
 
         binding.addingBtn.setOnClickListener {
-//            Toast.makeText(this, "New Section added", Toast.LENGTH_SHORT).show()
-//            addSection("kitchen", R.drawable.spain)
             dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             dialog.show()
         }
@@ -82,9 +83,11 @@ class SectionActivity : AppCompatActivity(), SectionClickListener {
 
     }
 
-    private fun initList() {
-        mainCountryList.add(CountryItem(R.drawable.spain))
-        mainCountryList.add(CountryItem(R.drawable.us))
+    private fun initList(): List<CountryItem> {
+        var list = mutableListOf<CountryItem>()
+        list.add(CountryItem(R.drawable.spain))
+        list.add(CountryItem(R.drawable.us))
+        return list
     }
 
     private fun addSection(title: String, flag: Int) {

@@ -6,10 +6,12 @@ import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.github.sdpsharelook.Section.SectionActivity
 import com.github.sdpsharelook.storage.DatabaseViewActivity
 import com.github.sdpsharelook.authorization.LoginActivity
 import com.github.sdpsharelook.language.Language
 import com.github.sdpsharelook.language.LanguageSelectionDialog
+import com.github.sdpsharelook.textDetection.TextDetectionActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

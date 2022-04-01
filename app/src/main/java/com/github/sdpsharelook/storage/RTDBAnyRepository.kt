@@ -24,11 +24,11 @@ class RTDBAnyRepository : IRepository<Any> {
     override fun flow(name: String): Flow<Result<Any?>> = callbackFlow {
         val fireListener = object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {
-                this@callbackFlow.trySendBlocking(Result.failure(error.toException()))
+                trySendBlocking(Result.failure(error.toException()))
             }
 
             override fun onDataChange(snapshot: DataSnapshot) {
-                this@callbackFlow.trySendBlocking(Result.success(snapshot.value))
+                trySendBlocking(Result.success(snapshot.value))
             }
         }
         firebaseDatabase.getReference(name).addValueEventListener(fireListener)

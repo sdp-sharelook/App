@@ -24,23 +24,23 @@ class RTDBWordListRepository : IRepository<List<String>> {
         val fireListener = object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val list = listOfNotNull(snapshot.getValue<String>())
-                this@callbackFlow.trySendBlocking(Result.success(list))
+                trySendBlocking(Result.success(list))
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
                 val list = listOfNotNull(snapshot.getValue<String>(), "changed")
-                this@callbackFlow.trySendBlocking(Result.success(list))
+                trySendBlocking(Result.success(list))
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
                 val list = listOfNotNull(snapshot.getValue<String>(), "")
-                this@callbackFlow.trySendBlocking(Result.success(list))
+                trySendBlocking(Result.success(list))
             }
 
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
 
             override fun onCancelled(error: DatabaseError) {
-                this@callbackFlow.trySendBlocking(Result.failure(error.toException()))
+                trySendBlocking(Result.failure(error.toException()))
             }
 
         }
@@ -58,15 +58,12 @@ class RTDBWordListRepository : IRepository<List<String>> {
      */
     override suspend fun insert(name: String, entity: List<String>) {
         val databaseReference =
-            if (name == "test") firebaseDatabase.getReference(name) else reference.child(name)
+            databaseReference(name)
         entity.forEach { databaseReference.push().setValue(it).await() }
     }
 
     /**
-     * Read data at [name] once asynchronously.
-     *
-     * @param name identifier of entity
-     * @return [List] or null
+     * Don't use
      */
     override suspend fun read(name: String): List<String>? {
         throw UnsupportedOperationException("Use flow function for lists")
@@ -83,7 +80,7 @@ class RTDBWordListRepository : IRepository<List<String>> {
      */
     override suspend fun update(name: String, entity: List<String>) {
         val databaseReference =
-            if (name == "test") firebaseDatabase.getReference(name) else reference.child(name)
+            databaseReference(name)
         databaseReference.setValue(entity).await()
     }
 
@@ -94,8 +91,12 @@ class RTDBWordListRepository : IRepository<List<String>> {
      */
     override suspend fun delete(name: String) {
         val databaseReference =
-            if (name == "test") firebaseDatabase.getReference(name) else reference.child(name)
+            databaseReference(name)
         databaseReference.removeValue().await()
+    }
+
+    private fun databaseReference(name: String): DatabaseReference {
+        return if (name == "test") firebaseDatabase.getReference(name) else reference.child(name)
     }
 
 }

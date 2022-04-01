@@ -166,7 +166,7 @@ class SignUpActivity : AppCompatActivity() {
         binding.passwordBox.helperText = isPasswordValid()
     }
 
-    fun signUp(view: View) {
+    fun signUp(@Suppress("UNUSED_PARAMETER")view: View) {
         //TODO: add e-mail and password verification before login button is pressed
         val email = findViewById<EditText>(R.id.email).text.toString()
         val password = findViewById<EditText>(R.id.password).text.toString()

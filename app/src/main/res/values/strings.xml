@@ -121,4 +121,6 @@
     <string name="sectionsButtonName">Sections</string>
     <string name="translateButtonName">Translate</string>
     <string name="unrecognized_source_language">Source language unrecognized.</string>
+    <string name="take_picture">"Take a picture"</string>
+    <string name="take_picture_description">"Description"</string>
 </resources>

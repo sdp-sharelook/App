@@ -6,7 +6,11 @@ import android.view.View
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import com.github.sdpsharelook.Section.SectionActivity
+
+import com.github.sdpsharelook.textDetection.TextDetectionActivity
+
 import com.github.sdpsharelook.storage.DatabaseViewActivity
+
 
 
 const val EXTRA_MESSAGE = "com.github.sdpsharelook.NAME"
@@ -43,7 +47,11 @@ class MainActivity : AppCompatActivity() {
     fun translatorActivity(@Suppress("UNUSED_PARAMETER")view: View) =
         startActivity(Intent(this, TranslateActivity::class.java))
 
+    fun textDetectionActivity(view: View) =
+        startActivity(Intent(this, TextDetectionActivity::class.java))
+
     fun databaseActivity(@Suppress("UNUSED_PARAMETER")view: View) {
         startActivity(Intent(this, DatabaseViewActivity::class.java))
     }
+
 }

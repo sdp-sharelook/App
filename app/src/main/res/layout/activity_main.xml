@@ -81,6 +81,12 @@
             app:barrierDirection="top" />
 
         <Button
+            android:id="@+id/textDetectionButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="textDetectionActivity"
+            android:text="Text detection" />
+        <Button
             android:id="@+id/databaseButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

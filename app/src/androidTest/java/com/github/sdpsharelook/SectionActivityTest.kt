@@ -76,31 +76,6 @@ class SectionActivityTest {
         )
         appCompatEditText2.perform(closeSoftKeyboard())
 
-//        val appCompatSpinner = onView(
-//            allOf(
-//                withId(R.id.spinner_countries), withContentDescription("ShareLook"),
-//                childAtPosition(
-//                    childAtPosition(
-//                        withId(android.R.id.content),
-//                        0
-//                    ),
-//                    1
-//                ),
-//                isDisplayed()
-//            )
-//        )
-//        appCompatSpinner.perform(click())
-//
-//        val relativeLayout = onData(anything())
-//            .inAdapterView(
-//                childAtPosition(
-//                    withClassName(`is`("android.widget.PopupWindow$PopupBackgroundView")),
-//                    0
-//                )
-//            )
-//            .atPosition(1)
-//        relativeLayout.perform(click())
-
         val materialButton2 = onView(
             allOf(
                 withId(R.id.popup_add_btn), withText("Save"),
@@ -221,30 +196,6 @@ class SectionActivityTest {
         )
         appCompatEditText5.perform(closeSoftKeyboard())
 
-//        val appCompatSpinner2 = onView(
-//            allOf(
-//                withId(R.id.spinner_countries), withContentDescription("ShareLook"),
-//                childAtPosition(
-//                    childAtPosition(
-//                        withId(android.R.id.content),
-//                        0
-//                    ),
-//                    1
-//                ),
-//                isDisplayed()
-//            )
-//        )
-//        appCompatSpinner2.perform(click())
-//
-//        val relativeLayout2 = onData(anything())
-//            .inAdapterView(
-//                childAtPosition(
-//                    withClassName(`is`("android.widget.PopupWindow$PopupBackgroundView")),
-//                    0
-//                )
-//            )
-//            .atPosition(0)
-//        relativeLayout2.perform(click())
 
         val materialButton3 = onView(
             allOf(

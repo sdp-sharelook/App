@@ -49,14 +49,14 @@ class CameraActivity : AppCompatActivity() {
     }
 
     fun takePic() {
-        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        if (intent.resolveActivity(packageManager) != null) {
+        //val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        //if (intent.resolveActivity(packageManager) != null) {
             tempImageUri = FileProvider.getUriForFile(this, "camera", createImage())
             checkPermissions(Manifest.permission.CAMERA)
             if (checkPerms()) {
                 cameraLauncher.launch(tempImageUri)
             }
-        }
+        //}
     }
 
     private var tempImageUri: Uri? = null

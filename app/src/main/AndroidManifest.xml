@@ -21,10 +21,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyBootcamp">
         <activity
+            android:name=".textDetection.TextDetectionActivity"
+            android:exported="false" />
+        <activity
             android:name=".storage.DatabaseViewActivity"
             android:exported="false"
             android:label="@string/title_activity_database_view"
             android:theme="@style/Theme.MyBootcamp.NoActionBar" />
+
         <activity
             android:name=".Section.SectionDetail"
             android:exported="false" />
@@ -55,6 +59,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="com.google.firebase.ml.vision.DEPENDENCIES"
+            android:value="ocr" />
+
     </application>
 
 </manifest>

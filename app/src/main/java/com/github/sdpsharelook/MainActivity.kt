@@ -6,13 +6,14 @@ import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.github.sdpsharelook.Section.SectionActivity
+import com.github.sdpsharelook.storage.DatabaseViewActivity
 import com.github.sdpsharelook.authorization.LoginActivity
 import com.github.sdpsharelook.language.Language
 import com.github.sdpsharelook.language.LanguageSelectionDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+
 
 
 const val EXTRA_MESSAGE = "com.github.sdpsharelook.NAME"
@@ -25,7 +26,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    fun greet(view: View) {
+    fun greet(@Suppress("UNUSED_PARAMETER")view: View) {
         val editText = findViewById<EditText>(R.id.edit_text_name)
         val name = editText?.text.toString()
         val intent = Intent(this, GreetingActivity::class.java).apply {
@@ -34,27 +35,26 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    fun textToSpeech(@Suppress("UNUSED_PARAMETER")view: View) {}
+    //startActivity(Intent(this, TextToSpeechActivity::class.java))
 
-    fun sectionActivity(view: View) =
+
+
+    fun voiceRecognition(@Suppress("UNUSED_PARAMETER")view: View) {}
+    // startActivity(Intent(this, SpeechRecognitionActivity::class.java))
+
+
+    fun sectionActivity(@Suppress("UNUSED_PARAMETER")view: View) =
         startActivity(Intent(this, SectionActivity::class.java))
 
-    fun translatorActivity(view: View) =
+    fun translatorActivity(@Suppress("UNUSED_PARAMETER")view: View) =
         startActivity(Intent(this, TranslateActivity::class.java))
 
-    fun loginActivity(view: View) =
-        startActivity(Intent(this, LoginActivity::class.java))
+    fun textDetectionActivity(view: View) =
+        startActivity(Intent(this, TextDetectionActivity::class.java))
 
-    fun languagesPopup(view: View) {
-        val activity = this
-        CoroutineScope(Dispatchers.Main).launch {
-            val languages = Language.translatorAvailableLanguages.union(setOf(Language.auto))
-            Toast.makeText(
-                activity,
-                LanguageSelectionDialog.selectLanguage(activity, languages).toString(),
-                Toast.LENGTH_SHORT
-            ).show()
-        }
+    fun databaseActivity(@Suppress("UNUSED_PARAMETER")view: View) {
+        startActivity(Intent(this, DatabaseViewActivity::class.java))
     }
-
 
 }

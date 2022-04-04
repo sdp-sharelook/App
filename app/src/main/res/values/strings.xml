@@ -113,12 +113,14 @@
     <string name="action_settings">Settings</string>
     <string name="database">Database</string>
     <string name="sendButton">send to database</string>
-    <string name="default_database_content">Default Database Content: could not reach database</string>
+    <string name="default_database_content">Default Database Content: database not yet reached</string>
     <string name="switch_languages">Switch languages</string>
     <string name="menu">menu</string>
-    <string name="downloading_languages">downloading languages...</string>
+    <string name="downloading_languages">downloading languages…</string>
     <string name="listen">Listen</string>
     <string name="sectionsButtonName">Sections</string>
     <string name="translateButtonName">Translate</string>
     <string name="unrecognized_source_language">Source language unrecognized.</string>
+    <string name="take_picture">"Take a picture"</string>
+    <string name="take_picture_description">"Description"</string>
 </resources>

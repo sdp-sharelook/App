@@ -1,17 +1,15 @@
 package com.github.sdpsharelook
 
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.sdpsharelook.authorization.TestAuth
 import com.github.sdpsharelook.authorization.TestUserConstants.TEST_USER_EMAIL
 import com.github.sdpsharelook.authorization.TestUserConstants.TEST_USER_PASS
-import com.github.sdpsharelook.authorization.User
 import com.github.sdpsharelook.authorization.auth
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 
+@ExperimentalCoroutinesApi
 class AuthProviderTest {
     @Before
     fun resetAuthProvider(){
@@ -23,7 +21,7 @@ class AuthProviderTest {
         runTest{
             val user = auth.signInWithEmailAndPassword(TEST_USER_EMAIL, TEST_USER_PASS)
             assert(auth.currentUser!!.email==TEST_USER_EMAIL)
-            auth.signOut();
+            auth.signOut()
             assert(auth.currentUser==null)
         }
     }

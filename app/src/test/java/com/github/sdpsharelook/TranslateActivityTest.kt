@@ -27,7 +27,7 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class TranslateActivityTest {
-    private var mIdlingResource: IdlingResource? = null;
+    private var mIdlingResource: IdlingResource? = null
 
     @Before
     fun registerIdlingResource() {

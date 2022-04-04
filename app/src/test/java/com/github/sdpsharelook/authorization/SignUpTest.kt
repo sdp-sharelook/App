@@ -8,7 +8,7 @@ import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
-import androidx.test.runner.AndroidJUnit4
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.sdpsharelook.R
 import com.github.sdpsharelook.authorization.TestUserConstants.TEST_USER_PASS2
 import com.github.sdpsharelook.authorization.UserConstants.TEST_USER_EMAIL

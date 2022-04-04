@@ -8,9 +8,9 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.ext.junit.rules.ActivityScenarioRule
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import androidx.test.rule.ActivityTestRule
-import androidx.test.runner.AndroidJUnit4
 import com.github.sdpsharelook.R
 import org.hamcrest.Description
 import org.hamcrest.Matcher
@@ -26,7 +26,7 @@ class PL {
 
     @Rule
     @JvmField
-    var mActivityTestRule = ActivityTestRule(LoginActivity::class.java)
+    var mActivityTestRule = ActivityScenarioRule(LoginActivity::class.java)
 
     @Test
     fun pL() {

@@ -6,14 +6,14 @@ import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class RealTimeWordSaverDatabaseTest {
 
-    var storedValue : Any? = null
+    var storedValue: Any? = null
 
     @Test
     @ExperimentalCoroutinesApi

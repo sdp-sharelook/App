@@ -1,32 +1,30 @@
 package com.github.sdpsharelook.storage
 
 import com.github.sdpsharelook.Word
-import kotlinx.coroutines.tasks.await
 
 /**
  * Real time database implementation of [WordSaverDatabase]
  *
  * @constructor Create [RealTimeWordSaverDatabase]
  *
- * @param uid unique identifier of user in firebase auth
- * @param root possible injection of database root
+ * @param uid unique identifier of word list
+ * @param repository database root injection
  */
 class RealTimeWordSaverDatabase(
-    uid: String,
-    root: RTTRoot = FireDataBase()
+    private val uid: String,
+    private val repository: IRepository<List<String>>
 ) : WordSaverDatabase {
-    private val favReference = root.reference.child("users").child(uid).child("wordlists").child("favourites")
 
     override suspend fun saveFavourites(wordSaver: WordSaver) {
-        favReference.setValue(wordSaver.filter { it.value.isFavourite }.keys.toList()).await()
+        val value = wordSaver.filter { it.value.isFavourite }.keys.toList()
+        repository.insert(uid, value)
     }
 
     override suspend fun fillFavourites(wordSaver: WordSaver) {
-        val dataSnapshot = favReference.get().await()
-        val wordlist = dataSnapshot.getValue() as? List<*>
-        wordlist?.forEach {
-            if (it is String && !wordSaver.containsKey(it))
-                wordSaver[it] = Word(it, "TODO", true)
+        val read = repository.read(uid)
+        read?.forEach {
+            if (!wordSaver.containsKey(it))
+                wordSaver[it] = Word(it, "TODO", isFavourite = true)
         }
     }
 }

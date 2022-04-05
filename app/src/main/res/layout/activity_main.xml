@@ -133,6 +133,7 @@
                 android:onClick="databaseActivity"
                 android:text="@string/database" />
 
+
         </LinearLayout>
 
 
@@ -148,4 +149,5 @@
         />
 
 </androidx.drawerlayout.widget.DrawerLayout>
+
 

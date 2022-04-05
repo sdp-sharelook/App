@@ -60,6 +60,10 @@
             android:theme="@style/Theme.Sherlook">
         </activity>
         <activity
+            android:name=".camera.CameraActivity"
+            android:exported="false">
+        </activity>
+        <activity
             android:name=".SplashScreenActivity"
             android:exported="true"
             android:theme="@style/Theme.App.Starting">

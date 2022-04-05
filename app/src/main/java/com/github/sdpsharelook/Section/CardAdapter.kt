@@ -41,8 +41,6 @@ class CardAdapter(
         edit = false
         sectionList.set(editPosition, section)
         notifyItemChanged(editPosition)
-//        sectionList.set(viewHolder.adapterPosition, section)
-//        notifyItemChanged(viewHolder.adapterPosition)
     }
 
     fun removeItem(viewHolder: RecyclerView.ViewHolder, index: Int) {

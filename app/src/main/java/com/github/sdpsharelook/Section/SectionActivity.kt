@@ -17,6 +17,7 @@ import com.github.sdpsharelook.R
 import com.github.sdpsharelook.databinding.ActivitySectionBinding
 import com.github.sdpsharelook.databinding.CardSectionBinding
 import com.github.sdpsharelook.databinding.PopupBinding
+import com.github.sdpsharelook.storage.RTDBWordListRepository
 
 var edit = false
 var editPosition = 0
@@ -51,6 +52,9 @@ class SectionActivity : AppCompatActivity(), SectionClickListener {
 
         dialog = Dialog(sectionActivity)
         dialog.setContentView(popupBinding.root)
+        dialog.setOnDismissListener{
+            popupBinding.editSectionName.setText("Section name")
+        }
 
         // set up the spinner
         popupBinding.spinnerCountries.adapter = CountryAdapter(sectionActivity, mainCountryList)
@@ -63,14 +67,18 @@ class SectionActivity : AppCompatActivity(), SectionClickListener {
 
         binding.addingBtn.setOnClickListener {
             dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
             dialog.show()
         }
+
+        var database = RTDBWordListRepository()
+        database.ins
 
 
         popupBinding.popupAddBtn.setOnClickListener{
             var sectionName = popupBinding.editSectionName.text.toString()
             var countryIndex = popupBinding.spinnerCountries.selectedItemPosition
-
+            // Popu do 2 different things if it is editing a section or creating one
             if (edit){
                 cardAdapter.editItem(Section(sectionName, mainCountryList.get(countryIndex).flag))
             } else {

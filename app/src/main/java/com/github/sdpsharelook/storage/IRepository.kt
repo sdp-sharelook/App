@@ -15,12 +15,19 @@ interface IRepository<T> {
     fun flow(name: String = "test"): Flow<Result<T?>>
 
     /**
-     * Create permanent repository entry
+     * Insert repository entity into existing list
      *
      * @param name identifier of entity
      * @param entity Entity
      */
     suspend fun insert(name: String, entity: T)
+
+    /**
+     * Create permanent repository entry
+     *
+     * @param name identifier of entity
+     */
+    suspend fun create(name: String = ""): String
 
     /**
      * Read data at [name] once asynchronously.
@@ -45,5 +52,5 @@ interface IRepository<T> {
      *
      * @param name identifier of entity
      */
-    suspend fun delete(name: String)
+    suspend fun delete(name : String)
 }

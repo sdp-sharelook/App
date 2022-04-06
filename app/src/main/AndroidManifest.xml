@@ -4,11 +4,17 @@
     package="com.github.sdpsharelook">
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-feature android:name="android.hardware.camera" android:required="true" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
+
     <queries>
         <intent>
             <action android:name="android.intent.action.TTS_SERVICE" />
@@ -25,6 +31,9 @@
         android:roundIcon="@drawable/ic_svg_path"
         android:supportsRtl="true"
         android:theme="@style/Theme.Sherlook">
+        <activity
+            android:name=".revision.revisionActivity"
+            android:exported="false" />
         <activity
             android:name=".textDetection.TextDetectionActivity"
             android:exported="false" />
@@ -57,12 +66,10 @@
         <activity
             android:name=".MainActivity"
             android:exported="false"
-            android:theme="@style/Theme.Sherlook">
-        </activity>
+            android:theme="@style/Theme.Sherlook"></activity>
         <activity
             android:name=".camera.CameraActivity"
-            android:exported="false">
-        </activity>
+            android:exported="false"></activity>
         <activity
             android:name=".SplashScreenActivity"
             android:exported="true"
@@ -73,17 +80,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <provider
-            android:authorities="camera"
             android:name="androidx.core.content.FileProvider"
+            android:authorities="camera"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
         <meta-data
             android:name="com.google.firebase.ml.vision.DEPENDENCIES"
             android:value="ocr" />
     </application>
+
 </manifest>

@@ -2,9 +2,6 @@ package com.github.sdpsharelook.language
 
 import android.content.Context
 import com.github.sdpsharelook.R
-import com.github.sdpsharelook.speechRecognition.SpeechRecognizer
-import com.github.sdpsharelook.textToSpeech.TextToSpeech
-import com.google.mlkit.nl.translate.TranslateLanguage
 import java.util.*
 
 data class Language(
@@ -27,7 +24,7 @@ data class Language(
                 ctx.resources.getIdentifier(
                     tag,
                     "raw",
-                    ctx.getPackageName()
+                    ctx.packageName
                 )
             }
         }
@@ -37,7 +34,7 @@ data class Language(
         }
     }
     companion object {
-        val AUTO_TAG: String = "auto"
+        const val AUTO_TAG: String = "auto"
         val default by lazy { Language(Locale.getDefault().toLanguageTag()) }
         val auto = Language(AUTO_TAG)
     }

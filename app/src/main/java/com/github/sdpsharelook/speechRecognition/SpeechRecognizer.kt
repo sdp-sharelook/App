@@ -5,18 +5,15 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.speech.RecognitionListener as GoogleRecognitionListener
 import android.speech.RecognizerIntent
+import android.widget.Toast
 import android.speech.SpeechRecognizer as GoogleSpeechRecognizer
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.github.sdpsharelook.Utils
 import java.util.*
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
-import kotlin.coroutines.suspendCoroutine
 
 
-class SpeechRecognizer(val activity: AppCompatActivity) {
+class SpeechRecognizer(private val activity: AppCompatActivity) {
     private var hasPermissions = false
     private val speechRecognizer = GoogleSpeechRecognizer.createSpeechRecognizer(activity)
 
@@ -38,18 +35,20 @@ class SpeechRecognizer(val activity: AppCompatActivity) {
     /** Function triggered when audio permission is not allowed
      */
     private fun errorPermission() =
-        Utils.toast("Please give us the audio permission to use this feature", activity)
+        Toast.makeText(
+            activity,
+            "Please give us the audio permission to use this feature",
+            Toast.LENGTH_SHORT
+        ).show()
 
     /** start the permission asking procedure if needed
      */
-    fun checkPermissions() = when {
-        ContextCompat.checkSelfPermission(
-            activity,
-            android.Manifest.permission.RECORD_AUDIO
-        ) == PackageManager.PERMISSION_GRANTED -> {
-
-        }
-        else -> {
+    private fun checkPermissions() {
+        if (ContextCompat.checkSelfPermission(
+                activity,
+                android.Manifest.permission.RECORD_AUDIO
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
             requestPermissionLauncher.launch(
                 android.Manifest.permission.RECORD_AUDIO
             )

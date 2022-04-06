@@ -135,11 +135,9 @@ class TranslateActivity : AppCompatActivity() {
     }
 
     private fun initTextToSpeech() {
-        val ctx = this
         tts = TextToSpeech(this)
-
         findViewById<ImageButton>(R.id.imageButtonSpeak).setOnClickListener {
-            tts.speak(targetTextView.text.toString())
+            targetTextString?.let { tts.speak(it) }
         }
     }
 
@@ -152,7 +150,6 @@ class TranslateActivity : AppCompatActivity() {
                 override fun onResults(s: String) =
                     if (s.trim().isEmpty()) sourceText.setText("...")
                     else sourceText.setText(s)
-
 
                 override fun onReady() {
                     sourceText.isEnabled = false

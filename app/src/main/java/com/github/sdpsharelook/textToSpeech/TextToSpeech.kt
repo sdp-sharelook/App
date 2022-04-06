@@ -1,12 +1,7 @@
 package com.github.sdpsharelook.textToSpeech
 
 import android.content.Context
-import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.SeekBar
-import android.widget.Spinner
-import com.github.sdpsharelook.Utils
+import android.widget.*
 import java.util.*
 import android.speech.tts.TextToSpeech as GoogleTextToSpeech
 
@@ -22,7 +17,7 @@ class TextToSpeech(val ctx: Context) {
                     tts?.setLanguage(Locale.UK)
                 }
                 else -> {
-                    Utils.toast("An error happened while creating the TextToSpeech object", ctx)
+                    Toast.makeText(ctx, "An error happened while creating the TextToSpeech object", Toast.LENGTH_SHORT)
                 }
             }
         }
@@ -88,6 +83,6 @@ class TextToSpeech(val ctx: Context) {
 
     fun speak(message: String) =
         tts?.speak(message, GoogleTextToSpeech.QUEUE_FLUSH, null, null)
-            ?: Utils.toast("The TextToSpeech object is null", ctx)
+            ?: Toast.makeText ( ctx,"The TextToSpeech object is null", Toast.LENGTH_SHORT).show()
 
 }

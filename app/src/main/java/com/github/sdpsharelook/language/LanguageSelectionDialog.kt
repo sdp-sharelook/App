@@ -4,13 +4,10 @@ import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.widget.EditText
-import androidx.appcompat.app.AppCompatActivity
 import android.widget.ListView
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import com.github.sdpsharelook.R
-import com.github.sdpsharelook.speechRecognition.SpeechRecognizer
-import com.github.sdpsharelook.textToSpeech.TextToSpeech
 import com.github.sdpsharelook.translate.Translator
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
@@ -28,20 +25,20 @@ class LanguageSelectionDialog private constructor(
         )
 
     private fun buildDialog(continuation: Continuation<Language?>) {
-        getWindow()?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         setContentView(R.layout.dialog_language_selection)
         val dialog = this
         setOnCancelListener { continuation.resume(null) }
         val listView = findViewById<ListView>(R.id.list_view_languages).apply {
             adapter = search("")
-            setOnItemClickListener { adapterView, view, i, l ->
+            setOnItemClickListener { _, _, i, _ ->
                 dialog.dismiss()
                 val language = adapter.getItem(i) as Language
                 continuation.resume(language)
             }
         }
         findViewById<EditText>(R.id.edit_text_search_language).let {
-            it.addTextChangedListener { afterTextChanged ->
+            it.addTextChangedListener { _ ->
                 listView.adapter = search(it.text.toString())
             }
         }

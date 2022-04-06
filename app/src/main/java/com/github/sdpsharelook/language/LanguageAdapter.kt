@@ -1,5 +1,6 @@
 package com.github.sdpsharelook.language
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -8,10 +9,6 @@ import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import com.github.sdpsharelook.R
-import com.github.sdpsharelook.speechRecognition.SpeechRecognizer
-import com.github.sdpsharelook.textToSpeech.TextToSpeech
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 class LanguageAdapter(
@@ -20,12 +17,11 @@ class LanguageAdapter(
 ) : BaseAdapter() {
 
     private val sortedLanguages =
-        when {
-            Language.auto in languages ->
-                listOf(Language.auto) + (languages.filterNot { it == Language.auto }
-                    .sortedBy { it.displayName }.toList())
-            else -> languages.sortedBy { it.displayName }.toList()
-        }
+        if (Language.auto in languages)
+            listOf(Language.auto) + (languages.filterNot { it == Language.auto }
+                .sortedBy { it.displayName }.toList())
+        else languages.sortedBy { it.displayName }.toList()
+
 
     override fun getCount(): Int = languages.size
 
@@ -33,6 +29,7 @@ class LanguageAdapter(
 
     override fun getItemId(i: Int): Long = sortedLanguages[i].hashCode().toLong()
 
+    @SuppressLint("ViewHolder")
     override fun getView(i: Int, convertView: View?, parent: ViewGroup?): View =
         LayoutInflater.from(ctx).inflate(R.layout.language_row, parent, false).apply {
             val language = sortedLanguages[i]

@@ -43,7 +43,7 @@ class TranslateActivity : AppCompatActivity() {
         initTextToSpeech()
         initSpeechRecognizer()
         setSource(Language.auto)
-        setTarget(Language("en"))
+        setTarget(Language("en"), true)
         findViewById<Button>(R.id.buttonSourceLang).apply {
             setOnClickListener { selectLanguage(this) }
         }
@@ -64,11 +64,12 @@ class TranslateActivity : AppCompatActivity() {
         speechRecognizer.language = language
     }
 
-    private fun setTarget(language: Language) {
+    private fun setTarget(language: Language, forceEnableTTS:Boolean=false) {
         targetLanguage = language
         val buttonTarget = findViewById<Button>(R.id.buttonTargetLang)
         buttonTarget.setText(language.displayName)
         textToSpeech.language = language
+        ttsButton.isEnabled = forceEnableTTS || textToSpeech.isLanguageAvailable(language)
     }
 
 
@@ -82,7 +83,8 @@ class TranslateActivity : AppCompatActivity() {
                 buttonTarget -> Translator.availableLanguages
                 else -> setOf()
             }
-            val ttsLanguages = translatorLanguages.filter { textToSpeech.isLanguageAvailable(it) }.toSet()
+            val ttsLanguages =
+                translatorLanguages.filter { textToSpeech.isLanguageAvailable(it) }.toSet()
             val srLanguages = translatorLanguages
 
             LanguageSelectionDialog.selectLanguage(

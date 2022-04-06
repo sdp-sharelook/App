@@ -30,13 +30,15 @@ class TextToSpeech(private val ctx: Context) {
     }
 
     private fun setTTSLanguage(language: Language) =
-        if (isLanguageAvailable(language) && language.locale != null)
-            tts?.language = language.locale
-        else Toast.makeText(
-            ctx,
-            "Language not available for text-to-speech ${language.displayName}(${language.tag})",
-            Toast.LENGTH_SHORT
-        ).show()
+        language.locale?.let {
+            if (isLanguageAvailable(language))
+                tts?.language = it
+        }
+            ?: Toast.makeText(
+                ctx,
+                "Language not available for text-to-speech ${language.displayName}(${language.tag})",
+                Toast.LENGTH_SHORT
+            ).show()
 
 
     private var _language = Language.default
@@ -66,5 +68,6 @@ class TextToSpeech(private val ctx: Context) {
             ?: Toast.makeText(ctx, "The TextToSpeech object is null", Toast.LENGTH_SHORT).show()
 
     fun isLanguageAvailable(language: Language): Boolean =
-        language.locale?.let { initialized && tts?.isLanguageAvailable(it) == GoogleTextToSpeech.LANG_AVAILABLE } ?: false
+        language.locale?.let { initialized && tts?.isLanguageAvailable(it) == GoogleTextToSpeech.LANG_AVAILABLE }
+            ?: false
 }

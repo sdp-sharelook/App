@@ -31,14 +31,11 @@ class SpeechRecognizer(private val activity: AppCompatActivity) {
      */
     fun cancel() = speechRecognizer.cancel()
 
-    private var _language: String? = null
+    private var _language: Language=Language.auto
     var language: Language
-        get() = _language?.let { Language(it) } ?: Language.auto
+        get() = _language
         set(value) {
-            _language = when (value) {
-                Language.auto -> null
-                else -> value.tag
-            }
+            _language = value
         }
 
     private var hasPermissions = false
@@ -84,16 +81,18 @@ class SpeechRecognizer(private val activity: AppCompatActivity) {
      */
     private fun createIntent(): Intent {
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
-        _language?.let {
+        _language.locale?.let {
             intent.putExtra(
                 RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                it
+                it.toLanguageTag()
             )
-        } ?: intent.putExtra(
-            RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-            RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
-        )
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
+            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, it.toLanguageTag())
+        } ?: run {
+            intent.putExtra(
+                RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+            )
+        }
         intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
         return intent
     }

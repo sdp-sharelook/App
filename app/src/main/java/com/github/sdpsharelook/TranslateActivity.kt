@@ -20,7 +20,7 @@ import kotlinx.coroutines.*
 
 class TranslateActivity : AppCompatActivity() {
     private lateinit var targetTextView: TextView
-    private lateinit var tts: TextToSpeech
+    private lateinit var textToSpeech: TextToSpeech
     private lateinit var sourceLanguage: Language
     private lateinit var targetLanguage: Language
     private lateinit var speechRecognizer: SpeechRecognizer
@@ -68,7 +68,7 @@ class TranslateActivity : AppCompatActivity() {
         targetLanguage = language
         val buttonTarget = findViewById<Button>(R.id.buttonTargetLang)
         buttonTarget.setText(language.displayName)
-        tts.language = language
+        textToSpeech.language = language
     }
 
 
@@ -82,7 +82,7 @@ class TranslateActivity : AppCompatActivity() {
                 buttonTarget -> Translator.availableLanguages
                 else -> setOf()
             }
-            val ttsLanguages = translatorLanguages.filter { tts.isLanguageAvailable(it) }.toSet()
+            val ttsLanguages = translatorLanguages.filter { textToSpeech.isLanguageAvailable(it) }.toSet()
             val srLanguages = translatorLanguages
 
             LanguageSelectionDialog.selectLanguage(
@@ -98,7 +98,7 @@ class TranslateActivity : AppCompatActivity() {
                     }
                     buttonTarget -> {
                         setTarget(it)
-                        tts.language = it
+                        textToSpeech.language = it
                     }
                 }
             }
@@ -149,9 +149,9 @@ class TranslateActivity : AppCompatActivity() {
     }
 
     private fun initTextToSpeech() {
-        tts = TextToSpeech(this)
+        textToSpeech = TextToSpeech(this)
         findViewById<ImageButton>(R.id.imageButtonTTS).setOnClickListener {
-            targetTextString?.let { tts.speak(it) }
+            targetTextString?.let { textToSpeech.speak(it) }
         }
     }
 

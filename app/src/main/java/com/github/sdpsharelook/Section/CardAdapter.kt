@@ -1,6 +1,7 @@
 package com.github.sdpsharelook.Section
 
 import android.app.Dialog
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -50,11 +51,13 @@ class CardAdapter(
 
     fun removeItem(viewHolder: RecyclerView.ViewHolder, index: Int) {
         val section = sectionList[index]
+        Log.d("INDEX", index.toString())
         sectionList.removeAt(index)
         CoroutineScope(Dispatchers.IO).launch{
             section.databaseRepo.delete(section.sectionRepo)
         }
         notifyItemRemoved(viewHolder.adapterPosition)
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int = sections.size

@@ -32,9 +32,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Sherlook">
         <activity
-            android:name=".revision.revisionActivity"
-            android:exported="false" />
-        <activity
             android:name=".textDetection.TextDetectionActivity"
             android:exported="false" />
         <activity

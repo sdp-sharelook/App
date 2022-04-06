@@ -1,33 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".TranslateActivity">
+    tools:context=".TranslateFragment">
 
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <TableRow
-
-            android:gravity="center_vertical"
-            android:padding="5dp">
-
-            <ImageButton
-                android:id="@+id/imageButtonHamburger"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="#00000000"
-                android:contentDescription="@string/menu"
-                android:src="@drawable/ic_hamburger_menu" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-        </TableRow>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -129,4 +110,5 @@
                 android:src="@drawable/speaker" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </TableLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

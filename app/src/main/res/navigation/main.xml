@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    app:startDestination="@id/menuTranslateLink">
+
+    <fragment
+        android:id="@+id/menuTranslateLink"
+        android:name="com.github.sdpsharelook.TranslateFragment"
+        android:label="Translate"
+        tools:layout="@layout/fragment_translate" />
+    <fragment
+        android:id="@+id/menuTTSLink"
+        android:name="com.github.sdpsharelook."
+        android:label="Translate"
+        tools:layout="@layout/fragment_translate" />
+</navigation>

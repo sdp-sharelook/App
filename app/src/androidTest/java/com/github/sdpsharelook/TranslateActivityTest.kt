@@ -1,9 +1,8 @@
 package com.github.sdpsharelook
 
-import android.icu.text.CaseMap
+import android.os.Bundle
 import androidx.core.content.PermissionChecker
-import androidx.test.core.app.ActivityScenario
-import androidx.test.espresso.Espresso
+import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
@@ -12,7 +11,6 @@ import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.runner.permission.PermissionRequester
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -31,8 +29,8 @@ class TranslateActivityTest {
 
     @Before
     fun registerIdlingResource() {
-        ActivityScenario.launch(TranslateActivity::class.java).onActivity { activity ->
-            mIdlingResource = activity.getIdlingResource()
+        launchFragmentInContainer<TranslateFragment>(Bundle(), R.style.Theme_Sherlook).onFragment {
+            mIdlingResource = it.getIdlingResource()
             // To prove that the test fails, omit this call:
             IdlingRegistry.getInstance().register(mIdlingResource)
         }
@@ -72,10 +70,6 @@ class TranslateActivityTest {
         selectLanguage("it", R.id.targetLangSelector)
         onView(withId(R.id.targetText)).check(matches(withText("Ciao.")))
 
-        // menu
-        onView(withId(R.id.imageButtonHamburger)).perform(click())
-        onView(withId(R.id.button_back)).perform(click())
-
         // speak
         onView(withId(R.id.imageButtonSpeak)).perform(click())
         delay(2000)
@@ -94,8 +88,6 @@ class TranslateActivityTest {
             addPermissions(android.Manifest.permission.RECORD_AUDIO)
             requestPermissions()
         }
-        // onView(withId(R.id.sourceText)).check(matches(withText("...")))
-        // onView(withId(R.id.sourceText)).check(matches(not(isEnabled())))
         delay(1000)
     }
 

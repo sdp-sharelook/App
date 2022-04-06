@@ -1,44 +1,57 @@
 package com.github.sdpsharelook
 
-import android.content.Intent
 import android.os.Bundle
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.*
-import androidx.annotation.Nullable
 import androidx.annotation.VisibleForTesting
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.test.espresso.IdlingResource
 import androidx.test.espresso.idling.CountingIdlingResource
-import com.github.sdpsharelook.Section.SectionActivity
 import com.github.sdpsharelook.speechRecognition.RecognitionListener
 import com.github.sdpsharelook.speechRecognition.SpeechRecognizer
 import com.github.sdpsharelook.textToSpeech.TextToSpeech
 import com.github.sdpsharelook.translate.Translator
 import com.google.mlkit.nl.translate.TranslateLanguage
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.*
 
-
-class TranslateActivity : AppCompatActivity() {
+/**
+ * A simple [Fragment] subclass.
+ * Use the [TranslateFragment.newInstance] factory method to
+ * create an instance of this fragment.
+ */
+class TranslateFragment : Fragment() {
     private val allLanguages = TranslateLanguage.getAllLanguages().toMutableList()
+
     private lateinit var targetText: TextView
+    private lateinit var sourceLangSelector: Spinner
+    private lateinit var targetLangSelector: Spinner
+    private lateinit var sourceText: TextView
+    private lateinit var buttonSwitchLang: ImageButton
+    private lateinit var imageButtonListen: ImageButton
+    private lateinit var imageButtonSpeak: ImageButton
+
     private lateinit var tts: TextToSpeech
 
-    @Nullable
     private var mIdlingResource: CountingIdlingResource? = null
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        targetText = view.findViewById(R.id.targetText)
+        sourceLangSelector = view.findViewById(R.id.sourceLangSelector)
+        targetLangSelector = view.findViewById(R.id.targetLangSelector)
+        sourceText = view.findViewById(R.id.sourceText)
+        buttonSwitchLang = view.findViewById(R.id.buttonSwitchLang)
+        imageButtonListen = view.findViewById(R.id.imageButtonListen)
+        imageButtonSpeak = view.findViewById(R.id.imageButtonSpeak)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_translate)
-        targetText = findViewById(R.id.targetText)
-        // original translator activity
-        val sourceLangSelector = findViewById<Spinner>(R.id.sourceLangSelector)
-        val targetLangSelector = findViewById<Spinner>(R.id.targetLangSelector)
-        val sourceText = findViewById<TextView>(R.id.sourceText)
-        val buttonSwitchLang = findViewById<ImageButton>(R.id.buttonSwitchLang)
-        fillAndInitializeSpinners(sourceLangSelector, targetLangSelector)
+        fillAndInitializeSpinners()
+
         sourceText.addTextChangedListener { afterTextChanged ->
             mIdlingResource?.increment()
             val scope = CoroutineScope(Dispatchers.IO)
@@ -54,73 +67,16 @@ class TranslateActivity : AppCompatActivity() {
             sourceText.text = targetText.text
             targetText.text = tempText
         }
-        // speech recognition
-        val sr = SpeechRecognizer(this)
-        val ctx = this
-        findViewById<ImageButton>(R.id.imageButtonListen).setOnClickListener {
-            sr.cancel()
-            sr.recognizeSpeech(object : RecognitionListener {
-                override fun onResults(s: String) {
-                    if (s.trim().isEmpty())
-                        sourceText.setText("...")
 
-                    sourceText.setText(s)
-                }
-
-                override fun onReady() {
-                    sourceText.isEnabled = false
-                    sourceText.setText("...")
-                }
-
-                override fun onBegin() {
-                    sourceText.isEnabled = false
-                }
-
-                override fun onEnd() {
-                    sourceText.isEnabled = true
-                }
-
-                override fun onError() {
-                    Toast.makeText(ctx, "Error recognition", Toast.LENGTH_SHORT).show()
-                    sourceText.setText("")
-                    sourceText.isEnabled = true
-                }
-            })
-
-        }
-        // text to speech
-        tts = TextToSpeech(ctx)
-
-        findViewById<ImageButton>(R.id.imageButtonSpeak).setOnClickListener {
-            // fixme replace "Bonjour" with sourceText.text.toString()
-            tts.speak(targetText.text.toString())
-        }
-        // hamburger menu
-        findViewById<ImageButton>(R.id.imageButtonHamburger).setOnClickListener {
-            val intent = Intent(ctx, NavigationMenuActivity::class.java)
-            ctx.startActivity(intent)
-        }
-
+        //initializeSpeechRecognition()
     }
 
-
-    companion object {
-        const val autoDetectName = "auto"
-    }
-
-
-    /** Filling spinners with available languages and initializing them.
-     * @param sourceLangSelector [Spinner] | The source language spinner.
-     * @param targetLangSelector [Spinner] | The target language spinner.
-     */
-    private fun fillAndInitializeSpinners(
-        sourceLangSelector: Spinner,
-        targetLangSelector: Spinner
-    ) {
+    /** Filling spinners with available languages and initializing them. */
+    private fun fillAndInitializeSpinners() {
         allLanguages.sort()
         allLanguages.add(0, autoDetectName)
         val adapter = ArrayAdapter(
-            this,
+            requireContext(),
             android.R.layout.simple_spinner_dropdown_item, allLanguages
         )
         sourceLangSelector.adapter = adapter
@@ -130,11 +86,10 @@ class TranslateActivity : AppCompatActivity() {
         sourceLangSelector.setSelection(allLanguages.indexOf(autoDetectName))
         targetLangSelector.setSelection(allLanguages.indexOf(TranslateLanguage.ENGLISH))
 
-        val sourceText = findViewById<TextView>(R.id.sourceText)
         // Dynamically update the translation on language source or target changed
         val spinnerOnItemSelected = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
-                tts.setLanguage(Locale.forLanguageTag(allLanguages[targetLangSelector.selectedItemPosition]))
+                //tts.setLanguage(Locale.forLanguageTag(allLanguages[targetLangSelector.selectedItemPosition]))
                 mIdlingResource?.increment()
                 val scope = CoroutineScope(Dispatchers.IO)
                 scope.launch {
@@ -152,13 +107,52 @@ class TranslateActivity : AppCompatActivity() {
         targetLangSelector.onItemSelectedListener = spinnerOnItemSelected
     }
 
+    private fun initializeSpeechRecognition() {
+        val sr = SpeechRecognizer(requireActivity())
+        val ctx = requireActivity().applicationContext
+
+        imageButtonListen.setOnClickListener {
+            sr.cancel()
+            sr.recognizeSpeech(object : RecognitionListener {
+                override fun onResults(s: String) {
+                    if (s.trim().isEmpty())
+                        sourceText.text = "..."
+
+                    sourceText.text = s
+                }
+
+                override fun onReady() {
+                    sourceText.isEnabled = false
+                    sourceText.text = "..."
+                }
+
+                override fun onBegin() {
+                    sourceText.isEnabled = false
+                }
+
+                override fun onEnd() {
+                    sourceText.isEnabled = true
+                }
+
+                override fun onError() {
+                    Toast.makeText(ctx, "Error recognition", Toast.LENGTH_SHORT).show()
+                    sourceText.text = ""
+                    sourceText.isEnabled = true
+                }
+            })
+        }
+
+        tts = TextToSpeech(ctx)
+
+        imageButtonSpeak.setOnClickListener {
+            tts.speak(targetText.text.toString())
+        }
+    }
+
     /** Call to update the text to translate and translate it.
      * @param textToTranslate [String] | The text to translate.
      */
     private suspend fun updateTranslation(textToTranslate: String) {
-        val sourceLangSelector = findViewById<Spinner>(R.id.sourceLangSelector)
-        val targetLangSelector = findViewById<Spinner>(R.id.targetLangSelector)
-        val targetText = findViewById<TextView>(R.id.targetText)
         var sourceLang = allLanguages[sourceLangSelector.selectedItemPosition]
         val destLang = allLanguages[targetLangSelector.selectedItemPosition]
 
@@ -175,7 +169,7 @@ class TranslateActivity : AppCompatActivity() {
         val t = Translator(sourceLang, destLang)
 
         targetText.text = getString(R.string.translation_running)
-        targetText.setText(t.translate(textToTranslate))
+        targetText.text = t.translate(textToTranslate)
         mIdlingResource?.decrement()
     }
 
@@ -188,5 +182,26 @@ class TranslateActivity : AppCompatActivity() {
             mIdlingResource = CountingIdlingResource("Translation")
         }
         return mIdlingResource!!
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_translate, container, false)
+    }
+
+    companion object {
+        const val autoDetectName = "auto"
+        /**
+         * Use this factory method to create a new instance of
+         * this fragment.
+         *
+         * @return A new instance of fragment TranslateFragment.
+         */
+        @JvmStatic
+        fun newInstance() =
+            TranslateFragment()
     }
 }

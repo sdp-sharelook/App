@@ -3,10 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <item
+        android:id="@+id/menuTranslateLink"
+        android:icon="@android:drawable/ic_menu_sort_alphabetically"
+        android:title="Translate"
+        />
+    <item
         android:id="@+id/menuTTSLink"
         android:icon="@drawable/speaker"
-        android:title="Text to speech"
-        />
+        android:title="Text to speech" />
     <item
         android:id="@+id/menuSpeechRecognitionLink"
         android:icon="@drawable/microphone"

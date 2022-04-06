@@ -7,16 +7,12 @@ import android.speech.RecognitionListener as GoogleRecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer as GoogleSpeechRecognizer
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
 import com.github.sdpsharelook.Utils
 import java.util.*
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
-import kotlin.coroutines.suspendCoroutine
 
-
-class SpeechRecognizer(val activity: AppCompatActivity) {
+class SpeechRecognizer(private val activity: FragmentActivity) {
     private var hasPermissions = false
     private val speechRecognizer = GoogleSpeechRecognizer.createSpeechRecognizer(activity)
 

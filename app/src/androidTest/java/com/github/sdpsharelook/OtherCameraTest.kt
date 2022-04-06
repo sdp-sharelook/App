@@ -25,6 +25,7 @@ import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
 import androidx.test.runner.AndroidJUnit4
+import com.github.sdpsharelook.camera.CameraActivity
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.`is`
@@ -41,7 +42,7 @@ class OtherCameraTest {
 
     @Rule
     @JvmField
-    var mActivityTestRule = ActivityTestRule(MainActivity::class.java)
+    var mActivityTestRule = ActivityTestRule(CameraActivity::class.java)
 
     @Rule
     @JvmField
@@ -52,20 +53,7 @@ class OtherCameraTest {
 
     @Test
     fun mainActivityTest3() {
-        val materialButton = onView(
-            allOf(
-                withId(R.id.button), withText("camera"),
-                childAtPosition(
-                    childAtPosition(
-                        withClassName(`is`("androidx.constraintlayout.widget.ConstraintLayout")),
-                        0
-                    ),
-                    10
-                ),
-                isDisplayed()
-            )
-        )
-        materialButton.perform(click())
+
         Intents.init()
         val materialButton2 = onView(
             allOf(

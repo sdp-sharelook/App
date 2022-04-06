@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/list_view_languages"
-        android:hint="Search..."
+        android:hint="@string/search"
         android:ems="10"
         android:imeOptions="actionDone"
         android:drawableEnd="@drawable/ic_search"

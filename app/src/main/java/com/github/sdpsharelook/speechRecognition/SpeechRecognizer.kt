@@ -10,10 +10,37 @@ import android.speech.SpeechRecognizer as GoogleSpeechRecognizer
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.github.sdpsharelook.language.Language
 import java.util.*
 
 
 class SpeechRecognizer(private val activity: AppCompatActivity) {
+
+    /** Start the speech recognition
+     * @param listener: the listener for callback when the result is ready
+     */
+    fun recognizeSpeech(listener: RecognitionListener) {
+        val intent = createIntent()
+        val googleListener = createGoogleRecognitionListener(listener)
+        checkPermissions()
+        speechRecognizer.setRecognitionListener(googleListener)
+        speechRecognizer.startListening(intent)
+    }
+
+    /** Cancel the speech recognition (must call it before starting a new one)
+     */
+    fun cancel() = speechRecognizer.cancel()
+
+    private var _language: String? = null
+    var language: Language
+        get() = _language?.let { Language(it) } ?: Language.auto
+        set(value) {
+            _language = when (value) {
+                Language.auto -> null
+                else -> value.tag
+            }
+        }
+
     private var hasPermissions = false
     private val speechRecognizer = GoogleSpeechRecognizer.createSpeechRecognizer(activity)
 
@@ -28,9 +55,6 @@ class SpeechRecognizer(private val activity: AppCompatActivity) {
             }
         }
 
-    /** Cancel the speech recognition (must call it before starting a new one)
-     */
-    fun cancel() = speechRecognizer.cancel()
 
     /** Function triggered when audio permission is not allowed
      */
@@ -57,11 +81,10 @@ class SpeechRecognizer(private val activity: AppCompatActivity) {
 
     /**
      * Create the intent to start the speech recognizer
-     * @param language: the language to put in the intent (free form by default)
      */
-    private fun createIntent(language: String? = null): Intent {
+    private fun createIntent(): Intent {
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
-        language?.let {
+        _language?.let {
             intent.putExtra(
                 RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 it
@@ -82,7 +105,6 @@ class SpeechRecognizer(private val activity: AppCompatActivity) {
             override fun onReadyForSpeech(p0: Bundle?) = listener.onReady()
 
             override fun onBeginningOfSpeech() = listener.onBegin()
-
 
             override fun onRmsChanged(p0: Float) {}
 
@@ -105,15 +127,4 @@ class SpeechRecognizer(private val activity: AppCompatActivity) {
         }
 
 
-    /** Start the speech recognition
-     * @param listener: the listener for callback when the result is ready
-     * @param language: to eventually specify the language (free form by default)
-     */
-    fun recognizeSpeech(listener: RecognitionListener, language: String? = null) {
-        val intent = createIntent(language)
-        val googleListener = createGoogleRecognitionListener(listener)
-        checkPermissions()
-        speechRecognizer.setRecognitionListener(googleListener)
-        speechRecognizer.startListening(intent)
-    }
 }

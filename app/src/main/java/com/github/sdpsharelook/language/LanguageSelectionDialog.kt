@@ -15,13 +15,19 @@ import kotlin.coroutines.suspendCoroutine
 
 class LanguageSelectionDialog private constructor(
     private val activity: AppCompatActivity,
-    private val languages: Set<Language>
+    private val languages: Set<Language>,
+    private val translatorAvailable: Set<Language>?,
+    private val ttsAvailable: Set<Language>?,
+    private val srAvailable: Set<Language>?,
 ) : Dialog(activity) {
 
     private fun search(text: String): LanguageAdapter =
         LanguageAdapter(
             activity,
-            languages.filter { it.displayName.lowercase().contains(text.lowercase()) }.toSet()
+            languages.filter { it.displayName.lowercase().contains(text.lowercase()) }.toSet(),
+            translatorAvailable ?: languages.toSet(),
+            ttsAvailable ?: setOf(),
+            srAvailable ?: languages.toSet()
         )
 
     private fun buildDialog(continuation: Continuation<Language?>) {
@@ -52,7 +58,17 @@ class LanguageSelectionDialog private constructor(
     companion object {
         suspend fun selectLanguage(
             activity: AppCompatActivity,
-            languages: Set<Language> = Translator.availableLanguages
-        ): Language? = LanguageSelectionDialog(activity, languages).selectLanguage()
+            languages: Set<Language> = Translator.availableLanguages,
+            translatorAvailable: Set<Language>? = null,
+            ttsAvailable: Set<Language>? = null,
+            srAvailable: Set<Language>? = null,
+        ): Language? =
+            LanguageSelectionDialog(
+                activity,
+                languages,
+                translatorAvailable,
+                ttsAvailable,
+                srAvailable
+            ).selectLanguage()
     }
 }

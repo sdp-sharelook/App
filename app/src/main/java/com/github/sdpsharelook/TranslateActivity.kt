@@ -29,18 +29,21 @@ class TranslateActivity : AppCompatActivity() {
     @Nullable
     private var mIdlingResource: CountingIdlingResource? = null
     private lateinit var sourceText: TextView
-
+    private lateinit var ttsButton: ImageButton
+    private lateinit var srButton: ImageButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_translate)
         targetTextView = findViewById(R.id.targetText)
         sourceText = findViewById(R.id.sourceText)
-        setSource(Language.auto)
-        setTarget(Language("en"))
+        ttsButton = findViewById(R.id.imageButtonTTS)
+        srButton = findViewById(R.id.imageButtonSR)
         initTranslator()
         initTextToSpeech()
         initSpeechRecognizer()
+        setSource(Language.auto)
+        setTarget(Language("en"))
         findViewById<Button>(R.id.buttonSourceLang).apply {
             setOnClickListener { selectLanguage(this) }
         }
@@ -58,14 +61,14 @@ class TranslateActivity : AppCompatActivity() {
         sourceLanguage = language
         val buttonSource = findViewById<Button>(R.id.buttonSourceLang)
         buttonSource.setText(language.displayName)
-        // speechRecognizer.language = language
+        speechRecognizer.language = language
     }
 
     private fun setTarget(language: Language) {
         targetLanguage = language
         val buttonTarget = findViewById<Button>(R.id.buttonTargetLang)
         buttonTarget.setText(language.displayName)
-        // speechRecognizer.language = language
+        tts.language = language
     }
 
 
@@ -74,21 +77,32 @@ class TranslateActivity : AppCompatActivity() {
         val buttonSource = findViewById<Button>(R.id.buttonSourceLang)
         val buttonTarget = findViewById<Button>(R.id.buttonTargetLang)
         CoroutineScope(Dispatchers.Main).launch {
-            when (button) {
-                buttonSource -> {
-                    val availableLanguages =
-                        Translator.availableLanguages.union(setOf(Language.auto))
+            val translatorLanguages = when (button) {
+                buttonSource -> Translator.availableLanguages.union(setOf(Language.auto))
+                buttonTarget -> Translator.availableLanguages
+                else -> setOf()
+            }
+            val ttsLanguages = translatorLanguages.filter { tts.isLanguageAvailable(it) }.toSet()
+            val srLanguages = translatorLanguages
 
-                    LanguageSelectionDialog.selectLanguage(activity, availableLanguages)
-                        ?.let { setSource(it) }
-
-                }
-                buttonTarget -> {
-                    val availableLanguages = Translator.availableLanguages
-                    LanguageSelectionDialog.selectLanguage(activity, availableLanguages)
-                        ?.let { setTarget(it) }
+            LanguageSelectionDialog.selectLanguage(
+                activity,
+                translatorLanguages,
+                translatorLanguages,
+                ttsLanguages,
+                srLanguages
+            )?.let {
+                when (button) {
+                    buttonSource -> {
+                        setSource(it)
+                    }
+                    buttonTarget -> {
+                        setTarget(it)
+                        tts.language = it
+                    }
                 }
             }
+
             mIdlingResource?.increment()
             val scope = CoroutineScope(Dispatchers.IO)
             scope.launch {
@@ -136,7 +150,7 @@ class TranslateActivity : AppCompatActivity() {
 
     private fun initTextToSpeech() {
         tts = TextToSpeech(this)
-        findViewById<ImageButton>(R.id.imageButtonSpeak).setOnClickListener {
+        findViewById<ImageButton>(R.id.imageButtonTTS).setOnClickListener {
             targetTextString?.let { tts.speak(it) }
         }
     }
@@ -144,7 +158,7 @@ class TranslateActivity : AppCompatActivity() {
     private fun initSpeechRecognizer() {
         speechRecognizer = SpeechRecognizer(this)
         val ctx = this
-        findViewById<ImageButton>(R.id.imageButtonListen).setOnClickListener {
+        srButton.setOnClickListener {
             speechRecognizer.cancel()
             speechRecognizer.recognizeSpeech(object : RecognitionListener {
                 override fun onResults(s: String) =
@@ -153,21 +167,21 @@ class TranslateActivity : AppCompatActivity() {
 
                 override fun onReady() {
                     sourceText.isEnabled = false
+                    srButton.isEnabled = false
                     sourceText.setText("...")
                 }
 
-                override fun onBegin() {
-                    sourceText.isEnabled = false
-                }
+                override fun onBegin() {}
 
                 override fun onEnd() {
                     sourceText.isEnabled = true
+                    srButton.isEnabled = true
                 }
 
                 override fun onError() {
                     Toast.makeText(ctx, "Error recognition", Toast.LENGTH_SHORT).show()
                     sourceText.setText("")
-                    sourceText.isEnabled = true
+                    onEnd()
                 }
             })
 

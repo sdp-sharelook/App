@@ -27,7 +27,7 @@ class TranslateActivity : AppCompatActivity() {
     private val allLanguages = TranslateLanguage.getAllLanguages().toMutableList()
     private lateinit var targetText: TextView
     private lateinit var tts: TextToSpeech
-    private lateinit var sectionWord: SectionWord
+    private var sectionWord: SectionWord? = null
 
     @Nullable
     private var mIdlingResource: CountingIdlingResource? = null
@@ -199,8 +199,10 @@ class TranslateActivity : AppCompatActivity() {
 
     fun addWordToSection(@Suppress("UNUSED_PARAMETER")view: View){
         val intent = Intent(this, SectionActivity::class.java)
-        intent.putExtra(TRANSLATOR_WORD, sectionWord)
-        addWordToSection = true
-        startActivity(intent)
+        if(sectionWord != null){
+            intent.putExtra(TRANSLATOR_WORD, sectionWord)
+            addWordToSection = true
+            startActivity(intent)
+        }
     }
 }

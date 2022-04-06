@@ -74,7 +74,7 @@ class SectionActivity : AppCompatActivity(), SectionClickListener {
                     sectionName,
                     mainCountryList[countryIndex].flag,
                     databaseWordList,
-                    sectionList.size.toString() //+"/" + databaseWordList.create()
+                    sectionName + countryIndex
                 ))
             }
 

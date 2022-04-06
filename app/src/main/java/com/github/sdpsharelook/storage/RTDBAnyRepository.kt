@@ -78,12 +78,4 @@ class RTDBAnyRepository : IRepository<Any> {
         TODO("Not yet implemented")
     }
 
-    /**
-     * Create permanent repository entry
-     *
-     * @param name identifier of entity
-     */
-    override suspend fun create(name: String): String {
-        TODO("Not yet implemented")
-    }
 }

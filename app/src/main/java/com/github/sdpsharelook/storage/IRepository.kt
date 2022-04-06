@@ -23,13 +23,6 @@ interface IRepository<T> {
     suspend fun insert(name: String, entity: T)
 
     /**
-     * Create permanent repository entry
-     *
-     * @param name identifier of entity
-     */
-    suspend fun create(name: String = ""): String
-
-    /**
      * Read data at [name] once asynchronously.
      *
      * @param name identifier of entity

@@ -99,10 +99,4 @@ class RTDBWordListRepository : IRepository<List<String>> {
         return if (name == "test") firebaseDatabase.getReference(name) else reference.child(name)
     }
 
-    /**
-     * Create permanent repository entry
-     *
-     * @param name identifier of entity
-     */
-    override suspend fun create(name: String): String = reference.child(name).push().toString()
 }

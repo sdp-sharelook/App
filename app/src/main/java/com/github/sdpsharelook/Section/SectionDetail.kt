@@ -2,8 +2,6 @@ package com.github.sdpsharelook.Section
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.TextView
-import com.github.sdpsharelook.R
 import com.github.sdpsharelook.databinding.ActivitySectionDetailBinding
 import kotlinx.coroutines.*
 

@@ -1,19 +1,23 @@
 package com.github.sdpsharelook.storage
 
-import com.google.firebase.database.*
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import javax.inject.Inject
 
 /**
  * Firebase Realtime Database repository implementation for any value
  *
  * @constructor Create [RTDBAnyRepository]
  */
-class RTDBAnyRepository : IRepository<Any> {
+class RTDBAnyRepository @Inject constructor() : IRepository<Any> {
 
-    private val firebaseDatabase: FirebaseDatabase by lazy { FirebaseDatabase.getInstance("https://billinguee-default-rtdb.europe-west1.firebasedatabase.app/") }
+    @Inject lateinit var firebaseDatabase: FirebaseDatabase
 
     /**
      * Gets an asynchronous data stream of [Any]

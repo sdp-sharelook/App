@@ -6,14 +6,17 @@ import androidx.appcompat.app.AppCompatActivity
 import com.github.sdpsharelook.R
 import com.github.sdpsharelook.databinding.ActivityDatabaseViewBinding
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class DatabaseViewActivity : AppCompatActivity() {
 
-    private val repository: IRepository<Any> = RTDBAnyRepository()
+    @Inject lateinit var repository: IRepository<Any>
     private lateinit var binding: ActivityDatabaseViewBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -80,7 +80,6 @@ class TextDetectionActivityTest {
                 isDisplayed()
             )
         )
-        button.check(matches(isDisplayed()))
 
         val materialButton3 = onView(
             allOf(

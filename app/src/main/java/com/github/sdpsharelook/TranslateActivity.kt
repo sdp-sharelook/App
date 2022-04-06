@@ -11,11 +11,14 @@ import androidx.core.widget.addTextChangedListener
 import androidx.test.espresso.IdlingResource
 import androidx.test.espresso.idling.CountingIdlingResource
 import com.github.sdpsharelook.Section.SectionActivity
+import com.github.sdpsharelook.Section.SectionWord
+import com.github.sdpsharelook.Section.TRANSLATOR_WORD
 import com.github.sdpsharelook.speechRecognition.RecognitionListener
 import com.github.sdpsharelook.speechRecognition.SpeechRecognizer
 import com.github.sdpsharelook.textToSpeech.TextToSpeech
 import com.github.sdpsharelook.translate.Translator
 import com.google.mlkit.nl.translate.TranslateLanguage
+import com.github.sdpsharelook.Section.addWordToSection
 import kotlinx.coroutines.*
 import java.util.*
 
@@ -24,6 +27,7 @@ class TranslateActivity : AppCompatActivity() {
     private val allLanguages = TranslateLanguage.getAllLanguages().toMutableList()
     private lateinit var targetText: TextView
     private lateinit var tts: TextToSpeech
+    private lateinit var sectionWord: SectionWord
 
     @Nullable
     private var mIdlingResource: CountingIdlingResource? = null
@@ -175,7 +179,10 @@ class TranslateActivity : AppCompatActivity() {
         val t = Translator(sourceLang, destLang)
 
         targetText.text = getString(R.string.translation_running)
-        targetText.setText(t.translate(textToTranslate))
+        var translation = t.translate(textToTranslate)
+        sectionWord = SectionWord(textToTranslate, translation )
+        targetText.setText(translation)
+
         mIdlingResource?.decrement()
     }
 
@@ -188,5 +195,12 @@ class TranslateActivity : AppCompatActivity() {
             mIdlingResource = CountingIdlingResource("Translation")
         }
         return mIdlingResource!!
+    }
+
+    fun addWordToSection(@Suppress("UNUSED_PARAMETER")view: View){
+        val intent = Intent(this, SectionActivity::class.java)
+        intent.putExtra(TRANSLATOR_WORD, sectionWord)
+        addWordToSection = true
+        startActivity(intent)
     }
 }

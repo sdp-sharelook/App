@@ -3,6 +3,9 @@ package com.github.sdpsharelook.Section
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.github.sdpsharelook.databinding.ActivitySectionDetailBinding
+import kotlinx.coroutines.*
+
+var addWordToSection = false
 
 class SectionDetail : AppCompatActivity() {
 
@@ -16,7 +19,18 @@ class SectionDetail : AppCompatActivity() {
         setContentView(binding.root)
 
         val sectionID = intent.getIntExtra(SECTION_ID, -1)
+
         val section = sectionFromId(sectionID)
+        if(addWordToSection){
+            val wordTranslated = intent.getSerializableExtra(TRANSLATOR_WORD) as SectionWord
+            CoroutineScope(Dispatchers.IO).launch {
+                if (section != null){
+                    section.databaseRepo.insert(section.sectionRepo, wordTranslated.toList())
+                }
+            }
+            addSectionWord(wordTranslated)
+            addWordToSection = false
+        }
 
         if (section != null){
             binding.sectionTitle.text = section.title

@@ -104,5 +104,5 @@ class RTDBWordListRepository : IRepository<List<String>> {
      *
      * @param name identifier of entity
      */
-    override suspend fun create(name: String): String = reference.push().toString()
+    override suspend fun create(name: String): String = reference.child(name).push().toString()
 }

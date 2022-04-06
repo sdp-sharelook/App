@@ -6,11 +6,6 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
-import android.widget.AdapterView
-import android.widget.Spinner
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.sdpsharelook.R
@@ -19,8 +14,10 @@ import com.github.sdpsharelook.databinding.CardSectionBinding
 import com.github.sdpsharelook.databinding.PopupBinding
 import com.github.sdpsharelook.storage.RTDBWordListRepository
 
+
 var edit = false
-var editPosition = 0
+
+val TRANSLATOR_WORD = "translatorExtra"
 
 
 class SectionActivity : AppCompatActivity(), SectionClickListener {
@@ -28,15 +25,10 @@ class SectionActivity : AppCompatActivity(), SectionClickListener {
     private lateinit var binding: ActivitySectionBinding
     private lateinit var popupBinding: PopupBinding
     private lateinit var cardBinding: CardSectionBinding
+    private var databaseWordList = RTDBWordListRepository()
 
     private lateinit var dialog: Dialog
     var mainCountryList = initList()
-
-
-
-
-
-    private val rotateOpen: Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.rotate_open) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,12 +36,12 @@ class SectionActivity : AppCompatActivity(), SectionClickListener {
         popupBinding = PopupBinding.inflate(layoutInflater)
         cardBinding = CardSectionBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         val sectionActivity = this
 
         //init list of possible languages for the spinner
         initList()
 
+        // set up the popup when cliking on add button
         dialog = Dialog(sectionActivity)
         dialog.setContentView(popupBinding.root)
         dialog.setOnDismissListener{
@@ -71,23 +63,24 @@ class SectionActivity : AppCompatActivity(), SectionClickListener {
             dialog.show()
         }
 
-        var database = RTDBWordListRepository()
-        database.ins
-
-
         popupBinding.popupAddBtn.setOnClickListener{
             var sectionName = popupBinding.editSectionName.text.toString()
             var countryIndex = popupBinding.spinnerCountries.selectedItemPosition
             // Popu do 2 different things if it is editing a section or creating one
             if (edit){
-                cardAdapter.editItem(Section(sectionName, mainCountryList.get(countryIndex).flag))
-            } else {
-                addSection(sectionName, mainCountryList.get(countryIndex).flag)
+                cardAdapter.editItem(sectionName, mainCountryList.get(countryIndex).flag)
+            } else{
+                addSection(Section(
+                    sectionName,
+                    mainCountryList[countryIndex].flag,
+                    databaseWordList,
+                    sectionList.size.toString() //+"/" + databaseWordList.create()
+                ))
             }
+
             Toast.makeText(this, "Section: " + sectionName + " saved", Toast.LENGTH_SHORT).show()
             dialog.dismiss()
         }
-
 
     }
 
@@ -98,26 +91,19 @@ class SectionActivity : AppCompatActivity(), SectionClickListener {
         return list
     }
 
-    private fun addSection(title: String, flag: Int) {
-        val section = Section(title, flag)
+    private fun addSection(section: Section) {
         sectionList.add(section)
         binding.recyclerView.adapter?.notifyDataSetChanged()
     }
 
-    private fun removeSection(index: Int) {
-        sectionList.removeAt(index)
-        binding.recyclerView.adapter?.notifyDataSetChanged()
-    }
-
-    private fun editSectionName(index: Int, title: String, flag: Int) {
-        sectionList.set(0, Section(title, flag))
-        binding.recyclerView.adapter?.notifyDataSetChanged()
-    }
-
     override fun onClick(section: Section) {
-        val intent = Intent(applicationContext, SectionDetail::class.java)
-        intent.putExtra(SECTION_ID, section.id)
-        startActivity(intent)
+        val newIntent = Intent(applicationContext, SectionDetail::class.java)
+
+        if(addWordToSection){
+            var sectionWord = intent.getSerializableExtra(TRANSLATOR_WORD) as SectionWord
+            newIntent.putExtra(SECTION_ID, section.id).putExtra(TRANSLATOR_WORD, sectionWord)
+        }else newIntent.putExtra(SECTION_ID, section.id)
+        startActivity(newIntent)
     }
 
 }

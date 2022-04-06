@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-class RTDBWordListRepository @Inject constructor() : IRepository<List<String>> {
+class RTDBWordListRepository @Inject constructor() : IRepository<List<@JvmSuppressWildcards String>> {
 
     @Inject
     lateinit var firebaseDatabase: FirebaseDatabase

@@ -9,7 +9,6 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
-
     <queries>
         <intent>
             <action android:name="android.intent.action.TTS_SERVICE" />
@@ -22,23 +21,19 @@
     <application
         android:name=".App"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_svg_path"
         android:label="@string/appName"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/ic_svg_path"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MyBootcamp">
+        android:theme="@style/Theme.Sherlook">
         <activity
             android:name=".textDetection.TextDetectionActivity"
-            android:exported="false" />
-        <activity
-            android:name=".camera.CameraActivity"
             android:exported="false" />
         <activity
             android:name=".storage.DatabaseViewActivity"
             android:exported="false"
             android:label="@string/title_activity_database_view"
             android:theme="@style/Theme.MyBootcamp.NoActionBar" />
-
         <activity
             android:name=".section.SectionDetail"
             android:exported="false" />
@@ -62,14 +57,23 @@
             android:exported="true" />
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="false"
+            android:theme="@style/Theme.Sherlook">
+        </activity>
+        <activity
+            android:name=".camera.CameraActivity"
+            android:exported="false">
+        </activity>
+        <activity
+            android:name=".SplashScreenActivity"
+            android:exported="true"
+            android:theme="@style/Theme.App.Starting">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <provider
             android:authorities="camera"
             android:name="androidx.core.content.FileProvider"
@@ -82,7 +86,5 @@
         <meta-data
             android:name="com.google.firebase.ml.vision.DEPENDENCIES"
             android:value="ocr" />
-
     </application>
-
 </manifest>

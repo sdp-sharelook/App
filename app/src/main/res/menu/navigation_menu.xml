@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <item
+        android:id="@+id/menuTTSLink"
+        android:icon="@drawable/speaker"
+        android:title="Text to speech"
+        />
+    <item
+        android:id="@+id/menuSpeechRecognitionLink"
+        android:icon="@drawable/microphone"
+        android:title="Speech recognition" />
+    <item
+        android:id="@+id/menuSectionsLink"
+        android:icon="@android:drawable/ic_menu_save"
+        android:title="Saved Words"
+        />
+</menu>

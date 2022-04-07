@@ -21,12 +21,16 @@ class CardViewHolder(
 //
 //        }
         cardCellBinding.deleteButton.setOnClickListener{
-            onDeletClick?.let { onDeletClick -> onDeletClick(this) }
+            onAnyClick(onDeletClick)
         }
 
         cardCellBinding.editButton.setOnClickListener {
-            onEditClick?.let { onEditClick -> onEditClick(this) }
+            onAnyClick(onEditClick)
         }
+    }
+
+    private fun onAnyClick(onClickParam: ((RecyclerView.ViewHolder) -> Unit)?) {
+        onClickParam?.let { f -> f(this) }
     }
 
     fun bindBook(section: Section){

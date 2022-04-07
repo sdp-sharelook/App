@@ -4,14 +4,11 @@ import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.widget.AdapterView
-import android.widget.Spinner
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.sdpsharelook.R
 import com.github.sdpsharelook.databinding.ActivitySectionBinding
@@ -32,10 +29,12 @@ class SectionActivity : AppCompatActivity(), SectionClickListener {
     var mainCountryList = initList()
 
 
-
-
-
-    private val rotateOpen: Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.rotate_open) }
+    private val rotateOpen: Animation by lazy {
+        AnimationUtils.loadAnimation(
+            this,
+            R.anim.rotate_open
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,20 +66,20 @@ class SectionActivity : AppCompatActivity(), SectionClickListener {
         }
 
 
-        popupBinding.popupAddBtn.setOnClickListener{
-            val sectionName = popupBinding.editSectionName.text.toString()
-            val countryIndex = popupBinding.spinnerCountries.selectedItemPosition
+        popupBinding.popupAddBtn.setOnClickListener { popupListener(cardAdapter) }
+    }
 
-            if (edit){
-                cardAdapter.editItem(Section(sectionName, mainCountryList.get(countryIndex).flag))
-            } else {
-                addSection(sectionName, mainCountryList[countryIndex].flag)
-            }
-            Toast.makeText(this, "Section: $sectionName saved", Toast.LENGTH_SHORT).show()
-            dialog.dismiss()
+    private fun popupListener(cardAdapter: CardAdapter) {
+        val sectionName = popupBinding.editSectionName.text.toString()
+        val countryIndex = popupBinding.spinnerCountries.selectedItemPosition
+
+        if (edit) {
+            cardAdapter.editItem(Section(sectionName, mainCountryList.get(countryIndex).flag))
+        } else {
+            addSection(sectionName, mainCountryList[countryIndex].flag)
         }
-
-
+        Toast.makeText(this, "Section: $sectionName saved", Toast.LENGTH_SHORT).show()
+        dialog.dismiss()
     }
 
     private fun initList(): List<CountryItem> {

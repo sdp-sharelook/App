@@ -26,40 +26,44 @@ class LoginActivity : AppCompatActivity() {
         val email = findViewById<EditText>(R.id.email).text.toString()
         val password = findViewById<EditText>(R.id.password).text.toString()
 
-        if (auth.currentUser != null) greet(auth.currentUser?.displayName)
+        if (auth.currentUser != null) greet(auth.currentUser?.displayName, this)
 
         CoroutineScope(Dispatchers.IO).launch {
             val user = auth.signInWithEmailAndPassword(email, password)
             if (user.isSuccess) {
 
 
-                runOnUiThread {
+                withContext(Dispatchers.Main) {
                     Toast.makeText(applicationContext, "Logged in !", Toast.LENGTH_SHORT).show()
                 }
-                greet(user.getOrThrow().displayName)
+                greet(user.getOrThrow().displayName, this@LoginActivity)
             } else {
-                runOnUiThread {
-                    Toast.makeText(
-                        applicationContext,
-                        user.exceptionOrNull()!!.message,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+                errorToast(this@LoginActivity, user)
             }
         }
     }
 
-
-    fun greet(name: String?) {
-        val tName =
-            if (name.isNullOrBlank() || auth.currentUser!!.isAnonymous) "anonymous" else name
-        val intent = Intent(this, GreetingActivity::class.java).apply {
-            putExtra(GREET_NAME_EXTRA, tName)
-        }
-        startActivity(intent)
-    }
-
     fun goToSignUp(@Suppress("UNUSED_PARAMETER")view: View) {
         startActivity(Intent(this, SignUpActivity::class.java).apply { })
+    }
+
+}
+
+internal fun greet(name: String?, activity: AppCompatActivity) {
+    val tName =
+        if (name.isNullOrBlank() || auth.currentUser!!.isAnonymous) "anonymous" else name
+    val intent = Intent(activity, GreetingActivity::class.java).apply {
+        putExtra(GREET_NAME_EXTRA, tName)
+    }
+    activity.startActivity(intent)
+}
+
+internal suspend fun errorToast(activity: AppCompatActivity, user: Result<User>) {
+    withContext(Dispatchers.Main) {
+        Toast.makeText(
+            activity.applicationContext,
+            user.exceptionOrNull()!!.message,
+            Toast.LENGTH_SHORT
+        ).show()
     }
 }

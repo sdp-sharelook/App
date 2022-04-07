@@ -1,13 +1,10 @@
 package com.github.sdpsharelook.authorization
 
-import android.content.Intent
 import android.os.Bundle
-import android.view.KeyEvent
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.github.sdpsharelook.GreetingActivity
 import com.github.sdpsharelook.R
 
 import com.github.sdpsharelook.databinding.ActivitySignUpBinding
@@ -169,9 +166,10 @@ class SignUpActivity : AppCompatActivity() {
                     withContext(Dispatchers.Main) {
                         Toast.makeText(applicationContext, "Signed Up !", Toast.LENGTH_LONG).show()
                     }
-                    greet(user.getOrNull()!!.displayName)
+                    greet(user.getOrNull()!!.displayName, this@SignUpActivity)
                 }
                 user.isFailure -> {
+                    errorToast(this@SignUpActivity,user)
                     withContext(Dispatchers.Main) {
                         Toast.makeText(
                             applicationContext,
@@ -184,12 +182,4 @@ class SignUpActivity : AppCompatActivity() {
         }
     }
 
-    private fun greet(name: String?) {
-        val tName =
-            if (name.isNullOrBlank() || auth.currentUser!!.isAnonymous) "anonymous" else name
-        val intent = Intent(this, GreetingActivity::class.java).apply {
-            putExtra(GREET_NAME_EXTRA, tName)
-        }
-        startActivity(intent)
-    }
 }

@@ -14,9 +14,8 @@ class CountryAdapter(context: Context, countryList: List<CountryItem>) : ArrayAd
         return initView(position, convertView, parent)
     }
 
-    override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
-        return initView(position, convertView, parent)
-    }
+    override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View =
+        getView(position, convertView, parent)
 
     private fun initView(position: Int, @Suppress("UNUSED_PARAMETER")convertView: View?, parent: ViewGroup ) : View {
         val currentCountry = getItem(position)

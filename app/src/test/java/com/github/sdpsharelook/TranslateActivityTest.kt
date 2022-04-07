@@ -85,7 +85,7 @@ class TranslateActivityTest {
         getInstrumentation().waitForIdleSync()
         delay(2000)
 
-        val context = getInstrumentation().getTargetContext()
+        val context = getInstrumentation().targetContext
         PermissionChecker.checkCallingOrSelfPermission(
             context,
             android.Manifest.permission.RECORD_AUDIO

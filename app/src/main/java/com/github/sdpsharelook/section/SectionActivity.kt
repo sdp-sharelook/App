@@ -68,15 +68,15 @@ class SectionActivity : AppCompatActivity(), SectionClickListener {
 
 
         popupBinding.popupAddBtn.setOnClickListener{
-            var sectionName = popupBinding.editSectionName.text.toString()
-            var countryIndex = popupBinding.spinnerCountries.selectedItemPosition
+            val sectionName = popupBinding.editSectionName.text.toString()
+            val countryIndex = popupBinding.spinnerCountries.selectedItemPosition
 
             if (edit){
                 cardAdapter.editItem(Section(sectionName, mainCountryList.get(countryIndex).flag))
             } else {
-                addSection(sectionName, mainCountryList.get(countryIndex).flag)
+                addSection(sectionName, mainCountryList[countryIndex].flag)
             }
-            Toast.makeText(this, "Section: " + sectionName + " saved", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Section: $sectionName saved", Toast.LENGTH_SHORT).show()
             dialog.dismiss()
         }
 
@@ -84,7 +84,7 @@ class SectionActivity : AppCompatActivity(), SectionClickListener {
     }
 
     private fun initList(): List<CountryItem> {
-        var list = mutableListOf<CountryItem>()
+        val list = mutableListOf<CountryItem>()
         list.add(CountryItem(R.drawable.spain))
         list.add(CountryItem(R.drawable.us))
         return list
@@ -93,17 +93,18 @@ class SectionActivity : AppCompatActivity(), SectionClickListener {
     private fun addSection(title: String, flag: Int) {
         val section = Section(title, flag)
         sectionList.add(section)
-        binding.recyclerView.adapter?.notifyDataSetChanged()
+        binding.recyclerView.adapter?.notifyItemInserted(sectionList.lastIndex)
     }
 
     private fun removeSection(index: Int) {
         sectionList.removeAt(index)
-        binding.recyclerView.adapter?.notifyDataSetChanged()
+        binding.recyclerView.adapter?.notifyItemRemoved(index)
     }
 
     private fun editSectionName(index: Int, title: String, flag: Int) {
-        sectionList.set(0, Section(title, flag))
-        binding.recyclerView.adapter?.notifyDataSetChanged()
+        assert(index == 0 && sectionList.isNotEmpty())
+        sectionList[0] = Section(title, flag)
+        binding.recyclerView.adapter?.notifyItemChanged(0)
     }
 
     override fun onClick(section: Section) {

@@ -40,11 +40,7 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun isFirstNameValid() : String? {
-        if(binding.firstName.text.toString() == "") {
-            return "Required"
-        } else {
-            return null
-        }
+        return if(binding.firstName.text.toString() == "") "Required" else null
     }
 
     private fun lastNameListener() {
@@ -56,11 +52,7 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun isLastNameValid() : String? {
-        if(binding.lastName.text.toString() != "") {
-            return null
-        } else {
-            return "Required"
-        }
+        return if(binding.lastName.text.toString() != "") null else "Required"
     }
 
     private fun emailListener() {
@@ -74,14 +66,8 @@ class SignUpActivity : AppCompatActivity() {
 
     private fun isEmailValid() : String? {
         val regex = "(([^<>()\\[\\]\\\\.,;:\\s@\"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))".toRegex()
-        if (binding.email.text.toString() == "") {
-            return "Required"
-        } else
-            if(!binding.email.text.toString().matches(regex)) {
-                return "Invalid Email Address"
-            } else {
-                return null
-            }
+        return if (binding.email.text.toString() == "") "Required" else
+            if(!binding.email.text.toString().matches(regex)) "Invalid Email Address" else null
     }
 
     private fun prelimPasswordListener() {
@@ -167,11 +153,11 @@ class SignUpActivity : AppCompatActivity() {
         val email = findViewById<EditText>(R.id.email).text.toString()
         val password = findViewById<EditText>(R.id.password).text.toString()
 
-        if (email.isNullOrBlank()) {
+        if (email.isBlank()) {
             Toast.makeText(this, "Email cannot be left blank!", Toast.LENGTH_LONG).show()
             return
         }
-        if (password.isNullOrBlank()) {
+        if (password.isBlank()) {
             Toast.makeText(this, "Password cannot be left blank!", Toast.LENGTH_LONG).show()
             return
         }
@@ -198,7 +184,7 @@ class SignUpActivity : AppCompatActivity() {
         }
     }
 
-    fun greet(name: String?) {
+    private fun greet(name: String?) {
         val tName =
             if (name.isNullOrBlank() || auth.currentUser!!.isAnonymous) "anonymous" else name
         val intent = Intent(this, GreetingActivity::class.java).apply {

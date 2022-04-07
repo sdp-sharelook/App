@@ -1,24 +1,16 @@
 package com.github.sdpsharelook.camera
 
 import android.Manifest
-import android.app.Activity
 import android.app.AlertDialog
-import android.content.ContentValues
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
-import android.provider.MediaStore
-import android.view.View
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.Toast
-import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.github.sdpsharelook.R
@@ -59,7 +51,7 @@ class CameraActivity : AppCompatActivity() {
     private var tempImageUri: Uri? = null
     private val cameraLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
         if (success) {
-            val file = File(currentPath)
+            val file = File(currentPath!!)
             val uri = Uri.fromFile(file)
             val imageView = findViewById<ImageView>(R.id.cameraImageView)
             imageView.setImageURI(uri)
@@ -82,7 +74,7 @@ class CameraActivity : AppCompatActivity() {
     private fun errorPermission() =
         Utils.toast("Please give camera permission to use this feature", this)
 
-    fun checkPermissions(permission: String) = when {
+    private fun checkPermissions(permission: String) = when {
         ContextCompat.checkSelfPermission(
             this,
             permission
@@ -95,16 +87,18 @@ class CameraActivity : AppCompatActivity() {
             )
         }
     }
-    fun checkPerms(): Boolean {
-        val permission1 = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
-        return permission1
+    private fun checkPerms(): Boolean {
+        return ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.CAMERA
+        ) == PackageManager.PERMISSION_GRANTED
     }
 
     private fun createImage(): File {
-        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss",Locale.US).format(Date())
         val imageName = "ShareLook_"+timeStamp+"_"
-        var storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        var image = File.createTempFile(imageName, ".jpg", storageDir)
+        val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        val image = File.createTempFile(imageName, ".jpg", storageDir)
         currentPath = image.absolutePath
         return image
     }

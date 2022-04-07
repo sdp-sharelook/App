@@ -20,4 +20,9 @@
         android:name="com.github.sdpsharelook."
         android:label="Translate"
         tools:layout="@layout/fragment_translate" />
+    <fragment
+        android:id="@+id/menuDatabaseViewLink"
+        android:name="com.github.sdpsharelook.storage.DatabaseViewFragment"
+        android:label="Database"
+        tools:layout="@layout/fragment_database_view" />
 </navigation>

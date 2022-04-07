@@ -10,7 +10,6 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
 import com.github.sdpsharelook.camera.CameraActivity
-import com.github.sdpsharelook.storage.DatabaseViewActivity
 import com.github.sdpsharelook.textDetection.TextDetectionActivity
 import com.google.android.material.navigation.NavigationView
 
@@ -45,9 +44,5 @@ class MainActivity : AppCompatActivity() {
 
     fun textDetectionActivity(view: View) =
         startActivity(Intent(this, TextDetectionActivity::class.java))
-
-    fun databaseActivity(@Suppress("UNUSED_PARAMETER")view: View) {
-        startActivity(Intent(this, DatabaseViewActivity::class.java))
-    }
 
 }

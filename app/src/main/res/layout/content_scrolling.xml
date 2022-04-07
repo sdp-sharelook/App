@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".storage.DatabaseViewActivity"
-    tools:showIn="@layout/activity_database_view">
+    tools:context=".storage.DatabaseViewFragment"
+    tools:showIn="@layout/fragment_database_view">
 
     <TextView
         android:id="@+id/database_contents"

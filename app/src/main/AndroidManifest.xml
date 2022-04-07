@@ -29,15 +29,7 @@
             android:name=".textDetection.TextDetectionActivity"
             android:exported="false" />
         <activity
-            android:name=".storage.DatabaseViewActivity"
-            android:exported="false"
-            android:label="@string/title_activity_database_view"
-            android:theme="@style/Theme.MyBootcamp.NoActionBar" />
-        <activity
             android:name=".Section.SectionDetail"
-            android:exported="false" />
-        <activity
-            android:name=".Section.SectionActivity"
             android:exported="false" />
         <activity
             android:name=".GreetingActivity"

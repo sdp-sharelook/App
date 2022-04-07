@@ -11,9 +11,7 @@ import com.github.sdpsharelook.GreetingActivity
 import com.github.sdpsharelook.R
 
 import com.github.sdpsharelook.databinding.ActivitySignUpBinding
-
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class SignUpActivity : AppCompatActivity() {
 
@@ -164,21 +162,23 @@ class SignUpActivity : AppCompatActivity() {
 
 
 
-        GlobalScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
             val user = auth.createUserWithEmailAndPassword(email, password)
-            if (user.isSuccess) {
-                runOnUiThread {
-                    Toast.makeText(applicationContext, "Signed Up !", Toast.LENGTH_LONG).show()
+            when {
+                user.isSuccess -> {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(applicationContext, "Signed Up !", Toast.LENGTH_LONG).show()
+                    }
+                    greet(user.getOrNull()!!.displayName)
                 }
-                greet(user.getOrNull()!!.displayName)
-            } else {
-
-                runOnUiThread {
-                    Toast.makeText(
-                        applicationContext,
-                        user.exceptionOrNull()!!.message,
-                        Toast.LENGTH_LONG
-                    ).show()
+                user.isFailure -> {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(
+                            applicationContext,
+                            user.exceptionOrNull()!!.message,
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
                 }
             }
         }

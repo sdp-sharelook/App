@@ -1,4 +1,4 @@
-package com.github.sdpsharelook.Section
+package com.github.sdpsharelook.section
 
 class SectionWord(var sourceText: String, var translatedText: String) {
 

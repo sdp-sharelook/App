@@ -60,14 +60,14 @@ class TranslateActivity : AppCompatActivity() {
     private fun setSource(language: Language) {
         sourceLanguage = language
         val buttonSource = findViewById<Button>(R.id.buttonSourceLang)
-        buttonSource.setText(language.displayName)
+        buttonSource.text = language.displayName
         speechRecognizer.language = language
     }
 
-    private fun setTarget(language: Language, forceEnableTTS:Boolean=false) {
+    private fun setTarget(language: Language, forceEnableTTS: Boolean = false) {
         targetLanguage = language
         val buttonTarget = findViewById<Button>(R.id.buttonTargetLang)
-        buttonTarget.setText(language.displayName)
+        buttonTarget.text = language.displayName
         textToSpeech.language = language
         ttsButton.isEnabled = forceEnableTTS || textToSpeech.isLanguageAvailable(language)
     }
@@ -85,14 +85,13 @@ class TranslateActivity : AppCompatActivity() {
             }
             val ttsLanguages =
                 translatorLanguages.filter { textToSpeech.isLanguageAvailable(it) }.toSet()
-            val srLanguages = translatorLanguages
 
             LanguageSelectionDialog.selectLanguage(
                 activity,
                 translatorLanguages,
                 translatorLanguages,
                 ttsLanguages,
-                srLanguages
+                translatorLanguages
             )?.let {
                 when (button) {
                     buttonSource -> {
@@ -104,26 +103,15 @@ class TranslateActivity : AppCompatActivity() {
                     }
                 }
             }
-
-            mIdlingResource?.increment()
-            val scope = CoroutineScope(Dispatchers.IO)
-            scope.launch {
-                if (sourceText.text.isNotEmpty())
-                    updateTranslation(sourceText.text.toString())
-                else
-                    mIdlingResource?.decrement()
-            }
+            if (sourceText.text.isNotEmpty())
+                updateTranslation(sourceText.text.toString())
         }
     }
 
     private fun initTranslator() {
         val buttonSwitchLang = findViewById<ImageButton>(R.id.buttonSwitchLang)
         sourceText.addTextChangedListener { afterTextChanged ->
-            mIdlingResource?.increment()
-            val scope = CoroutineScope(Dispatchers.IO)
-            scope.launch {
-                updateTranslation(afterTextChanged.toString())
-            }
+            updateTranslation(afterTextChanged.toString())
         }
         buttonSwitchLang.setOnClickListener {
             when (sourceLanguage) {
@@ -132,19 +120,14 @@ class TranslateActivity : AppCompatActivity() {
                         .show()
                 else -> {
                     val sourceEditText = findViewById<EditText>(R.id.sourceText)
-                    val tempsource = sourceEditText.text.toString()
+                    val tempSource = sourceEditText.text.toString()
                     sourceEditText.setText(targetTextString ?: "")
-                    targetTextView.setText(tempsource)
-                    val templanguage = sourceLanguage
+                    targetTextView.text = tempSource
+                    val tempLanguage = sourceLanguage
                     setSource(targetLanguage)
-                    setTarget(templanguage)
-                    val scope = CoroutineScope(Dispatchers.IO)
-                    scope.launch {
-                        if (sourceText.text.isNotEmpty())
-                            updateTranslation(sourceText.text.toString())
-                        else
-                            mIdlingResource?.decrement()
-                    }
+                    setTarget(tempLanguage)
+                    if (sourceText.text.isNotEmpty())
+                        updateTranslation(sourceText.text.toString())
                 }
             }
         }
@@ -170,7 +153,7 @@ class TranslateActivity : AppCompatActivity() {
                 override fun onReady() {
                     sourceText.isEnabled = false
                     srButton.isEnabled = false
-                    sourceText.setText("...")
+                    sourceText.text = "..."
                 }
 
                 override fun onBegin() {}
@@ -182,7 +165,7 @@ class TranslateActivity : AppCompatActivity() {
 
                 override fun onError() {
                     Toast.makeText(ctx, "Error recognition", Toast.LENGTH_SHORT).show()
-                    sourceText.setText("")
+                    sourceText.text = ""
                     onEnd()
                 }
             })
@@ -193,26 +176,30 @@ class TranslateActivity : AppCompatActivity() {
     /** Call to update the text to translate and translate it.
      * @param textToTranslate [String] | The text to translate.
      */
-    private suspend fun updateTranslation(textToTranslate: String) {
-        var sourceLang = sourceLanguage
-        val destLang = targetLanguage
-        if (sourceLang == Language.auto) {
-            sourceLang = Language(Translator.detectLanguage(textToTranslate))
-            if (!Translator.availableLanguages.contains(sourceLang)) {
-                targetTextString = null
-                targetTextView.text = getString(R.string.unrecognized_source_language)
-                mIdlingResource?.decrement()
-                return
+    private fun updateTranslation(textToTranslate: String) {
+        mIdlingResource?.increment()
+        val activity = this
+        CoroutineScope(Dispatchers.IO).launch {
+            var sourceLang = sourceLanguage
+            val destLang = targetLanguage
+            if (sourceLang == Language.auto) {
+                sourceLang = Language(Translator.detectLanguage(textToTranslate))
+                if (!Translator.availableLanguages.contains(sourceLang)) {
+                    targetTextString = null
+                    targetTextView.text = getString(R.string.unrecognized_source_language)
+                    mIdlingResource?.decrement()
+                    cancel()
+                }
             }
+
+            val t = Translator(sourceLang.tag, destLang.tag)
+            targetTextString = null
+
+            targetTextView.text = getString(R.string.translation_running)
+            targetTextString = t.translate(textToTranslate)
+            activity.targetTextView.text = targetTextString
+            mIdlingResource?.decrement()
         }
-
-        val t = Translator(sourceLang.tag, destLang.tag)
-        targetTextString = null
-
-        targetTextView.text = getString(R.string.translation_running)
-        targetTextString = t.translate(textToTranslate)
-        this.targetTextView.text = targetTextString
-        mIdlingResource?.decrement()
     }
 
     /**

@@ -9,10 +9,10 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-class RTDBWordListRepository @Inject constructor() : IRepository<List<@JvmSuppressWildcards String>> {
+class RTDBWordListRepository @Inject constructor(
+    private var firebaseDatabase: FirebaseDatabase
+) : IRepository<List<@JvmSuppressWildcards String>> {
 
-    @Inject
-    lateinit var firebaseDatabase: FirebaseDatabase
     private val reference: DatabaseReference by lazy { firebaseDatabase.reference.child("wordlists") }
 
     /**

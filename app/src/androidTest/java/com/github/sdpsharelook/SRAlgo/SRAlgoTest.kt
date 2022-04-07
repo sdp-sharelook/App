@@ -1,4 +1,4 @@
-package com.github.sdpsharelook
+package com.github.sdpsharelook.SRAlgo
 
 import com.github.sdpsharelook.revision.SRAlgo
 import com.github.sdpsharelook.revision.revisionWord

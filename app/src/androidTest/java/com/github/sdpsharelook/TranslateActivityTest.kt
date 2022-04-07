@@ -119,14 +119,8 @@ class TranslateActivityTest {
         selectTargetLanguage("en")
         onView(withId(R.id.sourceText))
             .perform(typeText("Bo"), closeSoftKeyboard())
-        onView(withId(R.id.targetText)).check(
-            matches(
-                anyOf(
-                    withText(R.string.unrecognized_source_language),
-                    withText(R.string.translation_running)
-                )
-            )
-        )
+        onView(withId(R.id.targetText))
+            .check(matches(withText(R.string.unrecognized_source_language)))
     }
 
     @Test

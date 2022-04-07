@@ -15,6 +15,7 @@ import com.github.sdpsharelook.speechRecognition.RecognitionListener
 import com.github.sdpsharelook.speechRecognition.SpeechRecognizer
 import com.github.sdpsharelook.textToSpeech.TextToSpeech
 import com.github.sdpsharelook.translate.Translator
+import com.google.mlkit.nl.translate.TranslateLanguage
 import kotlinx.coroutines.*
 
 
@@ -173,6 +174,8 @@ class TranslateActivity : AppCompatActivity() {
         }
     }
 
+    private var translatorLanguagesTag = TranslateLanguage.getAllLanguages().toSet()
+
     /** Call to update the text to translate and translate it.
      * @param textToTranslate [String] | The text to translate.
      */
@@ -182,23 +185,27 @@ class TranslateActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.IO).launch {
             var sourceLang = sourceLanguage
             val destLang = targetLanguage
+            var coroutineCanceled=false
             if (sourceLang == Language.auto) {
-                sourceLang = Language(Translator.detectLanguage(textToTranslate))
-                if (!Translator.availableLanguages.contains(sourceLang)) {
+                val sourceLangTag = Translator.detectLanguage(textToTranslate)
+                if (!translatorLanguagesTag.contains(sourceLangTag)) {
                     targetTextString = null
                     targetTextView.text = getString(R.string.unrecognized_source_language)
                     mIdlingResource?.decrement()
-                    cancel()
+                    // println("source language unrecognized")
+                    coroutineCanceled=true
                 }
+                else sourceLang=Language(sourceLangTag)
             }
-
-            val t = Translator(sourceLang.tag, destLang.tag)
-            targetTextString = null
-
-            targetTextView.text = getString(R.string.translation_running)
-            targetTextString = t.translate(textToTranslate)
-            activity.targetTextView.text = targetTextString
-            mIdlingResource?.decrement()
+            if (!coroutineCanceled) {
+                val t = Translator(sourceLang.tag, destLang.tag)
+                // println("source language recognized ${sourceLang.tag}")
+                targetTextString = null
+                targetTextView.text = getString(R.string.translation_running)
+                targetTextString = t.translate(textToTranslate)
+                activity.targetTextView.text = targetTextString
+                mIdlingResource?.decrement()
+            }
         }
     }
 

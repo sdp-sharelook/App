@@ -8,6 +8,11 @@
         android:title="Translate"
         />
     <item
+        android:id="@+id/menuSectionsLink"
+        android:icon="@android:drawable/ic_menu_save"
+        android:title="Saved Words"
+        />
+    <item
         android:id="@+id/menuTTSLink"
         android:icon="@drawable/speaker"
         android:title="Text to speech" />
@@ -15,9 +20,4 @@
         android:id="@+id/menuSpeechRecognitionLink"
         android:icon="@drawable/microphone"
         android:title="Speech recognition" />
-    <item
-        android:id="@+id/menuSectionsLink"
-        android:icon="@android:drawable/ic_menu_save"
-        android:title="Saved Words"
-        />
 </menu>

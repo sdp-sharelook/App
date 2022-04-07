@@ -11,6 +11,11 @@
         android:label="Translate"
         tools:layout="@layout/fragment_translate" />
     <fragment
+        android:id="@+id/menuSectionsLink"
+        android:name="com.github.sdpsharelook.SectionFragment"
+        android:label="Saved words"
+        tools:layout="@layout/fragment_section" />
+    <fragment
         android:id="@+id/menuTTSLink"
         android:name="com.github.sdpsharelook."
         android:label="Translate"

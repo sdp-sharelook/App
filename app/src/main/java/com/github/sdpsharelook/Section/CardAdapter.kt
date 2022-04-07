@@ -4,10 +4,9 @@ import android.app.Dialog
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.github.sdpsharelook.R
-import com.github.sdpsharelook.databinding.ActivitySectionBinding
 import com.github.sdpsharelook.databinding.CardSectionBinding
-import com.github.sdpsharelook.databinding.PopupBinding
+import com.github.sdpsharelook.edit
+import com.github.sdpsharelook.editPosition
 
 class CardAdapter(
     private val sections: List<Section>,

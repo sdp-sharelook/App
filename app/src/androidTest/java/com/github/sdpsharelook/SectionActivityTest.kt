@@ -1,22 +1,20 @@
 package com.github.sdpsharelook
 
-
+import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import androidx.test.espresso.Espresso.onData
+import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.*
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.LargeTest
-import androidx.test.rule.ActivityTestRule
 import androidx.test.runner.AndroidJUnit4
-import com.github.sdpsharelook.Section.SectionActivity
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.*
 import org.hamcrest.TypeSafeMatcher
-import org.junit.Rule
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -24,9 +22,10 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class SectionActivityTest {
 
-    @Rule
-    @JvmField
-    var mActivityTestRule = ActivityTestRule(SectionActivity::class.java)
+    @Before
+    fun init() {
+        launchFragmentInContainer<SectionFragment>(Bundle(), R.style.Theme_Sherlook)
+    }
 
     @Test
     fun sectionActivityTest() {

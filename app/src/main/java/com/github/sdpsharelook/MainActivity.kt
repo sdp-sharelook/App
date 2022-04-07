@@ -9,7 +9,6 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
-import com.github.sdpsharelook.Section.SectionActivity
 import com.github.sdpsharelook.camera.CameraActivity
 import com.github.sdpsharelook.storage.DatabaseViewActivity
 import com.github.sdpsharelook.textDetection.TextDetectionActivity
@@ -40,10 +39,6 @@ class MainActivity : AppCompatActivity() {
 
     fun voiceRecognition(@Suppress("UNUSED_PARAMETER")view: View) {}
     // startActivity(Intent(this, SpeechRecognitionActivity::class.java))
-
-
-    fun sectionActivity(@Suppress("UNUSED_PARAMETER")view: View) =
-        startActivity(Intent(this, SectionActivity::class.java))
 
     fun cameraActivity(view: View) =
         startActivity(Intent(this, CameraActivity::class.java))

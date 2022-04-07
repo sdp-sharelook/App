@@ -21,10 +21,9 @@ import androidx.test.espresso.intent.Intents.intended
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
-import androidx.test.runner.AndroidJUnit4
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.`is`
@@ -41,11 +40,11 @@ class OtherCameraTest {
 
     @Rule
     @JvmField
-    var mActivityTestRule = ActivityTestRule(MainActivity::class.java)
+    var mActivityTestRule = ActivityScenarioRule(MainActivity::class.java)
 
     @Rule
     @JvmField
-    var mGrantPermissionRule =
+    var mGrantPermissionRule: GrantPermissionRule =
         GrantPermissionRule.grant(
             "android.permission.CAMERA"
         )
@@ -109,13 +108,9 @@ class OtherCameraTest {
 
 
 
-    private fun withDrawable(resourceId: Int) : TypeSafeMatcher<View> {
-        return drawable(resourceId)
-    }
+    private fun withDrawable(resourceId: Int) : TypeSafeMatcher<View> = drawable(resourceId)
 
-    private fun noDrawable() : TypeSafeMatcher<View> {
-        return drawable(-1)
-    }
+    private fun noDrawable() : TypeSafeMatcher<View> = drawable(-1)
 
     private fun drawable(resourceId: Int) = object : TypeSafeMatcher<View>() {
         override fun describeTo(description: Description) {
@@ -123,15 +118,9 @@ class OtherCameraTest {
         }
 
         override fun matchesSafely(view: View): Boolean {
-            val context = view.context
-            var ppp = true
+//            val context = view.context
             val imageView = view as ImageView
-            ppp = if (resourceId < 0) {
-                imageView.drawable == null
-            } else {
-                imageView.drawable != null
-            }
-            return view is ImageView && ppp
+            return if (resourceId < 0) imageView.drawable == null else imageView.drawable != null
         }
     }
 

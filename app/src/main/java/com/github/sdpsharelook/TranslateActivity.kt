@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.test.espresso.IdlingResource
 import androidx.test.espresso.idling.CountingIdlingResource
-import com.github.sdpsharelook.Section.SectionActivity
 import com.github.sdpsharelook.speechRecognition.RecognitionListener
 import com.github.sdpsharelook.speechRecognition.SpeechRecognizer
 import com.github.sdpsharelook.textToSpeech.TextToSpeech
@@ -41,8 +40,7 @@ class TranslateActivity : AppCompatActivity() {
         fillAndInitializeSpinners(sourceLangSelector, targetLangSelector)
         sourceText.addTextChangedListener { afterTextChanged ->
             mIdlingResource?.increment()
-            val scope = CoroutineScope(Dispatchers.IO)
-            scope.launch {
+            CoroutineScope(Dispatchers.IO).launch {
                 updateTranslation(afterTextChanged.toString())
             }
         }
@@ -62,14 +60,14 @@ class TranslateActivity : AppCompatActivity() {
             sr.recognizeSpeech(object : RecognitionListener {
                 override fun onResults(s: String) {
                     if (s.trim().isEmpty())
-                        sourceText.setText("...")
+                        sourceText.text = "..."
 
-                    sourceText.setText(s)
+                    sourceText.text = s
                 }
 
                 override fun onReady() {
                     sourceText.isEnabled = false
-                    sourceText.setText("...")
+                    sourceText.text = "..."
                 }
 
                 override fun onBegin() {
@@ -82,7 +80,7 @@ class TranslateActivity : AppCompatActivity() {
 
                 override fun onError() {
                     Toast.makeText(ctx, "Error recognition", Toast.LENGTH_SHORT).show()
-                    sourceText.setText("")
+                    sourceText.text = ""
                     sourceText.isEnabled = true
                 }
             })
@@ -136,8 +134,7 @@ class TranslateActivity : AppCompatActivity() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
                 tts.setLanguage(Locale.forLanguageTag(allLanguages[targetLangSelector.selectedItemPosition]))
                 mIdlingResource?.increment()
-                val scope = CoroutineScope(Dispatchers.IO)
-                scope.launch {
+                CoroutineScope(Dispatchers.IO).launch {
                     if (sourceText.text.isNotEmpty())
                         updateTranslation(sourceText.text.toString())
                     else
@@ -155,7 +152,7 @@ class TranslateActivity : AppCompatActivity() {
     /** Call to update the text to translate and translate it.
      * @param textToTranslate [String] | The text to translate.
      */
-    private suspend fun updateTranslation(textToTranslate: String) {
+    private suspend fun updateTranslation(textToTranslate: String) = withContext(Dispatchers.Main) {
         val sourceLangSelector = findViewById<Spinner>(R.id.sourceLangSelector)
         val targetLangSelector = findViewById<Spinner>(R.id.targetLangSelector)
         val targetText = findViewById<TextView>(R.id.targetText)
@@ -168,14 +165,14 @@ class TranslateActivity : AppCompatActivity() {
             if (!allLanguages.contains(sourceLang)) {
                 targetText.text = getString(R.string.unrecognized_source_language)
                 mIdlingResource?.decrement()
-                return
+                return@withContext
             }
         }
 
         val t = Translator(sourceLang, destLang)
 
         targetText.text = getString(R.string.translation_running)
-        targetText.setText(t.translate(textToTranslate))
+        targetText.text = t.translate(textToTranslate)
         mIdlingResource?.decrement()
     }
 

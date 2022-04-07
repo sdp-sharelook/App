@@ -35,7 +35,7 @@ class DatabaseViewActivityTest {
     var hiltRule = HiltAndroidRule(this)
 
     @Before
-    fun init() {
+    fun inject() {
         hiltRule.inject()
     }
 

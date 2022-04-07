@@ -7,9 +7,9 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.ext.junit.rules.ActivityScenarioRule
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import androidx.test.rule.ActivityTestRule
-import androidx.test.runner.AndroidJUnit4
 import com.github.sdpsharelook.textDetection.TextDetectionActivity
 import org.hamcrest.Description
 import org.hamcrest.Matcher
@@ -27,7 +27,7 @@ class TextDetectionActivityTest {
 
     @Rule
     @JvmField
-    var mActivityTestRule = ActivityTestRule(TextDetectionActivity::class.java)
+    var mActivityTestRule = ActivityScenarioRule(TextDetectionActivity::class.java)
 
     @Test
     fun textDetectionActivityTest() {

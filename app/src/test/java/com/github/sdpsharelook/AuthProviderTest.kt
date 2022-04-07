@@ -20,6 +20,8 @@ class AuthProviderTest {
 
         runTest{
             val user = auth.signInWithEmailAndPassword(TEST_USER_EMAIL, TEST_USER_PASS)
+            assert(user.isSuccess)
+            assert(auth.currentUser!!.email==user.getOrThrow().email)
             assert(auth.currentUser!!.email==TEST_USER_EMAIL)
             auth.signOut()
             assert(auth.currentUser==null)

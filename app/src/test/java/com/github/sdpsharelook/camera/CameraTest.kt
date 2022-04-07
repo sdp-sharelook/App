@@ -4,9 +4,8 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.rules.ActivityScenarioRule
-import androidx.test.runner.AndroidJUnit4
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.sdpsharelook.R
-import com.github.sdpsharelook.authorization.SignUpActivity
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith

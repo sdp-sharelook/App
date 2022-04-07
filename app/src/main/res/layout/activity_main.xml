@@ -30,14 +30,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/ic_hamburger_menu_svgrepo_com"
-                />
+                android:contentDescription="@string/hamburger_menu" />
 
             <ImageView
                 android:id="@+id/imageView"
                 android:layout_width="150dp"
                 android:layout_height="match_parent"
                 android:adjustViewBounds="false"
-                android:contentDescription="logo"
+                android:contentDescription="@string/logo"
                 android:cropToPadding="true"
                 android:scaleType="centerCrop"
                 android:src="@drawable/logo" />
@@ -92,6 +92,7 @@
                 app:barrierDirection="top" />
 
             <Button
+                android:id="@+id/button_voice_recognition"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="voiceRecognition"

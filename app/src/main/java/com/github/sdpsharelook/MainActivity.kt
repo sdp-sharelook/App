@@ -30,8 +30,8 @@ class MainActivity : AppCompatActivity() {
         findViewById<ImageView>(R.id.menu_hamburger).setOnClickListener {
             drawerLayout.openDrawer(GravityCompat.START)
         }
-        val navView = findViewById<NavigationView>(R.id.navView)
-        val theme = applicationContext.theme
+        @Suppress("UNUSED_VARIABLE") val navView = findViewById<NavigationView>(R.id.navView)
+        @Suppress("UNUSED_VARIABLE") val theme = applicationContext.theme
     }
 
     fun greet(button: View) {
@@ -51,26 +51,28 @@ class MainActivity : AppCompatActivity() {
 
 
     fun voiceRecognition(button: View) {
-//        assert(button.id == R.id.button_voice_recognition)
+        assert(button.id == R.id.button_voice_recognition)
         // startActivity(Intent(this, SpeechRecognitionActivity::class.java))
     }
 
 
     fun sectionActivity(button: View) {
-//        assert(button.id == R.id.button_section)
+        assert(button.id == R.id.sectionButton)
         startActivity(Intent(this, SectionActivity::class.java))
     }
 
     fun translatorActivity(button: View) {
-//        assert(button.id == R.id.button_translation)
+        assert(button.id == R.id.translateButton)
         startActivity(Intent(this, TranslateActivity::class.java))
     }
 
+    @Suppress("unused", "UNUSED_PARAMETER")
     fun cameraActivity(button: View) {
 //        assert(button.id == R.id.button_camera)
         startActivity(Intent(this, CameraActivity::class.java))
     }
 
+    @Suppress("unused", "UNUSED_PARAMETER")
     fun textDetectionActivity(button: View) {
 //        assert(button.id == R.id.button_text_detection)
         startActivity(Intent(this, TextDetectionActivity::class.java))

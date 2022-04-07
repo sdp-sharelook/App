@@ -1,13 +1,14 @@
 package com.github.sdpsharelook.Section
 
 import android.app.Dialog
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.github.sdpsharelook.R
-import com.github.sdpsharelook.databinding.ActivitySectionBinding
 import com.github.sdpsharelook.databinding.CardSectionBinding
-import com.github.sdpsharelook.databinding.PopupBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class CardAdapter(
     private val sections: List<Section>,
@@ -17,9 +18,12 @@ class CardAdapter(
     : RecyclerView.Adapter<CardViewHolder>()
 
 {
+    private var editPosition = 0
+    private lateinit var binding: CardSectionBinding
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolder {
         val from = LayoutInflater.from(parent.context)
-        val binding = CardSectionBinding.inflate(from, parent, false)
+        binding = CardSectionBinding.inflate(from, parent, false)
         return CardViewHolder(binding, clickListener)
     }
 
@@ -37,17 +41,23 @@ class CardAdapter(
         holder.bindBook(sections[position])
     }
 
-    fun editItem(section: Section) {
+    fun editItem(name: String, flag: Int) {
+        val section = sectionList[editPosition]
+        section.title = name
+        section.flag = flag
         edit = false
-        sectionList.set(editPosition, section)
         notifyItemChanged(editPosition)
-//        sectionList.set(viewHolder.adapterPosition, section)
-//        notifyItemChanged(viewHolder.adapterPosition)
     }
 
     fun removeItem(viewHolder: RecyclerView.ViewHolder, index: Int) {
+        val section = sectionList[index]
+        Log.d("INDEX", index.toString())
         sectionList.removeAt(index)
+        CoroutineScope(Dispatchers.IO).launch{
+            section.databaseRepo.delete(section.sectionRepo)
+        }
         notifyItemRemoved(viewHolder.adapterPosition)
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int = sections.size

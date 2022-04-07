@@ -51,7 +51,6 @@ class TranslateActivity : AppCompatActivity() {
         findViewById<Button>(R.id.buttonTargetLang).apply {
             setOnClickListener { selectLanguage(this) }
         }
-        val ctx = this
         findViewById<ImageButton>(R.id.imageButtonHamburger).setOnClickListener {
             val intent = Intent(ctx, NavigationMenuActivity::class.java)
             ctx.startActivity(intent)
@@ -75,37 +74,39 @@ class TranslateActivity : AppCompatActivity() {
 
 
     private fun selectLanguage(button: Button) {
-        val activity = this
         val buttonSource = findViewById<Button>(R.id.buttonSourceLang)
         val buttonTarget = findViewById<Button>(R.id.buttonTargetLang)
+        val translatorLanguages = when (button) {
+            buttonSource -> Translator.availableLanguages.union(setOf(Language.auto))
+            buttonTarget -> Translator.availableLanguages
+            else -> setOf()
+        }
         CoroutineScope(Dispatchers.Main).launch {
-            val translatorLanguages = when (button) {
-                buttonSource -> Translator.availableLanguages.union(setOf(Language.auto))
-                buttonTarget -> Translator.availableLanguages
-                else -> setOf()
-            }
-            val ttsLanguages =
-                translatorLanguages.filter { textToSpeech.isLanguageAvailable(it) }.toSet()
-
-            LanguageSelectionDialog.selectLanguage(
-                activity,
-                translatorLanguages,
-                translatorLanguages,
-                ttsLanguages,
-                translatorLanguages
-            )?.let {
-                when (button) {
-                    buttonSource -> {
-                        setSource(it)
-                    }
-                    buttonTarget -> {
-                        setTarget(it)
-                        textToSpeech.language = it
-                    }
-                }
-            }
+            launchLanguageDialog(button, translatorLanguages, buttonSource, buttonTarget)
             if (sourceText.text.isNotEmpty())
                 updateTranslation(sourceText.text.toString())
+        }
+    }
+
+    suspend fun launchLanguageDialog(
+        button: Button,
+        translatorLanguages: Set<Language>,
+        buttonSource: Button,
+        buttonTarget: Button
+    ) {
+        val ttsLanguages =
+            translatorLanguages.filter { textToSpeech.isLanguageAvailable(it) }.toSet()
+        LanguageSelectionDialog.selectLanguage(
+            this,
+            translatorLanguages,
+            translatorLanguages,
+            ttsLanguages,
+            translatorLanguages
+        )?.let {
+            when (button) {
+                buttonSource -> setSource(it)
+                buttonTarget -> setTarget(it)
+            }
         }
     }
 
@@ -141,36 +142,37 @@ class TranslateActivity : AppCompatActivity() {
         }
     }
 
+    private val ctx = this
+    private val recognitionListener = object : RecognitionListener {
+        override fun onResults(s: String) =
+            if (s.trim().isEmpty()) sourceText.setText("...")
+            else sourceText.setText(s)
+
+        override fun onReady() {
+            sourceText.isEnabled = false
+            srButton.isEnabled = false
+            sourceText.text = "..."
+        }
+
+        override fun onBegin() {}
+
+        override fun onEnd() {
+            sourceText.isEnabled = true
+            srButton.isEnabled = true
+        }
+
+        override fun onError() {
+            Toast.makeText(ctx, "Error recognition", Toast.LENGTH_SHORT).show()
+            sourceText.text = ""
+            onEnd()
+        }
+    }
+
     private fun initSpeechRecognizer() {
         speechRecognizer = SpeechRecognizer(this)
-        val ctx = this
         srButton.setOnClickListener {
             speechRecognizer.cancel()
-            speechRecognizer.recognizeSpeech(object : RecognitionListener {
-                override fun onResults(s: String) =
-                    if (s.trim().isEmpty()) sourceText.setText("...")
-                    else sourceText.setText(s)
-
-                override fun onReady() {
-                    sourceText.isEnabled = false
-                    srButton.isEnabled = false
-                    sourceText.text = "..."
-                }
-
-                override fun onBegin() {}
-
-                override fun onEnd() {
-                    sourceText.isEnabled = true
-                    srButton.isEnabled = true
-                }
-
-                override fun onError() {
-                    Toast.makeText(ctx, "Error recognition", Toast.LENGTH_SHORT).show()
-                    sourceText.text = ""
-                    onEnd()
-                }
-            })
-
+            speechRecognizer.recognizeSpeech(recognitionListener)
         }
     }
 
@@ -185,7 +187,7 @@ class TranslateActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.IO).launch {
             var sourceLang = sourceLanguage
             val destLang = targetLanguage
-            var coroutineCanceled=false
+            var coroutineCanceled = false
             if (sourceLang == Language.auto) {
                 val sourceLangTag = Translator.detectLanguage(textToTranslate)
                 if (!translatorLanguagesTag.contains(sourceLangTag)) {
@@ -193,9 +195,8 @@ class TranslateActivity : AppCompatActivity() {
                     targetTextView.text = getString(R.string.unrecognized_source_language)
                     mIdlingResource?.decrement()
                     // println("source language unrecognized")
-                    coroutineCanceled=true
-                }
-                else sourceLang=Language(sourceLangTag)
+                    coroutineCanceled = true
+                } else sourceLang = Language(sourceLangTag)
             }
             if (!coroutineCanceled) {
                 val t = Translator(sourceLang.tag, destLang.tag)

@@ -12,7 +12,7 @@
         android:id="@+id/button_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Back"
+        android:text="@string/back"
         android:onClick="back"/>
 
     <LinearLayout
@@ -26,21 +26,21 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Translator" />
+            android:text="@string/translator" />
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Learning" />
+            android:text="@string/learning" />
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="My account" />
+            android:text="@string/my_account" />
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Settings" />
+            android:text="@string/settings" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

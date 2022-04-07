@@ -13,13 +13,15 @@
             android:orientation="vertical">
 
         <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:hint="@string/nameHint"
-                android:ems="10"
-                android:id="@+id/edit_text_name"
-                android:autofillHints="name"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:hint="@string/nameHint"
+            android:ems="10"
+            android:minHeight="48dp"
+            android:id="@+id/edit_text_name"
+            android:autofillHints="name"
+            />
 
         <Button
                 android:text="@string/greet"
@@ -28,11 +30,6 @@
                 android:id="@+id/button_greet"
                 android:onClick="greet" />
 
-        <androidx.constraintlayout.widget.Barrier
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:barrierDirection="top" />
-
         <Button
                 android:text="@string/textToSpeechButtonText"
                 android:layout_width="match_parent"
@@ -40,61 +37,42 @@
                 android:id="@+id/button_text_to_speech"
                 android:onClick="textToSpeech" />
 
-        <androidx.constraintlayout.widget.Barrier
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:barrierDirection="top" />
-
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="voiceRecognition"
+            android:id="@+id/button_voice_recognition"
             android:text="@string/speech_recognition" />
 
-        <androidx.constraintlayout.widget.Barrier
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:barrierDirection="top" />
-
         <Button
-            android:id="@+id/sectionButton"
+            android:id="@+id/button_section"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="sectionActivity"
             android:text="@string/sectionsButtonName" />
 
-        <androidx.constraintlayout.widget.Barrier
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:barrierDirection="top" />
-
         <Button
-            android:id="@+id/translateButton"
+            android:id="@+id/button_translation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="translatorActivity"
             android:text="@string/translateButtonName" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/button_camera"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="cameraActivity"
-            android:text="camera" />
-
-        <androidx.constraintlayout.widget.Barrier
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:barrierDirection="top" />
+            android:text="@string/camera" />
 
         <Button
-            android:id="@+id/textDetectionButton"
+            android:id="@+id/button_text_detection"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="textDetectionActivity"
-            android:text="Text detection" />
+            android:text="@string/text_detection" />
         <Button
-            android:id="@+id/databaseButton"
+            android:id="@+id/button_database"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="databaseActivity"

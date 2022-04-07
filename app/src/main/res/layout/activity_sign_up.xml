@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:id="@+id/layout_signup"
     android:onClick="signUp"
-    tools:context=".SignUpActivity">
+    tools:context=".authorization.SignUpActivity">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/passwordBox"
@@ -28,7 +28,7 @@
             android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Repeat Password"
+            android:hint="@string/repeat_password"
             android:windowSoftInputMode="adjustPan"
             android:inputType="textPassword" />
 
@@ -50,10 +50,10 @@
         app:layout_constraintTop_toBottomOf="@+id/phoneNumberBox">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/prelimpassword"
+            android:id="@+id/preliminary_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Password"
+            android:hint="@string/password"
             android:windowSoftInputMode="adjustPan"
             android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -77,7 +77,7 @@
             android:id="@+id/phoneNumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Phone Number"
+            android:hint="@string/phone_number"
             android:inputType="phone"
             android:maxLength="10" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -99,7 +99,7 @@
             android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Email"
+            android:hint="@string/email"
             android:inputType="textEmailAddress" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -120,7 +120,7 @@
             android:id="@+id/lastName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Last Name"
+            android:hint="@string/last_name"
             android:inputType="textPersonName" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -133,7 +133,7 @@
         android:layout_marginEnd="60dp"
         android:checkable="false"
         android:onClick="checkBeforeSignUp"
-        android:text="Sign Up !"
+        android:text="@string/sign_up"
         app:iconPadding="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.1"
@@ -156,7 +156,7 @@
             android:id="@+id/firstName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="First Name"
+            android:hint="@string/first_name"
             android:inputType="textPersonName" />
     </com.google.android.material.textfield.TextInputLayout>
 

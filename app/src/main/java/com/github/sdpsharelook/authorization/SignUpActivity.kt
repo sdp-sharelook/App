@@ -85,9 +85,9 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun prelimPasswordListener() {
-        binding.prelimpassword.setOnFocusChangeListener{ _, focus ->
+        binding.preliminaryPassword.setOnFocusChangeListener{ _, focus ->
             if (!focus) {
-                binding.prelimpassword.error = isPrelimPassword()
+                binding.preliminaryPassword.error = isPrelimPassword()
                 binding.prelimPasswordBox.helperText = isPrelimPassword()
             }
         }
@@ -99,22 +99,22 @@ class SignUpActivity : AppCompatActivity() {
         val oneDigit = "(.*?[0-9].*)".toRegex()
         val specialChar = "(.*?[#?!()@\$ %^&*-].*)".toRegex()
         val minLength8 = ".{8,}".toRegex()
-        if(binding.prelimpassword.text.toString() == "") {
+        if(binding.preliminaryPassword.text.toString() == "") {
             return "Required"
         } else
-            if(!binding.prelimpassword.text.toString().matches(upperCase)) {
+            if(!binding.preliminaryPassword.text.toString().matches(upperCase)) {
                 return "Must contain an uppercase letter"
             } else
-                if(!binding.prelimpassword.text.toString().matches(lowerCase)) {
+                if(!binding.preliminaryPassword.text.toString().matches(lowerCase)) {
                     return "Must contain a lowercase letter"
                 } else
-                    if(!binding.prelimpassword.text.toString().matches(oneDigit)) {
+                    if(!binding.preliminaryPassword.text.toString().matches(oneDigit)) {
                         return "Must contain at least one digit"
                     } else
-                        if(!binding.prelimpassword.text.toString().matches(specialChar)) {
+                        if(!binding.preliminaryPassword.text.toString().matches(specialChar)) {
                             return "Must contain at least one special character"
                         } else
-                            if(!binding.prelimpassword.text.toString().matches(minLength8)) {
+                            if(!binding.preliminaryPassword.text.toString().matches(minLength8)) {
                                 return "Must contain at least 8 characters"
                             }
                             else {
@@ -132,17 +132,12 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun isPasswordValid() : String? {
-        when {
-            binding.password.text.toString() != binding.prelimpassword.text.toString() -> {
-                return "Passwords do not match"
-            }
-            else -> {
-                return null
-            }
-        }
+        return if (binding.password.text.toString() != binding.preliminaryPassword.text.toString()) "Passwords do not match"
+        else null
     }
 
     fun checkBeforeSignUp(view: View) {
+        assert(view.id == R.id.loginButton)
         updateErrors()
         val firstNameValid = binding.firstName.error == null
         val lastNameValid = binding.lastName.error == null
@@ -160,13 +155,14 @@ class SignUpActivity : AppCompatActivity() {
         binding.firstName.error = isFirstNameValid()
         binding.lastName.error = isLastNameValid()
         binding.email.error = isEmailValid()
-        binding.prelimpassword.error = isPrelimPassword()
+        binding.preliminaryPassword.error = isPrelimPassword()
         binding.prelimPasswordBox.helperText = isPrelimPassword()
         binding.passwordBox.error = isPasswordValid()
         binding.passwordBox.helperText = isPasswordValid()
     }
 
-    fun signUp(@Suppress("UNUSED_PARAMETER")view: View) {
+    fun signUp(view: View) {
+        assert(view.id == R.id.layout_signup || view.id == R.id.loginButton)
         //TODO: add e-mail and password verification before login button is pressed
         val email = findViewById<EditText>(R.id.email).text.toString()
         val password = findViewById<EditText>(R.id.password).text.toString()

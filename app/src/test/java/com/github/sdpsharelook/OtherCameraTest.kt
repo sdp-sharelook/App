@@ -54,7 +54,7 @@ class OtherCameraTest {
     fun mainActivityTest3() {
         val materialButton = onView(
             allOf(
-                withId(R.id.button), withText("camera"),
+                withId(R.id.button_camera), withText("camera"),
                 childAtPosition(
                     childAtPosition(
                         withClassName(`is`("androidx.constraintlayout.widget.ConstraintLayout")),

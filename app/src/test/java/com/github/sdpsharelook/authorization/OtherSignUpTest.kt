@@ -257,7 +257,7 @@ class PL {
 
         val textInputEditText14 = onView(
             allOf(
-                withId(R.id.prelimpassword),
+                withId(R.id.preliminary_password),
                 isDisplayed()
             )
         )
@@ -265,7 +265,7 @@ class PL {
 
         val textInputEditText15 = onView(
             allOf(
-                withId(R.id.prelimpassword), withText("Aaaaaaaaa"),
+                withId(R.id.preliminary_password), withText("Aaaaaaaaa"),
                 isDisplayed()
             )
         )
@@ -300,7 +300,7 @@ class PL {
 
         val textInputEditText18 = onView(
             allOf(
-                withId(R.id.prelimpassword), withText("Aaaaaaaaa"),
+                withId(R.id.preliminary_password), withText("Aaaaaaaaa"),
                 isDisplayed()
             )
         )
@@ -308,7 +308,7 @@ class PL {
 
         val textInputEditText19 = onView(
             allOf(
-                withId(R.id.prelimpassword), withText("Aaaaaaaaa9"),
+                withId(R.id.preliminary_password), withText("Aaaaaaaaa9"),
                 isDisplayed()
             )
         )
@@ -316,7 +316,7 @@ class PL {
 
         val textInputEditText20 = onView(
             allOf(
-                withId(R.id.prelimpassword), withText("Aaaaaaaaa9"),
+                withId(R.id.preliminary_password), withText("Aaaaaaaaa9"),
                 isDisplayed()
             )
         )
@@ -376,7 +376,7 @@ class PL {
 
         val textInputEditText25 = onView(
             allOf(
-                withId(R.id.prelimpassword), withText("Aaaaaaaaa9"),
+                withId(R.id.preliminary_password), withText("Aaaaaaaaa9"),
                 isDisplayed()
             )
         )
@@ -384,7 +384,7 @@ class PL {
 
         val textInputEditText26 = onView(
             allOf(
-                withId(R.id.prelimpassword), withText("Aaaaaaaaa9!"),
+                withId(R.id.preliminary_password), withText("Aaaaaaaaa9!"),
                 isDisplayed()
             )
         )
@@ -392,7 +392,7 @@ class PL {
 
         val textInputEditText27 = onView(
             allOf(
-                withId(R.id.prelimpassword), withText("Aaaaaaaaa9!"),
+                withId(R.id.preliminary_password), withText("Aaaaaaaaa9!"),
                 isDisplayed()
             )
         )

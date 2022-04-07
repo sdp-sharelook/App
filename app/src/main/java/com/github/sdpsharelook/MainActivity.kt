@@ -24,7 +24,8 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    fun greet(@Suppress("UNUSED_PARAMETER")view: View) {
+    fun greet(button: View) {
+        assert(button.id == R.id.button_greet)
         val editText = findViewById<EditText>(R.id.edit_text_name)
         val name = editText?.text.toString()
         val intent = Intent(this, GreetingActivity::class.java).apply {
@@ -33,28 +34,40 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    fun textToSpeech(@Suppress("UNUSED_PARAMETER")view: View) {}
-    //startActivity(Intent(this, TextToSpeechActivity::class.java))
+    fun textToSpeech(button: View) {
+        assert(button.id == R.id.button_text_to_speech)
+        //startActivity(Intent(this, TextToSpeechActivity::class.java))
+    }
 
 
+    fun voiceRecognition(button: View) {
+        assert(button.id == R.id.button_voice_recognition)
+        // startActivity(Intent(this, SpeechRecognitionActivity::class.java))
+    }
 
-    fun voiceRecognition(@Suppress("UNUSED_PARAMETER")view: View) {}
-    // startActivity(Intent(this, SpeechRecognitionActivity::class.java))
 
-
-    fun sectionActivity(@Suppress("UNUSED_PARAMETER")view: View) =
+    fun sectionActivity(button: View) {
+        assert(button.id == R.id.button_section)
         startActivity(Intent(this, SectionActivity::class.java))
+    }
 
-    fun translatorActivity(@Suppress("UNUSED_PARAMETER")view: View) =
+    fun translatorActivity(button: View) {
+        assert(button.id == R.id.button_translation)
         startActivity(Intent(this, TranslateActivity::class.java))
+    }
 
-    fun cameraActivity(view: View) =
+    fun cameraActivity(button: View) {
+        assert(button.id == R.id.button_camera)
         startActivity(Intent(this, CameraActivity::class.java))
-        
-    fun textDetectionActivity(view: View) =
-        startActivity(Intent(this, TextDetectionActivity::class.java))
+    }
 
-    fun databaseActivity(@Suppress("UNUSED_PARAMETER")view: View) {
+    fun textDetectionActivity(button: View) {
+        assert(button.id == R.id.button_text_detection)
+        startActivity(Intent(this, TextDetectionActivity::class.java))
+    }
+
+    fun databaseActivity(button: View) {
+        assert(button.id == R.id.button_database)
         startActivity(Intent(this, DatabaseViewActivity::class.java))
     }
 

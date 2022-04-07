@@ -40,10 +40,10 @@
             android:theme="@style/Theme.MyBootcamp.NoActionBar" />
 
         <activity
-            android:name=".Section.SectionDetail"
+            android:name=".section.SectionDetail"
             android:exported="false" />
         <activity
-            android:name=".Section.SectionActivity"
+            android:name=".section.SectionActivity"
             android:exported="false" />
         <activity
             android:name=".TranslateActivity"

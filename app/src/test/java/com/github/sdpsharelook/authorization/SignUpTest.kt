@@ -54,7 +54,7 @@ class SignUpTest {
         onView(withId(R.id.lastNameBox)).check(matches(isDisplayed()))
         onView(withId(R.id.password)).check(matches(isDisplayed()))
         onView(withId(R.id.passwordBox)).check(matches(isDisplayed()))
-        onView(withId(R.id.prelimpassword)).check(matches(isDisplayed()))
+        onView(withId(R.id.preliminary_password)).check(matches(isDisplayed()))
         onView(withId(R.id.prelimPasswordBox)).check(matches(isDisplayed()))
         onView(withId(R.id.phoneNumber)).check(matches(isDisplayed()))
         onView(withId(R.id.phoneNumberBox)).check(matches(isDisplayed()))

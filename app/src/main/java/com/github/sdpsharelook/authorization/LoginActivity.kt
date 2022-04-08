@@ -28,7 +28,7 @@ class LoginActivity : AppCompatActivity() {
 
         if (auth.currentUser != null) greet(auth.currentUser?.displayName)
 
-        GlobalScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
             val user = auth.signInWithEmailAndPassword(email, password)
             if (user.isSuccess) {
 

@@ -45,4 +45,9 @@
             app:nullable="true"
             android:defaultValue="@null" />
     </fragment>
+    <fragment
+        android:id="@+id/menuDatabaseViewLink"
+        android:name="com.github.sdpsharelook.storage.DatabaseViewFragment"
+        android:label="fragment_database_view"
+        tools:layout="@layout/fragment_database_view" />
 </navigation>

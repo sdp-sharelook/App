@@ -3,7 +3,6 @@ package com.github.sdpsharelook
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.EditText
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -12,7 +11,6 @@ import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
 import com.github.sdpsharelook.authorization.LoginActivity
 import com.github.sdpsharelook.camera.CameraActivity
-import com.github.sdpsharelook.storage.DatabaseViewActivity
 import com.github.sdpsharelook.textDetection.TextDetectionActivity
 import com.google.android.material.navigation.NavigationView
 
@@ -57,10 +55,6 @@ class MainActivity : AppCompatActivity() {
 
     fun textDetectionActivity(view: View) =
         startActivity(Intent(this, TextDetectionActivity::class.java))
-
-    fun databaseActivity(@Suppress("UNUSED_PARAMETER") view: View) {
-        startActivity(Intent(this, DatabaseViewActivity::class.java))
-    }
 
     fun signUpActivity(view: View) =
         startActivity(Intent(this, LoginActivity::class.java))

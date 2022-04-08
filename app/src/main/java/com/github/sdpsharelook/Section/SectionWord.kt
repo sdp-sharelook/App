@@ -1,5 +1,10 @@
 package com.github.sdpsharelook.Section
 
-class SectionWord(var sourceText: String, var translatedText: String) {
+import java.io.Serializable
 
+class SectionWord(var sourceText: String, var translatedText: String): Serializable {
+
+    fun toList():List<String>{
+        return listOf(sourceText, translatedText)
+    }
 }

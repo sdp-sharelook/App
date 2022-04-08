@@ -33,3 +33,7 @@ google-services.json
 
 # Android Profiling
 *.hprof
+
+# App data mainly used for caching
+app/srdatafile.csv
+app/test_sr_file.csv

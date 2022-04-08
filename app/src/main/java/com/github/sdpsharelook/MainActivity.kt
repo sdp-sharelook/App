@@ -50,9 +50,6 @@ class MainActivity : AppCompatActivity() {
     fun voiceRecognition(@Suppress("UNUSED_PARAMETER") view: View) {}
     // startActivity(Intent(this, SpeechRecognitionActivity::class.java))
 
-    fun cameraActivity(view: View) =
-        startActivity(Intent(this, CameraActivity::class.java))
-
     fun textDetectionActivity(view: View) =
         startActivity(Intent(this, TextDetectionActivity::class.java))
 

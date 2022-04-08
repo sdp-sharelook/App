@@ -14,7 +14,7 @@
     <item
         android:id="@+id/menuSectionsLink"
         android:icon="@android:drawable/ic_menu_save"
-        android:title="Saved Words"
+        android:title="Saved words"
         />
     <item
         android:id="@+id/menuCameraLink"
@@ -25,5 +25,10 @@
         android:id="@+id/menuSignUpLink"
         android:icon="@android:drawable/ic_menu_save"
         android:title="Sign Up"
+        />
+    <item
+        android:id="@+id/menuTextDetectionLink"
+        android:icon="@android:drawable/ic_menu_save"
+        android:title="Text detection"
         />
 </menu>

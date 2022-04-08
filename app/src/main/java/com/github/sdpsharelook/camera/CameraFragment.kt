@@ -2,58 +2,52 @@ package com.github.sdpsharelook.camera
 
 import android.Manifest
 import android.app.AlertDialog
-import android.content.Context
 import android.content.pm.PackageManager
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
-import android.widget.Button
-import android.widget.ImageView
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.github.sdpsharelook.R
+import com.github.sdpsharelook.databinding.FragmentCameraBinding
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
-class CameraActivity : AppCompatActivity() {
+class CameraFragment : Fragment() {
 
+    private lateinit var binding: FragmentCameraBinding
     private var currentPath: String? = null
     private var hasPermissions = false
 
     private fun showAlert(message: String) {
-        val builder = AlertDialog.Builder(this as Context)
+        val builder = AlertDialog.Builder(requireContext())
         builder.setMessage(message)
         builder.setPositiveButton(R.string.button, null)
         val dialog = builder.create()
         dialog.show()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.fragment_camera)
-        findViewById<Button>(R.id.buttonTakePic).setOnClickListener() {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.buttonTakePic.setOnClickListener {
             takePic()
         }
     }
 
-    fun takePic() {
-        tempImageUri = FileProvider.getUriForFile(this, "camera", createImage())
-        checkPermissions(Manifest.permission.CAMERA)
-        if (checkPerms()) {
-            cameraLauncher.launch(tempImageUri)
-        }
-    }
-
     private var tempImageUri: Uri? = null
+
     private val cameraLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
         if (success) {
             val file = File(currentPath)
             val uri = Uri.fromFile(file)
-            val imageView = findViewById<ImageView>(R.id.cameraImageView)
+            val imageView = binding.cameraImageView
             imageView.setImageURI(uri)
         } else {
             showAlert("Error while taking picture")
@@ -72,13 +66,23 @@ class CameraActivity : AppCompatActivity() {
         }
 
     private fun errorPermission() =
-        Toast.makeText(this, "Please give camera permission to use this feature", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), "Please give camera permission to use this feature", Toast.LENGTH_SHORT).show()
 
-    fun checkPermissions(permission: String) = when {
+
+
+    private fun takePic() {
+        tempImageUri = FileProvider.getUriForFile(requireContext(), "camera", createImage())
+        checkPermissions(Manifest.permission.CAMERA)
+        if (checkPerms()) {
+            cameraLauncher.launch(tempImageUri)
+        }
+    }
+
+    private fun checkPermissions(permission: String) = when (PackageManager.PERMISSION_GRANTED) {
         ContextCompat.checkSelfPermission(
-            this,
+            requireContext(),
             permission
-        ) == PackageManager.PERMISSION_GRANTED -> {
+        ) -> {
 
         }
         else -> {
@@ -87,17 +91,28 @@ class CameraActivity : AppCompatActivity() {
             )
         }
     }
-    fun checkPerms(): Boolean {
-        val permission1 = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
-        return permission1
+
+    private fun checkPerms(): Boolean {
+        return ContextCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.CAMERA
+        ) == PackageManager.PERMISSION_GRANTED
     }
 
     private fun createImage(): File {
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
         val imageName = "ShareLook_"+timeStamp+"_"
-        var storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        var image = File.createTempFile(imageName, ".jpg", storageDir)
+        val storageDir = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        val image = File.createTempFile(imageName, ".jpg", storageDir)
         currentPath = image.absolutePath
         return image
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentCameraBinding.inflate(layoutInflater)
+        return binding.root
     }
 }

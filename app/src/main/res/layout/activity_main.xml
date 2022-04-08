@@ -133,6 +133,20 @@
                 android:onClick="databaseActivity"
                 android:text="@string/database" />
 
+            <Button
+                android:id="@+id/cameraButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="cameraActivity"
+                android:text="camera" />
+
+            <Button
+                android:id="@+id/cameraButton2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="signUpActivity"
+                android:text="sign up" />
+
 
         </LinearLayout>
 

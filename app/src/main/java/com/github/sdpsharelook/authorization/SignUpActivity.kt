@@ -97,27 +97,29 @@ class SignUpActivity : AppCompatActivity() {
         val oneDigit = "(.*?[0-9].*)".toRegex()
         val specialChar = "(.*?[#?!()@\$ %^&*-].*)".toRegex()
         val minLength8 = ".{8,}".toRegex()
+        var error: String?
         if(binding.prelimpassword.text.toString() == "") {
-            return "Required"
+            error = "Required"
         } else
             if(!binding.prelimpassword.text.toString().matches(upperCase)) {
-                return "Must contain an uppercase letter"
+                error = "Must contain an uppercase letter"
             } else
                 if(!binding.prelimpassword.text.toString().matches(lowerCase)) {
-                    return "Must contain a lowercase letter"
+                    error = "Must contain a lowercase letter"
                 } else
                     if(!binding.prelimpassword.text.toString().matches(oneDigit)) {
-                        return "Must contain at least one digit"
+                        error = "Must contain at least one digit"
                     } else
                         if(!binding.prelimpassword.text.toString().matches(specialChar)) {
-                            return "Must contain at least one special character"
+                            error = "Must contain at least one special character"
                         } else
                             if(!binding.prelimpassword.text.toString().matches(minLength8)) {
-                                return "Must contain at least 8 characters"
+                                error = "Must contain at least 8 characters"
                             }
                             else {
-                                return null
+                                error = null
                             }
+        return error
     }
 
     private fun passwordListener() {
@@ -165,22 +167,10 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     fun signUp(@Suppress("UNUSED_PARAMETER")view: View) {
-        //TODO: add e-mail and password verification before login button is pressed
         val email = findViewById<EditText>(R.id.email).text.toString()
         val password = findViewById<EditText>(R.id.password).text.toString()
 
-        if (email.isNullOrBlank()) {
-            Toast.makeText(this, "Email cannot be left blank!", Toast.LENGTH_LONG).show()
-            return
-        }
-        if (password.isNullOrBlank()) {
-            Toast.makeText(this, "Password cannot be left blank!", Toast.LENGTH_LONG).show()
-            return
-        }
-
-
-
-        CoroutineScope(Dispatchers.IO).launch {
+        GlobalScope.launch {
             val user = auth.createUserWithEmailAndPassword(email, password)
             when {
                 user.isSuccess -> {

@@ -1,37 +1,52 @@
-package com.github.sdpsharelook.authorization
+package com.github.sdpsharelook
 
 
-import android.util.Log
-import android.view.View
-import android.view.ViewGroup
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.*
-import androidx.test.espresso.intent.Intents
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.DataInteraction
+import androidx.test.espresso.ViewInteraction
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
 import androidx.test.runner.AndroidJUnit4
+import android.view.View
+import android.view.ViewGroup
+import android.view.ViewParent
+
+import androidx.test.InstrumentationRegistry.getInstrumentation
+import androidx.test.espresso.Espresso.onData
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.Espresso.pressBack
+import androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu
+import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.assertion.ViewAssertions.*
+import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.ext.junit.rules.ActivityScenarioRule
+
 import com.github.sdpsharelook.R
+import com.github.sdpsharelook.authorization.LoginActivity
+
 import org.hamcrest.Description
 import org.hamcrest.Matcher
-import org.hamcrest.Matchers.allOf
 import org.hamcrest.TypeSafeMatcher
+import org.hamcrest.core.IsInstanceOf
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
+import org.hamcrest.Matchers.allOf
+import org.hamcrest.Matchers.anything
+import org.hamcrest.Matchers.`is`
+
 @LargeTest
 @RunWith(AndroidJUnit4::class)
-class PL {
+class OtherSignUpTest {
 
     @Rule
     @JvmField
-    var mActivityTestRule = ActivityTestRule(LoginActivity::class.java)
+    var mActivityTestRule = ActivityScenarioRule(LoginActivity::class.java)
 
     @Test
-    fun pL() {
-        Intents.init()
-        val materialButton = onView(
+    fun finalSignUpTest() {
+
+        val materialButton2 = onView(
             allOf(
                 withId(R.id.signUpButton), withText("Don't have an account? Sign up here !"),
                 childAtPosition(
@@ -44,53 +59,7 @@ class PL {
                 isDisplayed()
             )
         )
-        materialButton.perform(click())
-
-        val materialButton2 = onView(
-            allOf(
-                withId(R.id.loginButton), withText("Sign Up !"),
-                childAtPosition(
-                    allOf(
-                        withId(R.id.layout_signup),
-                        childAtPosition(
-                            withId(android.R.id.content),
-                            0
-                        )
-                    ),
-                    5
-                ),
-                isDisplayed()
-            )
-        )
         materialButton2.perform(click())
-
-        //assert(!Intents.getIntents().isEmpty())
-        Log.d("assert", Intents.getIntents().toString())
-        //assert(Intents.getIntents().toString() == "cmp=com.github.sdpsharelook/.authorization.SignUpActivity")
-
-        val textInputEditText = onView(
-            allOf(
-                withId(R.id.firstName),
-                isDisplayed()
-            )
-        )
-        textInputEditText.perform(click())
-
-        val textInputEditText2 = onView(
-            allOf(
-                withId(R.id.firstName),
-                isDisplayed()
-            )
-        )
-        textInputEditText2.perform(replaceText("kjhgkjh"), closeSoftKeyboard())
-
-        val textInputEditText3 = onView(
-            allOf(
-                withId(R.id.firstName), withText("kjhgkjh"),
-                isDisplayed()
-            )
-        )
-        textInputEditText3.perform(pressImeActionButton())
 
         val materialButton3 = onView(
             allOf(
@@ -110,40 +79,31 @@ class PL {
         )
         materialButton3.perform(click())
 
-//        assert(Intents.getIntents() == null)
+        val textInputEditText = onView(
+            allOf(
+                withId(R.id.firstName),
+                isDisplayed()
+            )
+        )
+        textInputEditText.perform(replaceText("first"), closeSoftKeyboard())
 
+        val textInputEditText2 = onView(
+            allOf(
+                withId(R.id.firstName), withText("first"),
+                isDisplayed()
+            )
+        )
+        textInputEditText2.perform(pressImeActionButton())
 
-        val textInputEditText4 = onView(
+        val textInputEditText3 = onView(
             allOf(
                 withId(R.id.lastName),
                 isDisplayed()
             )
         )
-        textInputEditText4.perform(click())
+        textInputEditText3.perform(replaceText("last"), closeSoftKeyboard())
 
-        val textInputEditText5 = onView(
-            allOf(
-                withId(R.id.lastName),
-                isDisplayed()
-            )
-        )
-        textInputEditText5.perform(replaceText("kjbkjbh"), closeSoftKeyboard())
-
-        val textInputEditText6 = onView(
-            allOf(
-                withId(R.id.lastName), withText("kjbkjbh"),
-                isDisplayed()
-            )
-        )
-        textInputEditText6.perform(pressImeActionButton())
-
-        val textInputEditText7 = onView(
-            allOf(
-                withId(R.id.email),
-                isDisplayed()
-            )
-        )
-        textInputEditText7.perform(replaceText("kjhgkjh"), closeSoftKeyboard())
+        //pressBack()
 
         val materialButton4 = onView(
             allOf(
@@ -163,12 +123,48 @@ class PL {
         )
         materialButton4.perform(click())
 
-//        assert(Intents.getIntents() == null)
+        val textInputEditText4 = onView(
+            allOf(
+                withId(R.id.email),
+                isDisplayed()
+            )
+        )
+        textInputEditText4.perform(replaceText("firstlast"), closeSoftKeyboard())
 
+        val textInputEditText5 = onView(
+            allOf(
+                withId(R.id.email), withText("firstlast"),
+                childAtPosition(
+                    childAtPosition(
+                        withId(R.id.emailBox),
+                        0
+                    ),
+                    0
+                ),
+                isDisplayed()
+            )
+        )
+        //textInputEditText5.perform(pressImeActionButton())
+
+        val textInputEditText6 = onView(
+            allOf(
+                withId(R.id.email), withText("firstlast"),
+                isDisplayed()
+            )
+        )
+        textInputEditText6.perform(replaceText("firstlast@mail"))
+
+        val textInputEditText7 = onView(
+            allOf(
+                withId(R.id.email), withText("firstlast@mail"),
+                isDisplayed()
+            )
+        )
+        textInputEditText7.perform(closeSoftKeyboard())
 
         val textInputEditText8 = onView(
             allOf(
-                withId(R.id.email), withText("kjhgkjh"),
+                withId(R.id.email), withText("firstlast@mail"),
                 childAtPosition(
                     childAtPosition(
                         withId(R.id.emailBox),
@@ -179,37 +175,9 @@ class PL {
                 isDisplayed()
             )
         )
-        textInputEditText8.perform(click())
-
-        val textInputEditText9 = onView(
-            allOf(
-                withId(R.id.email), withText("kjhgkjh"),
-                childAtPosition(
-                    childAtPosition(
-                        withId(R.id.emailBox),
-                        0
-                    ),
-                    0
-                ),
-                isDisplayed()
-            )
-        )
-        textInputEditText9.perform(replaceText("kjhgkjh@kjghkjh.kfjg"))
-
-        val textInputEditText10 = onView(
-            allOf(
-                withId(R.id.email), withText("kjhgkjh@kjghkjh.kfjg"),
-                childAtPosition(
-                    childAtPosition(
-                        withId(R.id.emailBox),
-                        0
-                    ),
-                    0
-                ),
-                isDisplayed()
-            )
-        )
-        textInputEditText10.perform(closeSoftKeyboard())
+//        textInputEditText8.perform(pressImeActionButton())
+//
+//        pressBack()
 
         val materialButton5 = onView(
             allOf(
@@ -229,19 +197,60 @@ class PL {
         )
         materialButton5.perform(click())
 
-//        assert(Intents.getIntents() == null)
-
-        val textInputEditText11 = onView(
+        val textInputEditText9 = onView(
             allOf(
-                withId(R.id.phoneNumber),
+                withId(R.id.email), withText("firstlast@mail"),
                 isDisplayed()
             )
         )
-        textInputEditText11.perform(replaceText("5544554455"), closeSoftKeyboard())
+        textInputEditText9.perform(replaceText("firstlast@mail.ch"))
+
+        val textInputEditText10 = onView(
+            allOf(
+                withId(R.id.email), withText("firstlast@mail.ch"),
+                isDisplayed()
+            )
+        )
+        textInputEditText10.perform(closeSoftKeyboard())
+
+        val textInputEditText11 = onView(
+            allOf(
+                withId(R.id.email), withText("firstlast@mail.ch"),
+                childAtPosition(
+                    childAtPosition(
+                        withId(R.id.emailBox),
+                        0
+                    ),
+                    0
+                ),
+                isDisplayed()
+            )
+        )
+//        textInputEditText11.perform(pressImeActionButton())
+//
+//        pressBack()
+
+        val materialButton6 = onView(
+            allOf(
+                withId(R.id.loginButton), withText("Sign Up !"),
+                childAtPosition(
+                    allOf(
+                        withId(R.id.layout_signup),
+                        childAtPosition(
+                            withId(android.R.id.content),
+                            0
+                        )
+                    ),
+                    5
+                ),
+                isDisplayed()
+            )
+        )
+        materialButton6.perform(click())
 
         val textInputEditText12 = onView(
             allOf(
-                withId(R.id.phoneNumber), withText("5544554455"),
+                withId(R.id.phoneNumber),
                 isDisplayed()
             )
         )
@@ -249,66 +258,75 @@ class PL {
 
         val textInputEditText13 = onView(
             allOf(
-                withId(R.id.phoneNumber), withText("5544554455"),
+                withId(R.id.phoneNumber),
                 isDisplayed()
             )
         )
-        textInputEditText13.perform(pressImeActionButton())
+        textInputEditText13.perform(replaceText("9658235863"), closeSoftKeyboard())
 
         val textInputEditText14 = onView(
+            allOf(
+                withId(R.id.phoneNumber), withText("9658235863"),
+                isDisplayed()
+            )
+        )
+//        textInputEditText14.perform(pressImeActionButton())
+//
+//        pressBack()
+
+        val materialButton7 = onView(
+            allOf(
+                withId(R.id.loginButton), withText("Sign Up !"),
+                childAtPosition(
+                    allOf(
+                        withId(R.id.layout_signup),
+                        childAtPosition(
+                            withId(android.R.id.content),
+                            0
+                        )
+                    ),
+                    5
+                ),
+                isDisplayed()
+            )
+        )
+        materialButton7.perform(click())
+
+        val textInputEditText15 = onView(
             allOf(
                 withId(R.id.prelimpassword),
                 isDisplayed()
             )
         )
-        textInputEditText14.perform(replaceText("Aaaaaaaaa"), closeSoftKeyboard())
-
-        val textInputEditText15 = onView(
-            allOf(
-                withId(R.id.prelimpassword), withText("Aaaaaaaaa"),
-                isDisplayed()
-            )
-        )
-        textInputEditText15.perform(pressImeActionButton())
+        textInputEditText15.perform(click())
 
         val textInputEditText16 = onView(
             allOf(
-                withId(R.id.password),
+                withId(R.id.prelimpassword),
                 isDisplayed()
             )
         )
-        textInputEditText16.perform(replaceText("Aaaaaaaaa"), closeSoftKeyboard())
+        textInputEditText16.perform(replaceText("a"), closeSoftKeyboard())
 
         val textInputEditText17 = onView(
             allOf(
-                withId(R.id.password), withText("Aaaaaaaaa"),
+                withId(R.id.prelimpassword), withText("a"),
                 isDisplayed()
             )
         )
         textInputEditText17.perform(pressImeActionButton())
 
-        val materialButton6 = onView(
-            allOf(
-                withId(R.id.loginButton), withText("Sign Up !"),
-                isDisplayed()
-            )
-        )
-        materialButton6.perform(click())
-
-//        assert(Intents.getIntents() == null)
-
-
         val textInputEditText18 = onView(
             allOf(
-                withId(R.id.prelimpassword), withText("Aaaaaaaaa"),
+                withId(R.id.prelimpassword), withText("a"),
                 isDisplayed()
             )
         )
-        textInputEditText18.perform(replaceText("Aaaaaaaaa9"))
+        textInputEditText18.perform(replaceText("A"))
 
         val textInputEditText19 = onView(
             allOf(
-                withId(R.id.prelimpassword), withText("Aaaaaaaaa9"),
+                withId(R.id.prelimpassword), withText("A"),
                 isDisplayed()
             )
         )
@@ -316,7 +334,7 @@ class PL {
 
         val textInputEditText20 = onView(
             allOf(
-                withId(R.id.prelimpassword), withText("Aaaaaaaaa9"),
+                withId(R.id.prelimpassword), withText("A"),
                 isDisplayed()
             )
         )
@@ -324,115 +342,185 @@ class PL {
 
         val textInputEditText21 = onView(
             allOf(
-                withId(R.id.password), withText("Aaaaaaaaa"),
+                withId(R.id.prelimpassword), withText("A"),
                 isDisplayed()
             )
         )
-        textInputEditText21.perform(pressImeActionButton())
-
-        val materialButton7 = onView(
-            allOf(
-                withId(R.id.loginButton), withText("Sign Up !"),
-                isDisplayed()
-            )
-        )
-        materialButton7.perform(click())
-
-//        assert(Intents.getIntents() == null)
+        textInputEditText21.perform(replaceText("Aa"))
 
         val textInputEditText22 = onView(
             allOf(
-                withId(R.id.password), withText("Aaaaaaaaa"),
+                withId(R.id.prelimpassword), withText("Aa"),
                 isDisplayed()
             )
         )
-        textInputEditText22.perform(replaceText("Aaaaaaaaa9"))
+        textInputEditText22.perform(closeSoftKeyboard())
 
         val textInputEditText23 = onView(
             allOf(
-                withId(R.id.password), withText("Aaaaaaaaa9"),
+                withId(R.id.prelimpassword), withText("Aa"),
                 isDisplayed()
             )
         )
-        textInputEditText23.perform(closeSoftKeyboard())
+        textInputEditText23.perform(pressImeActionButton())
 
         val textInputEditText24 = onView(
             allOf(
-                withId(R.id.password), withText("Aaaaaaaaa9"),
+                withId(R.id.prelimpassword), withText("Aa"),
                 isDisplayed()
             )
         )
-        textInputEditText24.perform(pressImeActionButton())
+        textInputEditText24.perform(replaceText("Aa0"))
+
+        val textInputEditText25 = onView(
+            allOf(
+                withId(R.id.prelimpassword), withText("Aa0"),
+                isDisplayed()
+            )
+        )
+        textInputEditText25.perform(closeSoftKeyboard())
+
+        val textInputEditText26 = onView(
+            allOf(
+                withId(R.id.prelimpassword), withText("Aa0"),
+                isDisplayed()
+            )
+        )
+        textInputEditText26.perform(pressImeActionButton())
+
+        val textInputEditText27 = onView(
+            allOf(
+                withId(R.id.prelimpassword), withText("Aa0"),
+                isDisplayed()
+            )
+        )
+        textInputEditText27.perform(replaceText("Aa0!"))
+
+        val textInputEditText28 = onView(
+            allOf(
+                withId(R.id.prelimpassword), withText("Aa0!"),
+                isDisplayed()
+            )
+        )
+        textInputEditText28.perform(closeSoftKeyboard())
+
+        val textInputEditText29 = onView(
+            allOf(
+                withId(R.id.prelimpassword), withText("Aa0!"),
+                isDisplayed()
+            )
+        )
+        textInputEditText29.perform(pressImeActionButton())
+//
+//        pressBack()
 
         val materialButton8 = onView(
             allOf(
                 withId(R.id.loginButton), withText("Sign Up !"),
+                childAtPosition(
+                    allOf(
+                        withId(R.id.layout_signup),
+                        childAtPosition(
+                            withId(android.R.id.content),
+                            0
+                        )
+                    ),
+                    5
+                ),
                 isDisplayed()
             )
         )
         materialButton8.perform(click())
 
-//        assert(Intents.getIntents() == null)
-
-        val textInputEditText25 = onView(
-            allOf(
-                withId(R.id.prelimpassword), withText("Aaaaaaaaa9"),
-                isDisplayed()
-            )
-        )
-        textInputEditText25.perform(replaceText("Aaaaaaaaa9!"))
-
-        val textInputEditText26 = onView(
-            allOf(
-                withId(R.id.prelimpassword), withText("Aaaaaaaaa9!"),
-                isDisplayed()
-            )
-        )
-        textInputEditText26.perform(closeSoftKeyboard())
-
-        val textInputEditText27 = onView(
-            allOf(
-                withId(R.id.prelimpassword), withText("Aaaaaaaaa9!"),
-                isDisplayed()
-            )
-        )
-        textInputEditText27.perform(pressImeActionButton())
-
-        val textInputEditText28 = onView(
-            allOf(
-                withId(R.id.password), withText("Aaaaaaaaa9"),
-                isDisplayed()
-            )
-        )
-        textInputEditText28.perform(replaceText("Aaaaaaaaa9!"))
-
-        val textInputEditText29 = onView(
-            allOf(
-                withId(R.id.password), withText("Aaaaaaaaa9!"),
-                isDisplayed()
-            )
-        )
-        textInputEditText29.perform(closeSoftKeyboard())
-
         val textInputEditText30 = onView(
             allOf(
-                withId(R.id.password), withText("Aaaaaaaaa9!"),
+                withId(R.id.prelimpassword), withText("Aa0!"),
                 isDisplayed()
             )
         )
-        textInputEditText30.perform(pressImeActionButton())
+        textInputEditText30.perform(replaceText("Aa0!aaaa"))
+
+        val textInputEditText31 = onView(
+            allOf(
+                withId(R.id.prelimpassword), withText("Aa0!aaaa"),
+                isDisplayed()
+            )
+        )
+        textInputEditText31.perform(closeSoftKeyboard())
+
+        val textInputEditText32 = onView(
+            allOf(
+                withId(R.id.prelimpassword), withText("Aa0!aaaa"),
+                isDisplayed()
+            )
+        )
+        textInputEditText32.perform(pressImeActionButton())
+//
+//        pressBack()
 
         val materialButton9 = onView(
             allOf(
                 withId(R.id.loginButton), withText("Sign Up !"),
+                childAtPosition(
+                    allOf(
+                        withId(R.id.layout_signup),
+                        childAtPosition(
+                            withId(android.R.id.content),
+                            0
+                        )
+                    ),
+                    5
+                ),
                 isDisplayed()
             )
         )
         materialButton9.perform(click())
-//        assert(Intents.getIntents() == null)
 
-        Intents.release()
+        val textInputEditText33 = onView(
+            allOf(
+                withId(R.id.password),
+                isDisplayed()
+            )
+        )
+        textInputEditText33.perform(click())
 
+        val textInputEditText34 = onView(
+            allOf(
+                withId(R.id.password),
+                isDisplayed()
+            )
+        )
+        textInputEditText34.perform(replaceText("Aa0!aaaa"), closeSoftKeyboard())
+
+        val textInputEditText35 = onView(
+            allOf(
+                withId(R.id.password), withText("Aa0!aaaa"),
+                isDisplayed()
+            )
+        )
+        textInputEditText35.perform(pressImeActionButton())
+
+        textInputEditText32.perform(click())
+        textInputEditText32.perform(pressImeActionButton())
+        textInputEditText35.perform(pressImeActionButton())
+
+        val materialButton10 = onView(
+            allOf(
+                withId(R.id.loginButton), withText("Sign Up !"),
+                childAtPosition(
+                    allOf(
+                        withId(R.id.layout_signup),
+                        childAtPosition(
+                            withId(android.R.id.content),
+                            0
+                        )
+                    ),
+                    5
+                ),
+                isDisplayed()
+            )
+        )
+        materialButton10.perform(click())
     }
 
     private fun childAtPosition(

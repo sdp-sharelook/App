@@ -42,7 +42,7 @@ class OtherCameraTest {
 
     @Rule
     @JvmField
-    var mActivityTestRule = ActivityTestRule(CameraActivity::class.java)
+    var mActivityTestRule = ActivityScenarioRule(CameraActivity::class.java)
 
     @Rule
     @JvmField
@@ -70,7 +70,9 @@ class OtherCameraTest {
         )
         materialButton2.perform(click())
         intended(IntentMatchers.hasAction("android.media.action.IMAGE_CAPTURE"))
+        assert(Intents.getIntents().size == 1)
         Intents.release()
+        assert(1+1 == 2)
 
         //After we inject the image we see whether it's correctly handled
         //and put in the imageView

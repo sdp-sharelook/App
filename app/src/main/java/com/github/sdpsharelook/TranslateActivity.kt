@@ -2,6 +2,7 @@ package com.github.sdpsharelook
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.*
 import androidx.annotation.Nullable
 import androidx.annotation.VisibleForTesting
@@ -9,6 +10,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.test.espresso.IdlingResource
 import androidx.test.espresso.idling.CountingIdlingResource
+import com.github.sdpsharelook.Section.SectionActivity
+import com.github.sdpsharelook.Section.SectionWord
+import com.github.sdpsharelook.Section.TRANSLATOR_WORD
+import com.github.sdpsharelook.Section.addWordToSection
 import com.github.sdpsharelook.language.Language
 import com.github.sdpsharelook.language.LanguageSelectionDialog
 import com.github.sdpsharelook.speechRecognition.RecognitionListener
@@ -18,7 +23,7 @@ import com.github.sdpsharelook.translate.Translator
 import com.google.mlkit.nl.translate.TranslateLanguage
 import kotlinx.coroutines.*
 
-
+val TRANSLATOR_WORD = "translatorExtra"
 class TranslateActivity : AppCompatActivity() {
     private lateinit var targetTextView: TextView
     private lateinit var textToSpeech: TextToSpeech
@@ -26,6 +31,8 @@ class TranslateActivity : AppCompatActivity() {
     private lateinit var targetLanguage: Language
     private lateinit var speechRecognizer: SpeechRecognizer
     private var targetTextString: String? = null
+    private var sectionWord: SectionWord? = null
+
 
     @Nullable
     private var mIdlingResource: CountingIdlingResource? = null
@@ -40,6 +47,7 @@ class TranslateActivity : AppCompatActivity() {
         sourceText = findViewById(R.id.sourceText)
         ttsButton = findViewById(R.id.imageButtonTTS)
         srButton = findViewById(R.id.imageButtonSR)
+
         initTranslator()
         initTextToSpeech()
         initSpeechRecognizer()
@@ -184,6 +192,7 @@ class TranslateActivity : AppCompatActivity() {
     private fun updateTranslation(textToTranslate: String) {
         mIdlingResource?.increment()
         val activity = this
+
         CoroutineScope(Dispatchers.IO).launch {
             var sourceLang = sourceLanguage
             val destLang = targetLanguage
@@ -203,7 +212,9 @@ class TranslateActivity : AppCompatActivity() {
                 // println("source language recognized ${sourceLang.tag}")
                 targetTextString = null
                 targetTextView.text = getString(R.string.translation_running)
+
                 targetTextString = t.translate(textToTranslate)
+                sectionWord = SectionWord(textToTranslate, targetTextString ?: "ERROR")
                 activity.targetTextView.text = targetTextString
                 mIdlingResource?.decrement()
             }
@@ -219,6 +230,15 @@ class TranslateActivity : AppCompatActivity() {
             mIdlingResource = CountingIdlingResource("Translation")
         }
         return mIdlingResource!!
+    }
+
+    fun addWordToSection(@Suppress("UNUSED_PARAMETER")view: View){
+        val intent = Intent(this, SectionActivity::class.java)
+        if(sectionWord != null){
+            intent.putExtra(TRANSLATOR_WORD, sectionWord)
+            addWordToSection = true
+            startActivity(intent)
+        }
     }
 }
 

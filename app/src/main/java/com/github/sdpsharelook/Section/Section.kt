@@ -11,5 +11,5 @@ class Section(
     var flag: Int,
     val databaseRepo: RTDBWordListRepository,
     val sectionRepo: String,
-    val id: Int? = sectionList.size
+    val id: Int = sectionList.size
 )

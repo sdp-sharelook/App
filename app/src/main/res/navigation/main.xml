@@ -24,7 +24,23 @@
         android:label="fragment_section"
         tools:layout="@layout/fragment_section" >
         <argument
-            android:name="sw"
+            android:name="sectionWord"
+            app:argType="com.github.sdpsharelook.Section.SectionWord"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <action
+            android:id="@+id/action_menuSectionsLink_to_sectionDetailFragment"
+            app:destination="@id/sectionDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/sectionDetailFragment"
+        android:name="com.github.sdpsharelook.Section.SectionDetailFragment"
+        android:label="SectionDetailFragment" >
+        <argument
+            android:name="sectionID"
+            app:argType="integer" />
+        <argument
+            android:name="sectionWord"
             app:argType="com.github.sdpsharelook.Section.SectionWord"
             app:nullable="true"
             android:defaultValue="@null" />

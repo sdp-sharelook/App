@@ -4,11 +4,12 @@ import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.sdpsharelook.R
@@ -20,7 +21,7 @@ import com.github.sdpsharelook.storage.RTDBWordListRepository
 var edit = false
 
 class SectionFragment : Fragment(), SectionClickListener {
-    private lateinit var binding : FragmentSectionBinding
+    private lateinit var binding: FragmentSectionBinding
     private lateinit var popupBinding: PopupBinding
     private lateinit var cardBinding: CardSectionBinding
     private var databaseWordList = RTDBWordListRepository()
@@ -28,12 +29,12 @@ class SectionFragment : Fragment(), SectionClickListener {
     private lateinit var dialog: Dialog
     var mainCountryList = initList()
 
-    private var sw: SectionWord? = null
+    private var sectionWord: SectionWord? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val args : SectionFragmentArgs by navArgs()
-        sw = args.sw
+        val args: SectionFragmentArgs by navArgs()
+        sectionWord = args.sectionWord
         popupBinding = PopupBinding.inflate(layoutInflater)
         cardBinding = CardSectionBinding.inflate(layoutInflater)
 
@@ -43,7 +44,7 @@ class SectionFragment : Fragment(), SectionClickListener {
         // set up the popup when cliking on add button
         dialog = Dialog(requireContext())
         dialog.setContentView(popupBinding.root)
-        dialog.setOnDismissListener{
+        dialog.setOnDismissListener {
             popupBinding.editSectionName.setText("Section name")
         }
 
@@ -62,22 +63,25 @@ class SectionFragment : Fragment(), SectionClickListener {
             dialog.show()
         }
 
-        popupBinding.popupAddBtn.setOnClickListener{
+        popupBinding.popupAddBtn.setOnClickListener {
             val sectionName = popupBinding.editSectionName.text.toString()
             val countryIndex = popupBinding.spinnerCountries.selectedItemPosition
             // Popu do 2 different things if it is editing a section or creating one
-            if (edit){
+            if (edit) {
                 cardAdapter.editItem(sectionName, mainCountryList.get(countryIndex).flag)
-            } else{
-                addSection(Section(
-                    sectionName,
-                    mainCountryList[countryIndex].flag,
-                    databaseWordList,
-                    sectionName + countryIndex
-                ))
+            } else {
+                addSection(
+                    Section(
+                        sectionName,
+                        mainCountryList[countryIndex].flag,
+                        databaseWordList,
+                        sectionName + countryIndex
+                    )
+                )
             }
 
-            Toast.makeText(requireContext(), "Section: $sectionName saved", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Section: $sectionName saved", Toast.LENGTH_SHORT)
+                .show()
             dialog.dismiss()
         }
     }
@@ -95,14 +99,10 @@ class SectionFragment : Fragment(), SectionClickListener {
     }
 
     override fun onClick(section: Section) {
-        // TODO
-//        val newIntent = Intent(applicationContext, SectionDetail::class.java)
-//
-//        if(addWordToSection){
-//            var sectionWord = intent.getSerializableExtra(TRANSLATOR_WORD) as SectionWord
-//            newIntent.putExtra(SECTION_ID, section.id).putExtra(TRANSLATOR_WORD, sectionWord)
-//        }else newIntent.putExtra(SECTION_ID, section.id)
-//        startActivity(newIntent)
+        val action = SectionFragmentDirections.actionMenuSectionsLinkToSectionDetailFragment(
+            section.id, sectionWord
+        )
+        findNavController().navigate(action)
     }
 
     override fun onCreateView(

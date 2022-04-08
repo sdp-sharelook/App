@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.github.sdpsharelook.Section.SectionActivity
+import com.github.sdpsharelook.authorization.LoginActivity
 
 import com.github.sdpsharelook.textDetection.TextDetectionActivity
 import com.github.sdpsharelook.storage.DatabaseViewActivity
@@ -77,4 +78,6 @@ class MainActivity : AppCompatActivity() {
         startActivity(Intent(this, DatabaseViewActivity::class.java))
     }
 
+    fun signUpActivity(view: View) =
+        startActivity(Intent(this, LoginActivity::class.java))
 }

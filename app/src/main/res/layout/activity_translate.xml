@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="10dp"
     tools:context=".TranslateActivity">
 
     <TableLayout
@@ -12,8 +13,7 @@
 
         <TableRow
 
-            android:gravity="center_vertical"
-            android:padding="5dp">
+            android:gravity="center_vertical">
 
             <ImageButton
                 android:id="@+id/imageButtonHamburger"
@@ -39,10 +39,6 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
                 android:inputType="textMultiLine">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -56,41 +52,44 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <ImageButton
-                android:id="@+id/imageButtonListen"
+                android:id="@+id/imageButtonSR"
                 style="@style/Theme.AppCompat.smallImageButton"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
                 android:layout_margin="15dp"
                 android:contentDescription="@string/listen"
-                android:src="@drawable/microphone" />
+                android:src="@drawable/ic_microphone" />
         </RelativeLayout>
 
         <TableRow
             android:layout_height="wrap_content"
             android:gravity="center_vertical">
 
-            <Spinner
-                android:id="@+id/sourceLangSelector"
+            <Button
+                android:id="@+id/buttonSourceLang"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
                 android:layout_weight="1"
-                android:contentDescription="@string/source_language"
+                android:backgroundTint="@color/white"
+                android:drawableEnd="@drawable/ic_spinner_arrow"
                 android:minHeight="48dp"
-                android:textAlignment="center" />
+                android:text="@string/source_language"
+                android:textAlignment="center"
+                android:textColor="@color/black" />
 
             <ImageButton
                 android:id="@+id/buttonSwitchLang"
                 style="@style/Theme.AppCompat.smallImageButton"
-                android:contentDescription="@string/switch_languages"
-                android:src="@drawable/switch_languages" />
 
-            <Spinner
-                android:id="@+id/targetLangSelector"
+                android:contentDescription="@string/switch_languages"
+                android:src="@drawable/ic_switch_languages" />
+
+            <Button
+                android:id="@+id/buttonTargetLang"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -98,9 +97,12 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
                 android:layout_weight="1"
-                android:contentDescription="@string/target_language"
+                android:backgroundTint="@color/white"
+                android:drawableLeft="@drawable/ic_spinner_arrow"
                 android:minHeight="48dp"
-                android:textAlignment="center" />
+                android:text="@string/target_language"
+                android:textAlignment="center"
+                android:textColor="@color/black" />
         </TableRow>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -117,31 +119,31 @@
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@id/imageButtonSpeak"
+                app:layout_constraintRight_toLeftOf="@id/imageButtonTTS"
                 app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageButton
-                android:id="@+id/imageButtonSpeak"
-                style="@style/Theme.AppCompat.smallImageButton"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintLeft_toRightOf="@id/targetText"
-                android:layout_margin="15dp"
-                android:contentDescription="@string/speak"
-                android:src="@drawable/speaker" />
 
             <ImageButton
                 android:id="@+id/addWordToSectionButton"
                 style="@style/Theme.AppCompat.smallImageButton"
                 android:layout_margin="15dp"
-
-                android:layout_marginRight="16dp"
                 android:contentDescription="@string/speak"
                 android:onClick="addWordToSection"
                 android:src="@drawable/ic_add"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:tint="@color/black" />
+
+            <ImageButton
+                android:id="@+id/imageButtonTTS"
+                style="@style/Theme.AppCompat.smallImageButton"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="15dp"
+                android:contentDescription="@string/speak"
+                android:src="@drawable/ic_speaker"
+                app:layout_constraintLeft_toRightOf="@id/targetText"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </TableLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,12 +4,12 @@
     android:layout_height="match_parent">
     <item
         android:id="@+id/menuTTSLink"
-        android:icon="@drawable/speaker"
+        android:icon="@drawable/ic_speaker"
         android:title="Text to speech"
         />
     <item
         android:id="@+id/menuSpeechRecognitionLink"
-        android:icon="@drawable/microphone"
+        android:icon="@drawable/ic_microphone"
         android:title="Speech recognition" />
     <item
         android:id="@+id/menuSectionsLink"

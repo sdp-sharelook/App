@@ -1,8 +1,10 @@
 package com.github.sdpsharelook.translate
 
+import com.github.sdpsharelook.language.Language
 import com.google.android.gms.tasks.Task
 import com.google.mlkit.common.model.DownloadConditions
 import com.google.mlkit.nl.languageid.LanguageIdentification
+import com.google.mlkit.nl.translate.TranslateLanguage
 import com.google.mlkit.nl.translate.Translation
 import com.google.mlkit.nl.translate.Translator
 import com.google.mlkit.nl.translate.TranslatorOptions
@@ -44,5 +46,9 @@ class Translator(src: String, dst: String) {
         suspend fun detectLanguage(text: String) : String {
             return LanguageIdentification.getClient().identifyLanguage(text).await()
         }
+        val availableLanguages: Set<Language> =
+            TranslateLanguage.getAllLanguages().map {
+                Language(it)
+            }.toSet()
     }
 }

@@ -14,13 +14,7 @@ class CardViewHolder(
     var onEditClick: ((RecyclerView.ViewHolder) -> Unit)? = null
 
     init {
-//        cardCellBinding.editButton.setOnClickListener {
-//            onDeletClick?.let { onDeletClick -> onDeletClick(this) }
-//        }
 
-//        cardCellBinding.sectionTitle.setOnClickListener {
-//
-//        }
         cardCellBinding.deleteButton.setOnClickListener{
             onDeletClick?.let { onDeletClick -> onDeletClick(this) }
         }

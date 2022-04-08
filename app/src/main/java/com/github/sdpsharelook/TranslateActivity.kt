@@ -221,3 +221,4 @@ class TranslateActivity : AppCompatActivity() {
         return mIdlingResource!!
     }
 }
+

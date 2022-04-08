@@ -46,6 +46,36 @@ class SectionActivityTest {
         )
         floatingActionButton.perform(click())
 
+        val materialButton2 = onView(
+            allOf(
+                withId(R.id.popup_add_btn), withText("Save"),
+                childAtPosition(
+                    childAtPosition(
+                        withId(android.R.id.content),
+                        0
+                    ),
+                    0
+                ),
+                isDisplayed()
+            )
+        )
+        materialButton2.perform(click())
+
+        val appCompatImageButton = onView(
+            allOf(
+                withId(R.id.editButton),
+                childAtPosition(
+                    childAtPosition(
+                        withId(R.id.cardView),
+                        0
+                    ),
+                    2
+                ),
+                isDisplayed()
+            )
+        )
+        appCompatImageButton.perform(click())
+
         val appCompatEditText = onView(
             allOf(
                 withId(R.id.edit_section_name), withText("Section name"),
@@ -76,7 +106,7 @@ class SectionActivityTest {
         )
         appCompatEditText2.perform(closeSoftKeyboard())
 
-        val materialButton2 = onView(
+        val materialButton3 = onView(
             allOf(
                 withId(R.id.popup_add_btn), withText("Save"),
                 childAtPosition(
@@ -89,7 +119,7 @@ class SectionActivityTest {
                 isDisplayed()
             )
         )
-        materialButton2.perform(click())
+        materialButton3.perform(click())
 
         val textView = onView(
             allOf(
@@ -100,14 +130,14 @@ class SectionActivityTest {
         )
         textView.check(matches(withText("cuisine")))
 
-        val imageView = onView(
+        val textView2 = onView(
             allOf(
-                withId(R.id.sectionFlag),
+                withId(R.id.sectionTitle), withText("cuisine"),
                 withParent(withParent(withId(R.id.cardView))),
                 isDisplayed()
             )
         )
-        imageView.check(matches(isDisplayed()))
+        textView2.check(matches(withText("cuisine")))
 
         val imageButton = onView(
             allOf(
@@ -129,97 +159,12 @@ class SectionActivityTest {
 
         val imageButton3 = onView(
             allOf(
-                withId(R.id.addingBtn),
-                withParent(withParent(withId(android.R.id.content))),
-                isDisplayed()
-            )
-        )
-        imageButton3.check(matches(isDisplayed()))
-
-        val appCompatImageButton = onView(
-            allOf(
-                withId(R.id.editButton),
-                childAtPosition(
-                    childAtPosition(
-                        withId(R.id.cardView),
-                        0
-                    ),
-                    2
-                ),
-                isDisplayed()
-            )
-        )
-        appCompatImageButton.perform(click())
-
-        val appCompatEditText3 = onView(
-            allOf(
-                withId(R.id.edit_section_name), withText("cuisine"),
-                childAtPosition(
-                    childAtPosition(
-                        withId(android.R.id.content),
-                        0
-                    ),
-                    2
-                ),
-                isDisplayed()
-            )
-        )
-        appCompatEditText3.perform(click())
-
-        val appCompatEditText4 = onView(
-            allOf(
-                withId(R.id.edit_section_name), withText("cuisine"),
-                childAtPosition(
-                    childAtPosition(
-                        withId(android.R.id.content),
-                        0
-                    ),
-                    2
-                ),
-                isDisplayed()
-            )
-        )
-        appCompatEditText4.perform(replaceText("salon"))
-
-        val appCompatEditText5 = onView(
-            allOf(
-                withId(R.id.edit_section_name), withText("salon"),
-                childAtPosition(
-                    childAtPosition(
-                        withId(android.R.id.content),
-                        0
-                    ),
-                    2
-                ),
-                isDisplayed()
-            )
-        )
-        appCompatEditText5.perform(closeSoftKeyboard())
-
-
-        val materialButton3 = onView(
-            allOf(
-                withId(R.id.popup_add_btn), withText("Save"),
-                childAtPosition(
-                    childAtPosition(
-                        withId(android.R.id.content),
-                        0
-                    ),
-                    0
-                ),
-                isDisplayed()
-            )
-        )
-        materialButton3.perform(click())
-
-        val textView2 = onView(
-            allOf(
-                withId(R.id.sectionTitle), withText("salon"),
+                withId(R.id.deleteButton),
                 withParent(withParent(withId(R.id.cardView))),
                 isDisplayed()
             )
         )
-        textView2.check(matches(withText("salon")))
+        imageButton3.check(matches(isDisplayed()))
     }
 
     private fun childAtPosition(

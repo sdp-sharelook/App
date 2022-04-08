@@ -121,6 +121,8 @@
     <string name="sectionsButtonName">Sections</string>
     <string name="translateButtonName">Translate</string>
     <string name="unrecognized_source_language">Source language unrecognized.</string>
+    <string name="no_user">John Doe</string>
+    <string name="testuser_gmail_com">testuser@gmail.com</string>
     <string name="take_picture">"Take a picture"</string>
     <string name="take_picture_description">"Description"</string>
     <string name="search">Search...</string>

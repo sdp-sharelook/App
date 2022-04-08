@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/menuTranslateLink"
-        android:name="com.github.sdpsharelook.TranslateFragment"
+        android:name="com.github.sdpsharelook.translate.TranslateFragment"
         android:label="fragment_translate"
         tools:layout="@layout/fragment_translate" >
         <action

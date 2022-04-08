@@ -1,28 +1,20 @@
 package com.github.sdpsharelook.camera
 
 import android.Manifest
-import android.app.Activity
 import android.app.AlertDialog
-import android.content.ContentValues
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
-import android.provider.MediaStore
-import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.github.sdpsharelook.R
-import com.github.sdpsharelook.Utils
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -80,7 +72,7 @@ class CameraActivity : AppCompatActivity() {
         }
 
     private fun errorPermission() =
-        Utils.toast("Please give camera permission to use this feature", this)
+        Toast.makeText(this, "Please give camera permission to use this feature", Toast.LENGTH_SHORT).show()
 
     fun checkPermissions(permission: String) = when {
         ContextCompat.checkSelfPermission(

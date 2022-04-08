@@ -5,29 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="10dp"
-    tools:context=".TranslateActivity">
+    tools:context=".TranslateFragment">
 
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <TableRow
-
-            android:gravity="center_vertical">
-
-            <ImageButton
-                android:id="@+id/imageButtonHamburger"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="#00000000"
-                android:contentDescription="@string/menu"
-                android:src="@drawable/ic_hamburger_menu" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-        </TableRow>
 
         <RelativeLayout
             android:layout_width="match_parent"

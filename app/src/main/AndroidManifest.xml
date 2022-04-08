@@ -58,9 +58,6 @@
             android:name=".authorization.SignUpActivity"
             android:exported="true" />
         <activity
-            android:name=".NavigationMenuActivity"
-            android:exported="true" />
-        <activity
             android:name=".MainActivity"
             android:exported="false"
             android:theme="@style/Theme.Sherlook"></activity>

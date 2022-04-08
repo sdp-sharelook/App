@@ -1,14 +1,15 @@
 package com.github.sdpsharelook
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.Button
+import android.widget.Toast
 import androidx.annotation.VisibleForTesting
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.test.espresso.IdlingResource
 import androidx.test.espresso.idling.CountingIdlingResource
 import com.github.sdpsharelook.Section.SectionWord
@@ -24,9 +25,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-
 class TranslateFragment : Fragment() {
-    private lateinit var binding : FragmentTranslateBinding
+    private lateinit var binding: FragmentTranslateBinding
 
     private lateinit var textToSpeech: TextToSpeech
     private lateinit var sourceLanguage: Language
@@ -51,6 +51,7 @@ class TranslateFragment : Fragment() {
         binding.buttonTargetLang.apply {
             setOnClickListener { selectLanguage(this) }
         }
+        binding.addWordToSectionButton.setOnClickListener { addWordToSection() }
     }
 
     private fun setSource(language: Language) {
@@ -63,7 +64,8 @@ class TranslateFragment : Fragment() {
         targetLanguage = language
         binding.buttonTargetLang.text = language.displayName
         textToSpeech.language = language
-        binding.imageButtonTTS.isEnabled = forceEnableTTS || textToSpeech.isLanguageAvailable(language)
+        binding.imageButtonTTS.isEnabled =
+            forceEnableTTS || textToSpeech.isLanguageAvailable(language)
     }
 
     private fun selectLanguage(button: Button) {
@@ -73,7 +75,12 @@ class TranslateFragment : Fragment() {
             else -> setOf()
         }
         CoroutineScope(Dispatchers.Main).launch {
-            launchLanguageDialog(button, translatorLanguages, binding.buttonSourceLang, binding.buttonTargetLang)
+            launchLanguageDialog(
+                button,
+                translatorLanguages,
+                binding.buttonSourceLang,
+                binding.buttonTargetLang
+            )
             if (binding.sourceText.text!!.isNotEmpty())
                 updateTranslation(binding.sourceText.text.toString())
         }
@@ -109,7 +116,11 @@ class TranslateFragment : Fragment() {
         binding.buttonSwitchLang.setOnClickListener {
             when (sourceLanguage) {
                 Language.auto ->
-                    Toast.makeText(requireContext(), "Cannot switch language in auto mode", Toast.LENGTH_SHORT)
+                    Toast.makeText(
+                        requireContext(),
+                        "Cannot switch language in auto mode",
+                        Toast.LENGTH_SHORT
+                    )
                         .show()
                 else -> {
                     val tempSource = binding.sourceText.text.toString()
@@ -158,7 +169,6 @@ class TranslateFragment : Fragment() {
     }
 
     private fun initSpeechRecognizer() {
-        speechRecognizer = SpeechRecognizer(requireActivity())
         binding.imageButtonSR.setOnClickListener {
             speechRecognizer.cancel()
             speechRecognizer.recognizeSpeech(recognitionListener)
@@ -201,6 +211,28 @@ class TranslateFragment : Fragment() {
         }
     }
 
+    private fun addWordToSection() {
+        if (sectionWord != null) {
+            val action = TranslateFragmentDirections.actionMenuTranslateLinkToMenuSectionsLink(
+                sectionWord!!
+            )
+            findNavController().navigate(action)
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        speechRecognizer = SpeechRecognizer(requireActivity())
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentTranslateBinding.inflate(layoutInflater)
+        return binding.root
+    }
+
     /**
      * Only called from test, creates and returns a new [CountingIdlingResource].
      */
@@ -210,30 +242,5 @@ class TranslateFragment : Fragment() {
             mIdlingResource = CountingIdlingResource("Translation")
         }
         return mIdlingResource!!
-    }
-
-    // TODO
-//    fun addWordToSection(@Suppress("UNUSED_PARAMETER")view: View){
-//        val nextFrag = SectionFragment()
-//        requireActivity().supportFragmentManager.beginTransaction()
-//            .replace(R.id.Layout_container, nextFrag, "findThisFragment")
-//            .addToBackStack(null)
-//            .commit()
-//
-//
-//        val intent = Intent(this, SectionActivity::class.java)
-//        if(sectionWord != null){
-//            intent.putExtra(com.github.sdpsharelook.Section.TRANSLATOR_WORD, sectionWord)
-//            com.github.sdpsharelook.Section.addWordToSection = true
-//            startActivity(intent)
-//        }
-//    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentTranslateBinding.inflate(layoutInflater)
-        return binding.root
     }
 }

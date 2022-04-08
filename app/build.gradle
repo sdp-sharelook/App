@@ -57,6 +57,7 @@ android {
 
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'androidx.navigation.safeargs.kotlin'
 
 dependencies {
     implementation platform('com.google.firebase:firebase-bom:29.1.0')

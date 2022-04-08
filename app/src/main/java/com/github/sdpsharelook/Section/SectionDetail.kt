@@ -42,14 +42,15 @@ class SectionDetail : AppCompatActivity() {
 
         // If we are adding a word from the translator Activity
         if(addWordToSection){
-            val wordTranslated = intent.getSerializableExtra(TRANSLATOR_WORD) as SectionWord
-            CoroutineScope(Dispatchers.IO).launch {
-                if (section != null){
-                    section.databaseRepo.insert(section.sectionRepo, wordTranslated.toList())
-                }
-            }
-            addSectionWord(wordTranslated)
-            addWordToSection = false
+            // TODO
+//            val wordTranslated = intent.getSerializableExtra(TRANSLATOR_WORD) as SectionWord
+//            CoroutineScope(Dispatchers.IO).launch {
+//                if (section != null){
+//                    section.databaseRepo.insert(section.sectionRepo, wordTranslated.toList())
+//                }
+//            }
+//            addSectionWord(wordTranslated)
+//            addWordToSection = false
         }
 
         if (section != null){

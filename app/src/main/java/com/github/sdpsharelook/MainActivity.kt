@@ -8,7 +8,8 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import com.github.sdpsharelook.Section.SectionActivity
+import androidx.navigation.Navigation
+import androidx.navigation.ui.NavigationUI
 import com.github.sdpsharelook.authorization.LoginActivity
 import com.github.sdpsharelook.camera.CameraActivity
 import com.github.sdpsharelook.storage.DatabaseViewActivity
@@ -31,7 +32,8 @@ class MainActivity : AppCompatActivity() {
             drawerLayout.openDrawer(GravityCompat.START)
         }
         val navView = findViewById<NavigationView>(R.id.navView)
-        val theme = applicationContext.theme
+        val navController = Navigation.findNavController(this, R.id.navHostFragment)
+        NavigationUI.setupWithNavController(navView, navController)
     }
 
 //    fun greet(@Suppress("UNUSED_PARAMETER") view: View) {
@@ -49,10 +51,6 @@ class MainActivity : AppCompatActivity() {
 
     fun voiceRecognition(@Suppress("UNUSED_PARAMETER") view: View) {}
     // startActivity(Intent(this, SpeechRecognitionActivity::class.java))
-
-
-    fun sectionActivity(@Suppress("UNUSED_PARAMETER") view: View) =
-        startActivity(Intent(this, SectionActivity::class.java))
 
     fun cameraActivity(view: View) =
         startActivity(Intent(this, CameraActivity::class.java))

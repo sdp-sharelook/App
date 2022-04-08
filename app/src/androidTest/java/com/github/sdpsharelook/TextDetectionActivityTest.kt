@@ -68,6 +68,7 @@ class TextDetectionActivityTest {
         )
         textView.check(matches(withText("Detect text on the image")))
 
+        @Suppress("UNUSED_VARIABLE")
         val button = onView(
             allOf(
                 withId(R.id.detectButton), withText("DETECT"),

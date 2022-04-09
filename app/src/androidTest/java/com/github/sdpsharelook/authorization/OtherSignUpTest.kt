@@ -1,6 +1,7 @@
 package com.github.sdpsharelook
 
 
+import android.os.Bundle
 import androidx.test.espresso.DataInteraction
 import androidx.test.espresso.ViewInteraction
 import androidx.test.filters.LargeTest
@@ -9,6 +10,7 @@ import androidx.test.runner.AndroidJUnit4
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewParent
+import androidx.fragment.app.testing.launchFragmentInContainer
 
 import androidx.test.InstrumentationRegistry.getInstrumentation
 import androidx.test.espresso.Espresso.onData
@@ -21,7 +23,7 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 
 import com.github.sdpsharelook.R
-import com.github.sdpsharelook.authorization.LoginActivity
+import com.github.sdpsharelook.authorization.SignUpFragment
 
 import org.hamcrest.Description
 import org.hamcrest.Matcher
@@ -34,14 +36,16 @@ import org.junit.runner.RunWith
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.anything
 import org.hamcrest.Matchers.`is`
+import org.junit.Before
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
 class OtherSignUpTest {
 
-    @Rule
-    @JvmField
-    var mActivityTestRule = ActivityScenarioRule(LoginActivity::class.java)
+    @Before
+    fun init() {
+        launchFragmentInContainer<SignUpFragment>(Bundle(), R.style.Theme_Sherlook)
+    }
 
     @Test
     fun finalSignUpTest() {

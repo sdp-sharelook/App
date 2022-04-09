@@ -1,6 +1,11 @@
 package com.github.sdpsharelook
 
 import android.content.Intent
+import android.os.Bundle
+import androidx.core.os.bundleOf
+import androidx.fragment.app.testing.launchFragmentInContainer
+import androidx.navigation.Navigation
+import androidx.navigation.testing.TestNavHostController
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.core.app.launchActivity
 import androidx.test.espresso.Espresso.onView
@@ -8,24 +13,17 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.github.sdpsharelook.textDetection.TextDetectionFragment
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class GreetingActivityTest {
+class GreetingFragmentTest {
+
     @Test
     fun testMainActivity() {
-        val intent: Intent =
-            Intent(
-                ApplicationProvider.getApplicationContext(),
-                GreetingActivity::class.java
-            ).apply {
-                putExtra(EXTRA_MESSAGE, "World")
-            }
-        val scenario = launchActivity<GreetingActivity>(intent)
-        scenario.use {
-            onView(withId(R.id.greetingMessage))
-                .check(matches(withText("Hello World!")))
-        }
+        launchFragmentInContainer<GreetingFragment>(bundleOf("name" to "World"), R.style.Theme_Sherlook)
+        onView(withId(R.id.greetingMessage)).check(matches(withText("Hello World!")))
     }
 }

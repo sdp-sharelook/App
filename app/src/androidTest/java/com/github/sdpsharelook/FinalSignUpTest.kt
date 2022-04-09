@@ -1,54 +1,38 @@
 package com.github.sdpsharelook
 
-
-import androidx.test.espresso.DataInteraction
-import androidx.test.espresso.ViewInteraction
-import androidx.test.filters.LargeTest
-import androidx.test.rule.ActivityTestRule
-import androidx.test.runner.AndroidJUnit4
+import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewParent
-
-import androidx.test.InstrumentationRegistry.getInstrumentation
-import androidx.test.espresso.Espresso.onData
+import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.Espresso.pressBack
-import androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu
 import androidx.test.espresso.action.ViewActions.*
-import androidx.test.espresso.assertion.ViewAssertions.*
 import androidx.test.espresso.matcher.ViewMatchers.*
-import androidx.test.ext.junit.rules.ActivityScenarioRule
-
-import com.github.sdpsharelook.R
-import com.github.sdpsharelook.authorization.LoginActivity
-
+import androidx.test.filters.LargeTest
+import androidx.test.runner.AndroidJUnit4
+import com.github.sdpsharelook.authorization.LoginFragment
 import org.hamcrest.Description
 import org.hamcrest.Matcher
+import org.hamcrest.Matchers.allOf
 import org.hamcrest.TypeSafeMatcher
-import org.hamcrest.core.IsInstanceOf
-import org.junit.Rule
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-
-import org.hamcrest.Matchers.allOf
-import org.hamcrest.Matchers.anything
-import org.hamcrest.Matchers.`is`
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
 class FinalSignUpTest {
 
-    @Rule
-    @JvmField
-    var mActivityTestRule = ActivityScenarioRule(LoginActivity::class.java)
+    @Before
+    fun init() {
+        launchFragmentInContainer<LoginFragment>(Bundle(), R.style.Theme_Sherlook)
+    }
 
     @Test
     fun finalSignUpTest() {
 
         val materialButton2 = onView(
             allOf(
-                withId(R.id.signUpButton), withText("Don't have an account? Sign up here !"),
+                withId(R.id.signUpButton),
                 childAtPosition(
                     childAtPosition(
                         withId(android.R.id.content),

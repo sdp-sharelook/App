@@ -1,25 +1,15 @@
 package com.github.sdpsharelook.authorization
 
 
-import android.view.View
-import android.view.ViewGroup
+import android.os.Bundle
+import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
-import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.runner.AndroidJUnit4
 import com.github.sdpsharelook.R
-import com.github.sdpsharelook.authorization.TestUserConstants.TEST_USER_PASS2
-import com.github.sdpsharelook.authorization.UserConstants.TEST_USER_EMAIL
-import com.github.sdpsharelook.authorization.UserConstants.TEST_USER_PASS
-import org.hamcrest.Description
-import org.hamcrest.Matcher
-import org.hamcrest.Matchers.allOf
-import org.hamcrest.TypeSafeMatcher
 import org.junit.After
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -27,11 +17,13 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class SignUpTest {
 
-    @get:Rule
-    var mActivityTestRule = ActivityScenarioRule(SignUpActivity::class.java)
+    @Before
+    fun init() {
+        launchFragmentInContainer<SignUpFragment>(Bundle(), R.style.Theme_Sherlook)
+    }
+
     val NEW_USER_EMAIL = "testuser123@gmail.com"
     val NEW_USER_PASS = "123456"
-
 
     @Before
     fun setAuth() {

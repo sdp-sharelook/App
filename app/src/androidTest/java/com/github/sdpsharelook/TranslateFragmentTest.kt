@@ -1,7 +1,8 @@
 package com.github.sdpsharelook
 
+import android.os.Bundle
 import androidx.core.content.PermissionChecker
-import androidx.test.core.app.ActivityScenario
+import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
@@ -15,6 +16,7 @@ import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.runner.permission.PermissionRequester
 import com.github.sdpsharelook.language.Language
 import com.github.sdpsharelook.language.Matchers.Companion.withTag
+import com.github.sdpsharelook.translate.TranslateFragment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
@@ -26,7 +28,7 @@ import org.junit.runner.RunWith
 
 
 @RunWith(AndroidJUnit4::class)
-class TranslateActivityTest {
+class TranslateFragmentTest {
     private var mIdlingResource: IdlingResource? = null
 
     private fun selectSourceLanguage(srcLang: String) {
@@ -41,8 +43,8 @@ class TranslateActivityTest {
 
     @Before
     fun registerIdlingResource() {
-        ActivityScenario.launch(TranslateActivity::class.java).onActivity { activity ->
-            mIdlingResource = activity.getIdlingResource()
+        launchFragmentInContainer<TranslateFragment>(Bundle(), R.style.Theme_Sherlook).onFragment {
+            mIdlingResource = it.getIdlingResource()
             // To prove that the test fails, omit this call:
             IdlingRegistry.getInstance().register(mIdlingResource)
         }
@@ -64,10 +66,6 @@ class TranslateActivityTest {
         // change target lang
         selectTargetLanguage("it")
         onView(withId(R.id.targetText)).check(matches(withText("Ciao.")))
-
-        // menu
-        onView(withId(R.id.imageButtonHamburger)).perform(click())
-        onView(withId(R.id.button_back)).perform(click())
     }
 
     @Test

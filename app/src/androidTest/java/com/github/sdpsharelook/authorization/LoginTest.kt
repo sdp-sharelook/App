@@ -1,10 +1,11 @@
 package com.github.sdpsharelook.authorization
 
-
+import android.os.Bundle
+import androidx.fragment.app.testing.FragmentScenario
+import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.*
-import androidx.test.espresso.matcher.ViewMatchers.*
-import androidx.test.ext.junit.rules.ActivityScenarioRule
+import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.sdpsharelook.R
 import com.github.sdpsharelook.authorization.UserConstants.TEST_USER_EMAIL
@@ -12,7 +13,6 @@ import com.github.sdpsharelook.authorization.UserConstants.TEST_USER_PASS
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -25,29 +25,25 @@ object UserConstants {
 @RunWith(AndroidJUnit4::class)
 class LoginSignUpTest {
 
-    @get:Rule
-    var loginRule = ActivityScenarioRule(LoginActivity::class.java)
-
     @Before
     fun logOut() {
-        auth= TestAuth()
+        auth = TestAuth()
         auth.signOut()
     }
 
-
     @Test
     fun testLoginWithTestUser() {
+        val scenario = launchFragmentInContainer<LoginFragment>(Bundle(), R.style.Theme_Sherlook)
         onView(withId(R.id.email)).perform(typeText(TEST_USER_EMAIL))
         onView(withId(R.id.password)).perform(typeText(TEST_USER_PASS))
         onView(withId(R.id.loginButton)).perform(click())
         assert(auth.currentUser!!.email == TEST_USER_EMAIL)
-        loginRule.scenario.close()
+        scenario.close()
     }
-
 
     @Test
     fun testLoginWithNoEmail() {
-
+        launchFragmentInContainer<LoginFragment>(Bundle(), R.style.Theme_Sherlook)
         onView(withId(R.id.loginButton)).perform(swipeLeft())
         onView(withId(R.id.email)).perform(typeText(""))
         onView(withId(R.id.password)).perform(typeText(TEST_USER_PASS))

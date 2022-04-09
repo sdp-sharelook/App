@@ -31,7 +31,7 @@ class TranslateFragment : Fragment() {
     private lateinit var textToSpeech: TextToSpeech
     private lateinit var sourceLanguage: Language
     private lateinit var targetLanguage: Language
-    private lateinit var speechRecognizer: SpeechRecognizer
+    //private lateinit var speechRecognizer: SpeechRecognizer
 
     private var targetTextString: String? = null
     private var sectionWord: SectionWord? = null
@@ -57,7 +57,7 @@ class TranslateFragment : Fragment() {
     private fun setSource(language: Language) {
         sourceLanguage = language
         binding.buttonSourceLang.text = language.displayName
-        speechRecognizer.language = language
+        //speechRecognizer.language = language
     }
 
     private fun setTarget(language: Language, forceEnableTTS: Boolean = false) {
@@ -170,8 +170,8 @@ class TranslateFragment : Fragment() {
 
     private fun initSpeechRecognizer() {
         binding.imageButtonSR.setOnClickListener {
-            speechRecognizer.cancel()
-            speechRecognizer.recognizeSpeech(recognitionListener)
+            //speechRecognizer.cancel()
+            //speechRecognizer.recognizeSpeech(recognitionListener)
         }
     }
 
@@ -222,7 +222,7 @@ class TranslateFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        speechRecognizer = SpeechRecognizer(requireActivity())
+        //speechRecognizer = SpeechRecognizer(requireActivity())
     }
 
     override fun onCreateView(

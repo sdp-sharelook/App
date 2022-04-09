@@ -1,33 +1,34 @@
 package com.github.sdpsharelook
 
-
+import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.LargeTest
-import androidx.test.rule.ActivityTestRule
 import androidx.test.runner.AndroidJUnit4
-import com.github.sdpsharelook.textDetection.TextDetectionActivity
+import com.github.sdpsharelook.textDetection.TextDetectionFragment
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.TypeSafeMatcher
 import org.hamcrest.core.IsInstanceOf
-import org.junit.Rule
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
-class TextDetectionActivityTest {
+class TextDetectionFragmentTest {
 
-    @Rule
-    @JvmField
-    var mActivityTestRule = ActivityTestRule(TextDetectionActivity::class.java)
+    @Before
+    fun init() {
+        launchFragmentInContainer<TextDetectionFragment>(Bundle(), R.style.Theme_Sherlook)
+    }
 
     @Test
     fun textDetectionActivityTest() {

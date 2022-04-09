@@ -29,9 +29,9 @@ class TranslateFragment : Fragment() {
     private lateinit var binding: FragmentTranslateBinding
 
     private lateinit var textToSpeech: TextToSpeech
-    private lateinit var sourceLanguage: Language
-    private lateinit var targetLanguage: Language
-    //private lateinit var speechRecognizer: SpeechRecognizer
+    private var sourceLanguage: Language = Language.auto
+    private var targetLanguage: Language = Language("en")
+    private lateinit var speechRecognizer: SpeechRecognizer
 
     private var targetTextString: String? = null
     private var sectionWord: SectionWord? = null
@@ -42,9 +42,7 @@ class TranslateFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initTranslator()
         initTextToSpeech()
-        initSpeechRecognizer()
-        setSource(Language.auto)
-        setTarget(Language("en"), true)
+        setTarget(targetLanguage, true)
         binding.buttonSourceLang.apply {
             setOnClickListener { selectLanguage(this) }
         }
@@ -54,10 +52,16 @@ class TranslateFragment : Fragment() {
         binding.addWordToSectionButton.setOnClickListener { addWordToSection() }
     }
 
+    override fun onResume() {
+        super.onResume()
+        initSpeechRecognizer()
+        setSource(sourceLanguage)
+    }
+
     private fun setSource(language: Language) {
         sourceLanguage = language
         binding.buttonSourceLang.text = language.displayName
-        //speechRecognizer.language = language
+        speechRecognizer.language = language
     }
 
     private fun setTarget(language: Language, forceEnableTTS: Boolean = false) {
@@ -170,8 +174,8 @@ class TranslateFragment : Fragment() {
 
     private fun initSpeechRecognizer() {
         binding.imageButtonSR.setOnClickListener {
-            //speechRecognizer.cancel()
-            //speechRecognizer.recognizeSpeech(recognitionListener)
+            speechRecognizer.cancel()
+            speechRecognizer.recognizeSpeech(recognitionListener)
         }
     }
 
@@ -186,28 +190,23 @@ class TranslateFragment : Fragment() {
         CoroutineScope(Dispatchers.IO).launch {
             var sourceLang = sourceLanguage
             val destLang = targetLanguage
-            var coroutineCanceled = false
             if (sourceLang == Language.auto) {
                 val sourceLangTag = Translator.detectLanguage(textToTranslate)
                 if (!translatorLanguagesTag.contains(sourceLangTag)) {
                     targetTextString = null
                     binding.targetText.text = getString(R.string.unrecognized_source_language)
                     mIdlingResource?.decrement()
-                    // println("source language unrecognized")
-                    coroutineCanceled = true
+                    return@launch
                 } else sourceLang = Language(sourceLangTag)
             }
-            if (!coroutineCanceled) {
-                val t = Translator(sourceLang.tag, destLang.tag)
-                // println("source language recognized ${sourceLang.tag}")
-                targetTextString = null
-                binding.targetText.text = getString(R.string.translation_running)
+            val t = Translator(sourceLang.tag, destLang.tag)
+            targetTextString = null
+            binding.targetText.text = getString(R.string.translation_running)
+            targetTextString = t.translate(textToTranslate)
+            sectionWord = SectionWord(textToTranslate, targetTextString ?: "ERROR")
+            binding.targetText.text = targetTextString
+            mIdlingResource?.decrement()
 
-                targetTextString = t.translate(textToTranslate)
-                sectionWord = SectionWord(textToTranslate, targetTextString ?: "ERROR")
-                binding.targetText.text = targetTextString
-                mIdlingResource?.decrement()
-            }
         }
     }
 
@@ -222,7 +221,7 @@ class TranslateFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //speechRecognizer = SpeechRecognizer(requireActivity())
+        speechRecognizer = SpeechRecognizer(requireActivity())
     }
 
     override fun onCreateView(

@@ -4,12 +4,12 @@
     android:layout_height="match_parent">
     <item
         android:id="@+id/menuTranslateLink"
-        android:icon="@drawable/ic_speaker"
+        android:icon="@drawable/ic_translate"
         android:title="Translate"
         />
     <item
         android:id="@+id/menuDatabaseViewLink"
-        android:icon="@drawable/ic_microphone"
+        android:icon="@android:drawable/ic_menu_save"
         android:title="Database" />
     <item
         android:id="@+id/menuSectionsLink"
@@ -18,17 +18,17 @@
         />
     <item
         android:id="@+id/menuCameraLink"
-        android:icon="@android:drawable/ic_menu_save"
+        android:icon="@android:drawable/ic_menu_camera"
         android:title="Camera"
         />
     <item
         android:id="@+id/menuLoginLink"
-        android:icon="@android:drawable/ic_menu_save"
+        android:icon="@drawable/ic_login"
         android:title="Login"
         />
     <item
         android:id="@+id/menuTextDetectionLink"
-        android:icon="@android:drawable/ic_menu_save"
+        android:icon="@drawable/ic_text_detection"
         android:title="Text detection"
         />
 </menu>

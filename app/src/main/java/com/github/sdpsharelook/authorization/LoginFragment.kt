@@ -7,7 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.github.sdpsharelook.databinding.FragmentLoginBinding
+import com.github.sdpsharelook.section.SectionFragmentArgs
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -20,6 +22,7 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val args: SectionFragmentArgs by navArgs()
         auth = FireAuth()
         binding.loginButton.setOnClickListener { logIn() }
         binding.signUpButton.setOnClickListener { goToSignUp() }

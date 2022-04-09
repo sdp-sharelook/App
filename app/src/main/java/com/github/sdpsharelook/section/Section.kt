@@ -1,4 +1,4 @@
-package com.github.sdpsharelook.Section
+package com.github.sdpsharelook.section
 
 import com.github.sdpsharelook.storage.RTDBWordListRepository
 

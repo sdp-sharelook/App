@@ -1,4 +1,4 @@
-package com.github.sdpsharelook.Section
+package com.github.sdpsharelook.section
 
 import androidx.recyclerview.widget.RecyclerView
 import com.github.sdpsharelook.databinding.CardSectionBinding

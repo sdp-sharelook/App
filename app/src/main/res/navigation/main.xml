@@ -20,7 +20,7 @@
     </fragment>
     <fragment
         android:id="@+id/menuSectionsLink"
-        android:name="com.github.sdpsharelook.Section.SectionFragment"
+        android:name="com.github.sdpsharelook.section.SectionFragment"
         android:label="fragment_section"
         tools:layout="@layout/fragment_section" >
         <argument
@@ -34,7 +34,7 @@
     </fragment>
     <fragment
         android:id="@+id/sectionDetailFragment"
-        android:name="com.github.sdpsharelook.Section.SectionDetailFragment"
+        android:name="com.github.sdpsharelook.section.SectionDetailFragment"
         android:label="SectionDetailFragment" >
         <argument
             android:name="sectionID"

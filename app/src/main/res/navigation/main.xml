@@ -85,4 +85,9 @@
             android:name="name"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/menuTextDetectionLink"
+        android:name="com.github.sdpsharelook.textDetection.TextDetectionFragment"
+        android:label="fragment_text_detection"
+        tools:layout="@layout/fragment_text_detection" />
 </navigation>

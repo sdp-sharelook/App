@@ -132,7 +132,6 @@
         android:layout_marginTop="40dp"
         android:layout_marginEnd="60dp"
         android:checkable="false"
-        android:onClick="checkBeforeSignUp"
         android:text="Sign Up !"
         app:iconPadding="0dp"
         app:layout_constraintEnd_toEndOf="parent"

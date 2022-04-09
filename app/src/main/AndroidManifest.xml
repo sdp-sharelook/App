@@ -35,9 +35,6 @@
             android:name=".textDetection.TextDetectionActivity"
             android:exported="false" />
         <activity
-            android:name=".GreetingActivity"
-            android:exported="false" />
-        <activity
             android:name=".MainActivity"
             android:exported="false"
             android:theme="@style/Theme.Sherlook" />

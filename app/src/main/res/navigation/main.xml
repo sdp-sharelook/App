@@ -63,10 +63,26 @@
         <action
             android:id="@+id/action_menuLoginLink_to_signUpFragment"
             app:destination="@id/signUpFragment" />
+        <action
+            android:id="@+id/action_menuLoginLink_to_greetingFragment"
+            app:destination="@id/greetingFragment" />
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
         android:name="com.github.sdpsharelook.authorization.SignUpFragment"
         android:label="fragment_sign_up"
-        tools:layout="@layout/fragment_sign_up" />
+        tools:layout="@layout/fragment_sign_up" >
+        <action
+            android:id="@+id/action_signUpFragment_to_greetingFragment"
+            app:destination="@id/greetingFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/greetingFragment"
+        android:name="com.github.sdpsharelook.GreetingFragment"
+        android:label="fragment_greeting"
+        tools:layout="@layout/fragment_greeting" >
+        <argument
+            android:name="name"
+            app:argType="string" />
+    </fragment>
 </navigation>

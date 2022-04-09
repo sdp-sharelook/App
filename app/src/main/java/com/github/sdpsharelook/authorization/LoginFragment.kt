@@ -52,13 +52,10 @@ class LoginFragment : Fragment() {
     }
 
     private fun greet(name: String?) {
-        // TODO
-//        val tName =
-//            if (name.isNullOrBlank() || auth.currentUser!!.isAnonymous) "anonymous" else name
-//        val intent = Intent(this, GreetingActivity::class.java).apply {
-//            putExtra(GREET_NAME_EXTRA, tName)
-//        }
-//        startActivity(intent)
+        val tName =
+            if (name.isNullOrBlank() || auth.currentUser!!.isAnonymous) "anonymous" else name
+        val action = LoginFragmentDirections.actionMenuLoginLinkToGreetingFragment(tName)
+        findNavController().navigate(action)
     }
 
     private fun goToSignUp() {

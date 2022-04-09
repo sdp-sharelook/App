@@ -1,15 +1,12 @@
 package com.github.sdpsharelook.authorization
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.github.sdpsharelook.GreetingActivity
-import com.github.sdpsharelook.R
+import androidx.navigation.fragment.findNavController
 import com.github.sdpsharelook.databinding.FragmentSignUpBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -28,6 +25,8 @@ class SignUpFragment : Fragment() {
         prelimPasswordListener()
         passwordListener()
         auth = FireAuth()
+
+        binding.loginButton.setOnClickListener { checkBeforeSignUp() }
     }
 
     private fun firstNameListener() {
@@ -131,7 +130,7 @@ class SignUpFragment : Fragment() {
         }
     }
 
-    fun checkBeforeSignUp(view: View) {
+    private fun checkBeforeSignUp() {
         updateErrors()
         val firstNameValid = binding.firstName.error == null
         val lastNameValid = binding.lastName.error == null
@@ -139,7 +138,7 @@ class SignUpFragment : Fragment() {
         val prelimPassValid = binding.prelimPasswordBox.helperText == null
         val passValid = binding.password.error == null && binding.passwordBox.helperText == null
         if (firstNameValid && lastNameValid && emailValid && prelimPassValid && passValid) {
-            signUp(view)
+            signUp()
         } else {
             Toast.makeText(requireContext(), "Form is filled incorrectly", Toast.LENGTH_SHORT).show()
         }
@@ -155,7 +154,7 @@ class SignUpFragment : Fragment() {
         binding.passwordBox.helperText = isPasswordValid()
     }
 
-    private fun signUp(@Suppress("UNUSED_PARAMETER") view: View) {
+    private fun signUp() {
         val email = binding.email.text.toString()
         val password = binding.password.text.toString()
 
@@ -182,13 +181,10 @@ class SignUpFragment : Fragment() {
     }
 
     private fun greet(name: String?) {
-        // TODO
-//        val tName =
-//            if (name.isNullOrBlank() || auth.currentUser!!.isAnonymous) "anonymous" else name
-//        val intent = Intent(this, GreetingActivity::class.java).apply {
-//            putExtra(GREET_NAME_EXTRA, tName)
-//        }
-//        startActivity(intent)
+        val tName =
+            if (name.isNullOrBlank() || auth.currentUser!!.isAnonymous) "anonymous" else name
+        val action = SignUpFragmentDirections.actionSignUpFragmentToGreetingFragment(tName)
+        findNavController().navigate(action)
     }
 
     override fun onCreateView(

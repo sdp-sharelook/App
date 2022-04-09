@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:id="@+id/layout_signup"
     android:onClick="signUp"
-    tools:context=".SignUpActivity">
+    tools:context=".authorization.SignUpFragment">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/passwordBox"

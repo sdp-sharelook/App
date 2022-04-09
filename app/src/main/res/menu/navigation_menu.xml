@@ -22,9 +22,9 @@
         android:title="Camera"
         />
     <item
-        android:id="@+id/menuSignUpLink"
+        android:id="@+id/menuLoginLink"
         android:icon="@android:drawable/ic_menu_save"
-        android:title="Sign Up"
+        android:title="Login"
         />
     <item
         android:id="@+id/menuTextDetectionLink"

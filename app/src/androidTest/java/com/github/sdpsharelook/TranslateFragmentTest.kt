@@ -14,6 +14,8 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.runner.permission.PermissionRequester
+import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.UiSelector
 import com.github.sdpsharelook.language.Language
 import com.github.sdpsharelook.language.Matchers.Companion.withTag
 import com.github.sdpsharelook.translate.TranslateFragment
@@ -23,6 +25,7 @@ import kotlinx.coroutines.test.runTest
 import org.hamcrest.Matchers.*
 import org.junit.After
 import org.junit.Before
+import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -146,6 +149,18 @@ class TranslateFragmentTest {
     fun unregisterIdlingResource() {
         if (mIdlingResource != null) {
             IdlingRegistry.getInstance().unregister(mIdlingResource)
+        }
+    }
+
+    companion object {
+        @JvmStatic
+        @BeforeClass
+        fun dismissANRSystemDialog() {
+            val device = UiDevice.getInstance(getInstrumentation())
+            val waitButton = device.findObject(UiSelector().textContains("wait"))
+            if (waitButton.exists()) {
+                waitButton.click()
+            }
         }
     }
 }

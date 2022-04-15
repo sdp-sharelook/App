@@ -126,4 +126,15 @@
     <string name="take_picture">"Take a picture"</string>
     <string name="take_picture_description">"Description"</string>
     <string name="search">Search...</string>
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome!"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <!-- Strings related to online picture picker -->
+    <string name="no_results_found">No result found</string>
 </resources>

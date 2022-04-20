@@ -8,15 +8,12 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
-import android.widget.Button
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.github.sdpsharelook.R
 import com.github.sdpsharelook.databinding.ActivityCameraBinding
-import com.github.sdpsharelook.databinding.ActivityTextDetectionBinding
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.mlkit.vision.common.InputImage
@@ -24,7 +21,6 @@ import com.google.mlkit.vision.text.Text
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import java.io.File
-import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -80,19 +76,22 @@ class CameraActivity : AppCompatActivity() {
             imageView.setImageURI(uri)
             inputImage = InputImage.fromFilePath(this, uri)
             // Once the image is captured recognize text
-            recognizer.process(inputImage)
-                .addOnSuccessListener(
-                    OnSuccessListener<Text?> { texts ->
-                        processTextBlock(texts)
-                    })
-                .addOnFailureListener(
-                    OnFailureListener { e -> // Task failed with an exception
-                        e.printStackTrace()
-                    })
-            binding.buttonTraduire.isEnabled = true
+            recognizeText(inputImage)
         } else {
             showAlert("Error while taking picture")
         }
+    }
+
+    private fun recognizeText(image: InputImage) {
+        recognizer.process(image)
+            .addOnSuccessListener(
+                OnSuccessListener<Text?> { texts ->
+                    processTextBlock(texts)
+                })
+            .addOnFailureListener(
+                OnFailureListener { e -> // Task failed with an exception
+                    e.printStackTrace()
+                })
     }
 
     private val requestPermissionLauncher =
@@ -140,6 +139,7 @@ class CameraActivity : AppCompatActivity() {
         if (result.text.isBlank()){
             binding.textData.text = "Aucun Text"
         }else{
+            binding.buttonTraduire.isEnabled = true
             binding.textData.text = result.text
         }
     }

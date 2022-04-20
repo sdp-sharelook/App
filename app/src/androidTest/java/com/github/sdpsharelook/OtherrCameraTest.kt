@@ -40,20 +40,23 @@ class IncompleteCameraTest {
 
     @Test
     fun incompleteCameraTest() {
-        val materialButton2 = onView(
+        val materialButton3 = onView(
             allOf(
-                withId(R.id.buttonTakePic), withText("Take Picture"),
+                withId(R.id.buttonTakePic), withText("Capture"),
                 childAtPosition(
-                    childAtPosition(
-                        withId(android.R.id.content),
-                        0
+                    allOf(
+                        withId(R.id.linearHolder),
+                        childAtPosition(
+                            withClassName(`is`("android.widget.RelativeLayout")),
+                            2
+                        )
                     ),
                     0
                 ),
                 isDisplayed()
             )
         )
-        materialButton2.perform(click())
+        materialButton3.perform(click())
 
 //        val materialButton3 = onView(
 //            allOf(

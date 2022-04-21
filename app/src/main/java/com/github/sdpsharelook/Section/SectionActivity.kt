@@ -13,6 +13,7 @@ import com.github.sdpsharelook.databinding.ActivitySectionBinding
 import com.github.sdpsharelook.databinding.CardSectionBinding
 import com.github.sdpsharelook.databinding.PopupBinding
 import com.github.sdpsharelook.storage.RTDBWordListRepository
+import com.github.sdpsharelook.storage.RTDBWordSectionRepository
 
 
 var edit = false
@@ -66,19 +67,24 @@ class SectionActivity : AppCompatActivity(), SectionClickListener {
         popupBinding.popupAddBtn.setOnClickListener{
             var sectionName = popupBinding.editSectionName.text.toString()
             var countryIndex = popupBinding.spinnerCountries.selectedItemPosition
+            var newSection = Section(
+                sectionName,
+                mainCountryList[countryIndex].flag,
+                databaseWordList,
+                sectionName + countryIndex.toString()
+            )
+
             // Popu do 2 different things if it is editing a section or creating one
             if (edit){
                 cardAdapter.editItem(sectionName, mainCountryList.get(countryIndex).flag)
-            } else{
-                addSection(Section(
-                    sectionName,
-                    mainCountryList[countryIndex].flag,
-                    databaseWordList,
-                    sectionName + countryIndex
-                ))
+                Toast.makeText(this, "Section: " + sectionName + " edited", Toast.LENGTH_SHORT).show()
+            } else if(addSection(newSection)){
+                Toast.makeText(this, "Section: " + sectionName + " saved", Toast.LENGTH_SHORT).show()
+            }else{
+                // if the section already exist
+                Toast.makeText(this, "This " + sectionName + " already exist", Toast.LENGTH_SHORT).show()
             }
 
-            Toast.makeText(this, "Section: " + sectionName + " saved", Toast.LENGTH_SHORT).show()
             dialog.dismiss()
         }
 
@@ -91,9 +97,15 @@ class SectionActivity : AppCompatActivity(), SectionClickListener {
         return list
     }
 
-    private fun addSection(section: Section) {
-        sectionList.add(section)
-        binding.recyclerView.adapter?.notifyDataSetChanged()
+    private fun addSection(section: Section): Boolean {
+        // if the section already exist do not add it
+        return if(sectionList.contains(section)){
+            false
+        }else{
+            sectionList.add(section)
+            binding.recyclerView.adapter?.notifyDataSetChanged()
+            true
+        }
     }
 
     override fun onClick(section: Section) {

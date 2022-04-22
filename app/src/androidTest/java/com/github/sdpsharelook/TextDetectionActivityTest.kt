@@ -34,14 +34,7 @@ class TextDetectionActivityTest {
 
         val detectButton = onView(
             allOf(
-                withId(R.id.detectButton), isDisplayed()
-            )
-        )
-        detectButton.check(matches(isNotEnabled()))
-
-        val materialButton2 = onView(
-            allOf(
-                withId(R.id.captureButton), withText("Capture"),
+                withId(R.id.detectButton), withText("Detect"),
                 childAtPosition(
                     allOf(
                         withId(R.id.linearHolder),
@@ -55,58 +48,16 @@ class TextDetectionActivityTest {
                 isDisplayed()
             )
         )
-        materialButton2.perform(click())
-
-        detectButton.check(matches(isEnabled()))
+        detectButton.perform(click())
 
         val textView = onView(
-            allOf(
-                withId(R.id.text_data), withText("Detect text on the image"),
-                withParent(withParent(withId(android.R.id.content))),
-                isDisplayed()
-            )
-        )
-        textView.check(matches(withText("Detect text on the image")))
-
-        val button = onView(
-            allOf(
-                withId(R.id.detectButton), withText("DETECT"),
-                withParent(
-                    allOf(
-                        withId(R.id.linearHolder),
-                        withParent(IsInstanceOf.instanceOf(android.widget.RelativeLayout::class.java))
-                    )
-                ),
-                isDisplayed()
-            )
-        )
-
-        val materialButton3 = onView(
-            allOf(
-                withId(R.id.detectButton), withText("Detect"),
-                childAtPosition(
-                    allOf(
-                        withId(R.id.linearHolder),
-                        childAtPosition(
-                            withClassName(`is`("android.widget.RelativeLayout")),
-                            2
-                        )
-                    ),
-                    1
-                ),
-                isDisplayed()
-            )
-        )
-        materialButton3.perform(click())
-
-        val textView2 = onView(
             allOf(
                 withId(R.id.text_data),
                 withParent(withParent(withId(android.R.id.content))),
                 isDisplayed()
             )
         )
-        textView2.check(matches(isDisplayed()))
+        textView.check(matches(withText("Recorded")))
     }
 
     private fun childAtPosition(

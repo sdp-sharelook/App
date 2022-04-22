@@ -39,14 +39,7 @@
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <Button
-            android:id="@+id/captureButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Capture"
-            android:layout_margin="8dp"
-            />
+
         <Button
             android:id="@+id/detectButton"
             android:layout_width="0dp"

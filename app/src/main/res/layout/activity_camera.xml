@@ -46,14 +46,14 @@
             android:text="Capture"
             android:layout_margin="8dp"
             />
+
         <Button
             android:id="@+id/buttonTraduire"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Traduire"
             android:layout_margin="8dp"
-            />
+            android:layout_weight="1"
+            android:text="Traduire" />
     </LinearLayout>
 
 </RelativeLayout>

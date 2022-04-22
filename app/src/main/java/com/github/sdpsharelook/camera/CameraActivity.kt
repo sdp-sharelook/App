@@ -3,17 +3,23 @@ package com.github.sdpsharelook.camera
 import android.Manifest
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.github.sdpsharelook.R
+import com.github.sdpsharelook.Section.SectionActivity
+import com.github.sdpsharelook.Section.TRANSLATOR_WORD
+import com.github.sdpsharelook.TranslateActivity
 import com.github.sdpsharelook.databinding.ActivityCameraBinding
+import com.github.sdpsharelook.translateWord
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.mlkit.vision.common.InputImage
@@ -31,6 +37,7 @@ class CameraActivity : AppCompatActivity() {
     private lateinit var inputImage: InputImage
     private lateinit var binding: ActivityCameraBinding
     private val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
+    private var textDetected : String? = null
 
 
     private fun showAlert(message: String) {
@@ -53,10 +60,8 @@ class CameraActivity : AppCompatActivity() {
         binding.buttonTraduire.isEnabled = false
 
         binding.buttonTraduire.setOnClickListener{
-
-
+            translatWord()
         }
-
     }
 
     fun takePic() {
@@ -137,10 +142,21 @@ class CameraActivity : AppCompatActivity() {
 
     private fun processTextBlock(result: Text) {
         if (result.text.isBlank()){
+            textDetected = "Aucun Text"
             binding.textData.text = "Aucun Text"
         }else{
             binding.buttonTraduire.isEnabled = true
-            binding.textData.text = result.text
+            textDetected = result.text
+            binding.textData.text = textDetected
+        }
+    }
+
+    fun translatWord(){
+        val intent = Intent(this, TranslateActivity::class.java)
+        if (textDetected != null) {
+            intent.putExtra(TRANSLATOR_WORD, textDetected)
+            translateWord = true
+            startActivity(intent)
         }
     }
 }

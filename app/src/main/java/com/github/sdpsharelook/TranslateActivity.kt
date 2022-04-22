@@ -24,6 +24,8 @@ import com.google.mlkit.nl.translate.TranslateLanguage
 import kotlinx.coroutines.*
 
 val TRANSLATOR_WORD = "translatorExtra"
+var translateWord = false
+
 class TranslateActivity : AppCompatActivity() {
     private lateinit var targetTextView: TextView
     private lateinit var textToSpeech: TextToSpeech
@@ -48,6 +50,8 @@ class TranslateActivity : AppCompatActivity() {
         ttsButton = findViewById(R.id.imageButtonTTS)
         srButton = findViewById(R.id.imageButtonSR)
 
+
+
         initTranslator()
         initTextToSpeech()
         initSpeechRecognizer()
@@ -62,6 +66,10 @@ class TranslateActivity : AppCompatActivity() {
         findViewById<ImageButton>(R.id.imageButtonHamburger).setOnClickListener {
             val intent = Intent(ctx, NavigationMenuActivity::class.java)
             ctx.startActivity(intent)
+        }
+        if(translateWord){
+            sourceText.text = intent.getStringExtra(TRANSLATOR_WORD)
+            translateWord = false
         }
     }
 

@@ -25,6 +25,7 @@
     </queries>
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@drawable/ic_svg_path"
         android:label="@string/appName"

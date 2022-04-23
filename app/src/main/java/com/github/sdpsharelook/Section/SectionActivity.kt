@@ -4,9 +4,9 @@ import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.sdpsharelook.R
 import com.github.sdpsharelook.databinding.ActivitySectionBinding
@@ -17,7 +17,7 @@ import com.github.sdpsharelook.storage.RTDBWordListRepository
 
 var edit = false
 
-val TRANSLATOR_WORD = "translatorExtra"
+const val TRANSLATOR_WORD = "translatorExtra"
 
 
 class SectionActivity : AppCompatActivity(), SectionClickListener {
@@ -41,11 +41,11 @@ class SectionActivity : AppCompatActivity(), SectionClickListener {
         //init list of possible languages for the spinner
         initList()
 
-        // set up the popup when cliking on add button
+        // set up the popup when clicking on add button
         dialog = Dialog(sectionActivity)
         dialog.setContentView(popupBinding.root)
-        dialog.setOnDismissListener{
-            popupBinding.editSectionName.setText("Section name")
+        dialog.setOnDismissListener {
+            popupBinding.editSectionName.setText(getString(R.string.section_name_hint))
         }
 
         // set up the spinner
@@ -63,9 +63,9 @@ class SectionActivity : AppCompatActivity(), SectionClickListener {
             dialog.show()
         }
 
-        popupBinding.popupAddBtn.setOnClickListener{
-            var sectionName = popupBinding.editSectionName.text.toString()
-            var countryIndex = popupBinding.spinnerCountries.selectedItemPosition
+        popupBinding.popupAddBtn.setOnClickListener {
+            val sectionName = popupBinding.editSectionName.text.toString()
+            val countryIndex = popupBinding.spinnerCountries.selectedItemPosition
             // Popu do 2 different things if it is editing a section or creating one
             if (edit){
                 cardAdapter.editItem(sectionName, mainCountryList.get(countryIndex).flag)
@@ -85,7 +85,7 @@ class SectionActivity : AppCompatActivity(), SectionClickListener {
     }
 
     private fun initList(): List<CountryItem> {
-        var list = mutableListOf<CountryItem>()
+        val list = mutableListOf<CountryItem>()
         list.add(CountryItem(R.drawable.spain))
         list.add(CountryItem(R.drawable.us))
         return list
@@ -93,14 +93,14 @@ class SectionActivity : AppCompatActivity(), SectionClickListener {
 
     private fun addSection(section: Section) {
         sectionList.add(section)
-        binding.recyclerView.adapter?.notifyDataSetChanged()
+        binding.recyclerView.adapter?.notifyItemInserted(sectionList.lastIndex)
     }
 
     override fun onClick(section: Section) {
         val newIntent = Intent(applicationContext, SectionDetail::class.java)
 
-        if(addWordToSection){
-            var sectionWord = intent.getSerializableExtra(TRANSLATOR_WORD) as SectionWord
+        if (addWordToSection) {
+            val sectionWord = intent.getSerializableExtra(TRANSLATOR_WORD) as SectionWord
             newIntent.putExtra(SECTION_ID, section.id).putExtra(TRANSLATOR_WORD, sectionWord)
         }else newIntent.putExtra(SECTION_ID, section.id)
         startActivity(newIntent)

@@ -63,10 +63,10 @@
         <activity
             android:name=".MainActivity"
             android:exported="false"
-            android:theme="@style/Theme.Sherlook"></activity>
+            android:theme="@style/Theme.Sherlook" />
         <activity
             android:name=".camera.CameraActivity"
-            android:exported="false"></activity>
+            android:exported="false" />
         <activity
             android:name=".SplashScreenActivity"
             android:exported="true"

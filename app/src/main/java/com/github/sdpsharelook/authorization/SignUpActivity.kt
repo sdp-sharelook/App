@@ -97,7 +97,7 @@ class SignUpActivity : AppCompatActivity() {
         val oneDigit = "(.*?[0-9].*)".toRegex()
         val specialChar = "(.*?[#?!()@\$ %^&*-].*)".toRegex()
         val minLength8 = ".{8,}".toRegex()
-        var error: String?
+        val error: String?
         if(binding.prelimpassword.text.toString() == "") {
             error = "Required"
         } else
@@ -170,7 +170,7 @@ class SignUpActivity : AppCompatActivity() {
         val email = findViewById<EditText>(R.id.email).text.toString()
         val password = findViewById<EditText>(R.id.password).text.toString()
 
-        GlobalScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
             val user = auth.createUserWithEmailAndPassword(email, password)
             when {
                 user.isSuccess -> {

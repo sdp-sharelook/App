@@ -11,6 +11,8 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.github.sdpsharelook.Section.SectionActivity
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
@@ -20,13 +22,21 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
+@HiltAndroidTest
 @LargeTest
 @RunWith(AndroidJUnit4::class)
 class SectionActivityTest {
 
-    @Rule
-    @JvmField
-    var mActivityTestRule = ActivityTestRule(SectionActivity::class.java)
+    @get:Rule(order = 0)
+    var hiltRule = HiltAndroidRule(this)
+
+    @get:Rule(order = 1)
+    var mActivityTestRule = ActivityScenarioRule(SectionActivity::class.java)
+
+    @Before
+    fun inject() {
+        hiltRule.inject()
+    }
 
     @Test
     fun sectionActivityTest() {

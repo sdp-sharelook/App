@@ -11,12 +11,13 @@ import com.github.sdpsharelook.authorization.UserConstants.TEST_USER_EMAIL
 import com.github.sdpsharelook.authorization.UserConstants.TEST_USER_PASS
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.inject.Provider
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
-class MockFirebaseAuth(p0: FirebaseApp) : FirebaseAuth(p0)
+class MockFirebaseAuth(p0: FirebaseApp, p1: Provider<*>) : FirebaseAuth(p0, p1)
 object UserConstants {
     const val TEST_USER_EMAIL = "testuser@gmail.com"
     const val TEST_USER_PASS = "123456"

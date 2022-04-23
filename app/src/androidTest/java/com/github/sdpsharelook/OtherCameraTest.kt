@@ -11,9 +11,9 @@ import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intended
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.rule.GrantPermissionRule
-import androidx.test.runner.AndroidJUnit4
 import com.github.sdpsharelook.camera.CameraFragment
 import org.hamcrest.Description
 import org.hamcrest.Matcher
@@ -102,15 +102,8 @@ class OtherCameraTest {
         }
 
         override fun matchesSafely(view: View): Boolean {
-            val context = view.context
-            var ppp = true
             val imageView = view as ImageView
-            ppp = if (resourceId < 0) {
-                imageView.drawable == null
-            } else {
-                imageView.drawable != null
-            }
-            return view is ImageView && ppp
+            return if (resourceId < 0) imageView.drawable == null else imageView.drawable != null
         }
     }
 

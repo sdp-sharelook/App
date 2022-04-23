@@ -1,42 +1,24 @@
-package com.github.sdpsharelook
+@file:Suppress("UNUSED_VARIABLE")
 
+package com.github.sdpsharelook.authorization
 
 import android.os.Bundle
-import androidx.test.espresso.DataInteraction
-import androidx.test.espresso.ViewInteraction
-import androidx.test.filters.LargeTest
-import androidx.test.rule.ActivityTestRule
-import androidx.test.runner.AndroidJUnit4
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewParent
 import androidx.fragment.app.testing.launchFragmentInContainer
-
-import androidx.test.InstrumentationRegistry.getInstrumentation
-import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.Espresso.pressBack
-import androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu
 import androidx.test.espresso.action.ViewActions.*
-import androidx.test.espresso.assertion.ViewAssertions.*
 import androidx.test.espresso.matcher.ViewMatchers.*
-import androidx.test.ext.junit.rules.ActivityScenarioRule
-
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.filters.LargeTest
 import com.github.sdpsharelook.R
-import com.github.sdpsharelook.authorization.SignUpFragment
-
 import org.hamcrest.Description
 import org.hamcrest.Matcher
+import org.hamcrest.Matchers.allOf
 import org.hamcrest.TypeSafeMatcher
-import org.hamcrest.core.IsInstanceOf
-import org.junit.Rule
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-
-import org.hamcrest.Matchers.allOf
-import org.hamcrest.Matchers.anything
-import org.hamcrest.Matchers.`is`
-import org.junit.Before
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)

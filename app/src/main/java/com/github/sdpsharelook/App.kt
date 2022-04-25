@@ -6,9 +6,4 @@ import dagger.hilt.android.HiltAndroidApp
 
 @Suppress("unused")
 @HiltAndroidApp
-class App : Application() {
-    override fun onCreate() {
-        super.onCreate()
-        FirebaseApp.initializeApp(this)
-    }
-}
+class App : Application()

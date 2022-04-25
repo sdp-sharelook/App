@@ -57,7 +57,12 @@ class SectionDetail : AppCompatActivity() {
             binding.sectionFlag.setImageResource(section.flag)
         }
 
-        binding.wordList.adapter = SectionWordAdapter(this, wordList)
+        binding.wordList.adapter = SectionWordAdapter2(this, wordList)
+
+        binding.wordList.setOnItemClickListener {parent, row, position, _ ->
+          //TODO take a picture and put it in the database
+        }
+
     }
 
     fun addSectionWord(sw : SectionWord) {

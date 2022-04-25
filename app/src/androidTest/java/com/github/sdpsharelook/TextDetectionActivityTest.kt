@@ -57,14 +57,7 @@ class TextDetectionActivityTest {
                 isDisplayed()
             )
         )
-        wait(1000000000)
-        textView.check(matches(withText("Recorded")))
-    }
-
-    private fun wait(iteration: Int) {
-        for (i in 0 .. iteration){
-
-        }
+        textView.check(matches(isDisplayed()))
     }
 
     private fun childAtPosition(

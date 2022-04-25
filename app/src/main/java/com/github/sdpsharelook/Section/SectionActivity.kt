@@ -12,23 +12,20 @@ import com.github.sdpsharelook.R
 import com.github.sdpsharelook.databinding.ActivitySectionBinding
 import com.github.sdpsharelook.databinding.CardSectionBinding
 import com.github.sdpsharelook.databinding.PopupBinding
-import com.github.sdpsharelook.storage.IRepository
-import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
+import com.github.sdpsharelook.storage.RTDBWordListRepository
 
 
 var edit = false
 
 const val TRANSLATOR_WORD = "translatorExtra"
 
-@AndroidEntryPoint
+
 class SectionActivity : AppCompatActivity(), SectionClickListener {
 
     private lateinit var binding: ActivitySectionBinding
     private lateinit var popupBinding: PopupBinding
     private lateinit var cardBinding: CardSectionBinding
-    @Inject
-    lateinit var databaseWordList: IRepository<List<String>>
+    private var databaseWordList = RTDBWordListRepository()
 
     private lateinit var dialog: Dialog
     var mainCountryList = initList()

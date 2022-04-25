@@ -5,16 +5,15 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import javax.inject.Inject
 
 /**
  * Firebase Realtime Database repository implementation for any value
  *
  * @constructor Create [RTDBAnyRepository]
  */
-class RTDBAnyRepository @Inject constructor(
-    private val firebaseDatabase: FirebaseDatabase
-) : IRepository<Any> {
+class RTDBAnyRepository : IRepository<Any> {
+
+    private val firebaseDatabase: FirebaseDatabase by lazy { FirebaseDatabase.getInstance("https://billinguee-default-rtdb.europe-west1.firebasedatabase.app/") }
 
     /**
      * Gets an asynchronous data stream of [Any]

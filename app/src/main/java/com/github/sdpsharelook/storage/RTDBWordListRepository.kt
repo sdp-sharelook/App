@@ -7,12 +7,11 @@ import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
-import javax.inject.Inject
+import java.lang.UnsupportedOperationException
 
-class RTDBWordListRepository @Inject constructor(
-    private var firebaseDatabase: FirebaseDatabase
-) : IRepository<List<@JvmSuppressWildcards String>> {
+class RTDBWordListRepository : IRepository<List<String>> {
 
+    private val firebaseDatabase: FirebaseDatabase by lazy { FirebaseDatabase.getInstance("https://billinguee-default-rtdb.europe-west1.firebasedatabase.app/") }
     private val reference: DatabaseReference by lazy { firebaseDatabase.reference.child("wordlists") }
 
     /**

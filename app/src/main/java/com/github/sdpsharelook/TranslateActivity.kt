@@ -214,7 +214,7 @@ class TranslateActivity : AppCompatActivity() {
                 targetTextView.text = getString(R.string.translation_running)
 
                 targetTextString = t.translate(textToTranslate)
-                sectionWord = SectionWord(textToTranslate, targetTextString ?: "ERROR")
+                sectionWord = SectionWord(textToTranslate, targetTextString ?: "ERROR", null)
                 activity.targetTextView.text = targetTextString
                 mIdlingResource?.decrement()
             }

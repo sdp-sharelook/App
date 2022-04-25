@@ -44,15 +44,6 @@
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <ImageButton
-            android:id="@+id/deleteButton"
-            android:layout_width="9dp"
-            android:layout_height="9dp"
-            android:backgroundTint="@color/white"
-            android:src="@android:drawable/ic_menu_close_clear_cancel"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:layout_editor_absoluteX="386dp" />
-
         <ImageView
             android:id="@+id/imageView3"
             android:layout_width="77dp"

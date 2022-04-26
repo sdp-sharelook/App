@@ -2,6 +2,7 @@ package com.github.sdpsharelook.onlinePictures
 
 import android.os.Build
 import com.github.sdpsharelook.language.Language
+import kotlinx.coroutines.CancellationException
 import org.json.JSONObject
 import org.json.JSONTokener
 import java.io.BufferedReader
@@ -79,6 +80,7 @@ class GoogleImageApi {
                     OnlinePicture(thumbnailLink, link, title)
                 }.toList()
             } catch (e: Throwable) {
+                if (e is CancellationException) throw e
                 return null
             }
         }

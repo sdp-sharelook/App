@@ -131,7 +131,7 @@ class CameraActivity : AppCompatActivity() {
         return permission1
     }
 
-    private fun createImage(): File {
+    fun createImage(): File {
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
         val imageName = "ShareLook_"+timeStamp+"_"
         var storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)

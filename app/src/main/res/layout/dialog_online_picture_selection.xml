@@ -43,7 +43,7 @@
         android:id="@+id/text_view_no_result"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/no_results_found"
+        android:text="@string/no_result_found"
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="20sp"

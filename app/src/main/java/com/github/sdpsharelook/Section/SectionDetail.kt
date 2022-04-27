@@ -33,16 +33,15 @@ class SectionDetail : AppCompatActivity() {
 
 
         CoroutineScope(Dispatchers.IO).launch {
-            collectListFlow(section!!)
+            collectSectionWordFlow(section!!)
         }
 
         /**Check if we are adding a word from the translator Activity**/
         if(addWordToSection){
             val wordTranslated = intent.getSerializableExtra(TRANSLATOR_WORD) as SectionWord
             CoroutineScope(Dispatchers.IO).launch {
-                if (section != null){
-                    section.databaseRepo.insert(section.sectionRepo, wordTranslated.toList())
-                }
+                // add the word to the database
+                section!!.databaseRepo.insert(section.sectionRepo, wordTranslated.toList())
             }
             addSectionWord(wordTranslated)
             addWordToSection = false
@@ -50,12 +49,12 @@ class SectionDetail : AppCompatActivity() {
 
     }
 
-    private suspend fun collectListFlow(section: Section) {
+    private suspend fun collectSectionWordFlow(section: Section) {
 
         Log.d("FONCTION", "message");
 
-        section!!.databaseRepo.flow().collect {
-            Log.d("COLLECT", it.toString())
+        section.databaseRepo.flow().collect {
+            Log.d("Mnaf", it.toString())
             when {
                 it.isSuccess -> {
                     Log.d("FUCK", it.toString())

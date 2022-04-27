@@ -21,8 +21,7 @@ class SRAlgoTest {
 
     @Before
     fun clearTest() {
-        File(TEST_SR_FILE).delete()
-        println(ApplicationProvider.getApplicationContext<Context?>().applicationContext.filesDir)
+        File(ApplicationProvider.getApplicationContext<Context?>().filesDir,TEST_SR_FILE).delete()
         TEST_WORDS.forEach {
             it.saveToStorage(ApplicationProvider.getApplicationContext(),TEST_SR_FILE)
         }

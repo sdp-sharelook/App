@@ -10,7 +10,7 @@ val SECTION_ID = "sectionExtra"
 class Section(
     var title: String,
     var flag: Int,
-    val databaseRepo: RTDBWordListRepository,//RTDBWordSectionRepository,
+    val databaseRepo: RTDBWordSectionRepository,
     val sectionRepo: String,
     val id: Int? = sectionList.size
 ){

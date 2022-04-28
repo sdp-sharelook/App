@@ -26,7 +26,7 @@ class SectionActivity : AppCompatActivity(), SectionClickListener {
     private lateinit var binding: ActivitySectionBinding
     private lateinit var popupBinding: PopupBinding
     private lateinit var cardBinding: CardSectionBinding
-    private var databaseWordList = RTDBWordListRepository()
+    private var databaseWordList = RTDBWordSectionRepository()
 
     private lateinit var dialog: Dialog
     var mainCountryList = initList()

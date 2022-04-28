@@ -20,7 +20,7 @@
             android:layout_weight="1"
             android:text="Section name"
             android:textColor="@color/black"
-            android:textSize="20dp"
+            android:textSize="25dp"
             android:textStyle="bold"
             android:layout_margin="8dp"/>
 

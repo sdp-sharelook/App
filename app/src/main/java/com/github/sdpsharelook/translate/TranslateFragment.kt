@@ -204,7 +204,7 @@ class TranslateFragment : Fragment() {
                 binding.targetText.text = getString(R.string.translation_running)
 
                 targetTextString = t.translate(textToTranslate)
-                sectionWord = SectionWord(textToTranslate, targetTextString ?: "ERROR")
+                sectionWord = SectionWord(textToTranslate, targetTextString ?: "ERROR", null)
                 binding.targetText.text = targetTextString
                 mIdlingResource?.decrement()
             }

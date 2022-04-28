@@ -45,7 +45,7 @@ class CameraFragment : Fragment() {
 
     private val cameraLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
         if (success) {
-            val file = File(currentPath)
+            val file = File(currentPath!!)
             val uri = Uri.fromFile(file)
             val imageView = binding.cameraImageView
             imageView.setImageURI(uri)
@@ -100,7 +100,7 @@ class CameraFragment : Fragment() {
     }
 
     private fun createImage(): File {
-        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss",Locale.US).format(Date())
         val imageName = "ShareLook_"+timeStamp+"_"
         val storageDir = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
         val image = File.createTempFile(imageName, ".jpg", storageDir)

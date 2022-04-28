@@ -125,6 +125,7 @@
     <string name="testuser_gmail_com">testuser@gmail.com</string>
     <string name="take_picture">"Take a picture"</string>
     <string name="take_picture_description">"Description"</string>
-    <string name="search">Search...</string>
+    <string name="search">Search…</string>
+    <string name="section_name_hint">Section name</string>
     <string name="word_image">Image</string>
 </resources>

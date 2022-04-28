@@ -30,13 +30,13 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun setDrawerListener(){
+    private fun setDrawerListener(){
         val drawerLayout = findViewById<DrawerLayout>(R.id.drawerLayout)
         findViewById<ImageView>(R.id.menu_hamburger).setOnClickListener{
-            drawerLayout.openDrawer(GravityCompat.START);
+            drawerLayout.openDrawer(GravityCompat.START)
         }
-        val navView = findViewById<NavigationView>(R.id.navView)
-        val theme = applicationContext.theme
+        findViewById<NavigationView>(R.id.navView)
+        applicationContext.theme
 
 
     }
@@ -65,16 +65,17 @@ class MainActivity : AppCompatActivity() {
     fun translatorActivity(@Suppress("UNUSED_PARAMETER")view: View) =
         startActivity(Intent(this, TranslateActivity::class.java))
 
-    fun cameraActivity(view: View) =
+    fun cameraActivity(@Suppress("UNUSED_PARAMETER") view: View) =
         startActivity(Intent(this, CameraActivity::class.java))
         
-    fun textDetectionActivity(view: View) =
+    @Suppress("unused")
+    fun textDetectionActivity(@Suppress("UNUSED_PARAMETER") view: View) =
         startActivity(Intent(this, TextDetectionActivity::class.java))
 
     fun databaseActivity(@Suppress("UNUSED_PARAMETER")view: View) {
         startActivity(Intent(this, DatabaseViewActivity::class.java))
     }
 
-    fun signUpActivity(view: View) =
+    fun signUpActivity(@Suppress("UNUSED_PARAMETER") view: View) =
         startActivity(Intent(this, LoginActivity::class.java))
 }

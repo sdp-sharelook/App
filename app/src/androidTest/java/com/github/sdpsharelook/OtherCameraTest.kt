@@ -1,40 +1,27 @@
 package com.github.sdpsharelook
 
 
-import android.graphics.Bitmap
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.ActivityResultRegistry
-import androidx.activity.result.contract.ActivityResultContract
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ActivityOptionsCompat
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.Espresso.pressBack
-import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intended
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.filters.LargeTest
-import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
-import androidx.test.runner.AndroidJUnit4
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.sdpsharelook.camera.CameraActivity
 import org.hamcrest.Description
 import org.hamcrest.Matcher
-import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.TypeSafeMatcher
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.lang.reflect.Type
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
@@ -116,15 +103,8 @@ class OtherCameraTest {
         }
 
         override fun matchesSafely(view: View): Boolean {
-            val context = view.context
-            var ppp = true
             val imageView = view as ImageView
-            ppp = if (resourceId < 0) {
-                imageView.drawable == null
-            } else {
-                imageView.drawable != null
-            }
-            return view is ImageView && ppp
+            return if (resourceId < 0) imageView.drawable == null else imageView.drawable != null
         }
     }
 

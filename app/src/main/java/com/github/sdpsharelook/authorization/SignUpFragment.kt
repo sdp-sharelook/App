@@ -154,7 +154,7 @@ class SignUpFragment : Fragment() {
         binding.passwordBox.helperText = isPasswordValid()
     }
 
-    private fun signUp() {
+    fun signUp() {
         val email = binding.email.text.toString()
         val password = binding.password.text.toString()
 

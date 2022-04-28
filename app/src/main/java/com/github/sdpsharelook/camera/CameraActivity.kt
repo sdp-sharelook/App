@@ -51,7 +51,7 @@ class CameraActivity : AppCompatActivity() {
     private var tempImageUri: Uri? = null
     private val cameraLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
         if (success) {
-            val file = File(currentPath)
+            val file = File(currentPath!!)
             val uri = Uri.fromFile(file)
             val imageView = findViewById<ImageView>(R.id.cameraImageView)
             imageView.setImageURI(uri)
@@ -92,11 +92,11 @@ class CameraActivity : AppCompatActivity() {
         return permission1
     }
 
-    fun createImage(): File {
-        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+    private fun createImage(): File {
+        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss",Locale.US).format(Date())
         val imageName = "ShareLook_"+timeStamp+"_"
-        var storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        var image = File.createTempFile(imageName, ".jpg", storageDir)
+        val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        val image = File.createTempFile(imageName, ".jpg", storageDir)
         currentPath = image.absolutePath
         return image
     }

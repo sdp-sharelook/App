@@ -19,7 +19,6 @@ class SectionDetail : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySectionDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         val sectionID = intent.getIntExtra(SECTION_ID, -1)
         val section = sectionFromId(sectionID)
 
@@ -51,13 +50,14 @@ class SectionDetail : AppCompatActivity() {
 
     private suspend fun collectSectionWordFlow(section: Section) {
 
-        Log.d("FONCTION", "message");
+        Log.d("FONCTION", section.sectionRepo)
+        addSectionWord(SectionWord("flow", "flow"))
 
-        section.databaseRepo.flow().collect {
-            Log.d("Mnaf", it.toString())
+        section.databaseRepo.flow(section.sectionRepo).collect {
+            Log.d("MNAF", it.toString())
             when {
                 it.isSuccess -> {
-                    Log.d("FUCK", it.toString())
+                    Log.d("SUCCES", it.toString())
                     val message = it.getOrNull().toString()
                     addSectionWord(SectionWord(message, message))
                 }
@@ -67,6 +67,7 @@ class SectionDetail : AppCompatActivity() {
                 }
             }
         }
+        binding.wordList.deferNotifyDataSetChanged()
     }
 
     fun addSectionWord(sw : SectionWord) {

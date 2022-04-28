@@ -44,9 +44,9 @@ class RTDBWordListRepository : IRepository<List<String>> {
             }
 
         }
-        firebaseDatabase.getReference(name).addChildEventListener(fireListener)
+        reference.child(name).addChildEventListener(fireListener)
         awaitClose {
-            firebaseDatabase.getReference(name).removeEventListener(fireListener)
+            reference.child(name).removeEventListener(fireListener)
         }
     }
 

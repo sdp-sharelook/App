@@ -1,9 +1,9 @@
 package com.github.sdpsharelook.Section
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.TextView
+import android.widget.BaseAdapter
+import androidx.appcompat.app.AppCompatActivity
 import com.github.sdpsharelook.databinding.ActivitySectionDetailBinding
 import kotlinx.coroutines.*
 
@@ -42,7 +42,6 @@ class SectionDetail : AppCompatActivity() {
                 // add the word to the database
                 section!!.databaseRepo.insert(section.sectionRepo, wordTranslated.toList())
             }
-            addSectionWord(wordTranslated)
             addWordToSection = false
         }
 
@@ -50,24 +49,21 @@ class SectionDetail : AppCompatActivity() {
 
     private suspend fun collectSectionWordFlow(section: Section) {
 
-        Log.d("FONCTION", section.sectionRepo)
-        addSectionWord(SectionWord("flow", "flow"))
-
         section.databaseRepo.flow(section.sectionRepo).collect {
-            Log.d("MNAF", it.toString())
             when {
                 it.isSuccess -> {
-                    Log.d("SUCCES", it.toString())
                     val message = it.getOrNull().toString()
                     addSectionWord(SectionWord(message, message))
                 }
                 it.isFailure -> {
-                    Log.d("FAIL", it.toString())
                     it.exceptionOrNull()?.printStackTrace()
                 }
             }
+            runOnUiThread {
+                (binding.wordList.adapter as BaseAdapter).notifyDataSetChanged()
+            }
         }
-        binding.wordList.deferNotifyDataSetChanged()
+
     }
 
     fun addSectionWord(sw : SectionWord) {

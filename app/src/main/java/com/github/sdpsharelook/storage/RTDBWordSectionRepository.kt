@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import java.lang.UnsupportedOperationException
 
-class RTDBWordSectionRepository : IRepository<List<SectionWord>> {
+class RTDBWordSectionRepository : IRepository<SectionWord> {
 
     private val firebaseDatabase: FirebaseDatabase by lazy { FirebaseDatabase.getInstance("https://billinguee-default-rtdb.europe-west1.firebasedatabase.app/") }
     private val reference: DatabaseReference by lazy { firebaseDatabase.reference.child("wordlists") }
@@ -21,21 +21,21 @@ class RTDBWordSectionRepository : IRepository<List<SectionWord>> {
      * @param name format: "path/name"
      * @return [Flow] of changes in the database at [name]
      */
-    override fun flow(name: String): Flow<Result<List<SectionWord>?>> = callbackFlow {
+    override fun flow(name: String): Flow<Result<SectionWord?>> = callbackFlow {
         val fireListener = object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                val list = listOfNotNull(snapshot.getValue<SectionWord>())
-                trySendBlocking(Result.success(list))
+                var word = snapshot.getValue<SectionWord>()
+                trySendBlocking(Result.success(word))
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                val list = listOfNotNull(snapshot.getValue<SectionWord>())
-                trySendBlocking(Result.success(list))
+                var word = snapshot.getValue<SectionWord>()
+                trySendBlocking(Result.success(word))
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
-                val list = listOfNotNull(snapshot.getValue<SectionWord>())
-                trySendBlocking(Result.success(list))
+                var word = snapshot.getValue<SectionWord>()
+                trySendBlocking(Result.success(word))
             }
 
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
@@ -45,9 +45,9 @@ class RTDBWordSectionRepository : IRepository<List<SectionWord>> {
             }
 
         }
-        firebaseDatabase.getReference(name).addChildEventListener(fireListener)
+        reference.child(name).addChildEventListener(fireListener)
         awaitClose {
-            firebaseDatabase.getReference(name).removeEventListener(fireListener)
+            reference.child(name).removeEventListener(fireListener)
         }
     }
 
@@ -57,16 +57,15 @@ class RTDBWordSectionRepository : IRepository<List<SectionWord>> {
      * @param name identifier of entity
      * @param entity Entity
      */
-    override suspend fun insert(name: String, entity: List<SectionWord>) {
-        val databaseReference =
-            databaseReference(name)
-        entity.forEach { databaseReference.push().setValue(it).await() }
+    override suspend fun insert(name: String, entity: SectionWord) {
+        val databaseReference = databaseReference(name)
+        databaseReference.push().setValue(entity)
     }
 
     /**
      * Don't use
      */
-    override suspend fun read(name: String): List<SectionWord>? {
+    override suspend fun read(name: String): SectionWord {
         throw UnsupportedOperationException("Use flow function for lists")
     }
 
@@ -79,7 +78,7 @@ class RTDBWordSectionRepository : IRepository<List<SectionWord>> {
      * @param name Caution: wrong [name] can overwrite data.
      * @param entity Entity
      */
-    override suspend fun update(name: String, entity: List<SectionWord>) {
+    override suspend fun update(name: String, entity: SectionWord) {
         val databaseReference =
             databaseReference(name)
         databaseReference.setValue(entity).await()

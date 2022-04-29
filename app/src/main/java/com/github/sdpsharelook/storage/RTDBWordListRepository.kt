@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import java.lang.UnsupportedOperationException
 
-class RTDBWordListRepository : IRepository<List<String>> {
+class RTDBWordListRepository : IRepository<List<@JvmSuppressWildcards String>> {
 
     private val firebaseDatabase: FirebaseDatabase by lazy { FirebaseDatabase.getInstance("https://billinguee-default-rtdb.europe-west1.firebasedatabase.app/") }
     private val reference: DatabaseReference by lazy { firebaseDatabase.reference.child("wordlists") }

@@ -31,9 +31,14 @@ class SectionDetail : AppCompatActivity() {
 
         /**Check if we are adding a word from the translator Activity**/
         addWordFromTranslator(section)
-
+        
+        /**collect data from the database**/
         CoroutineScope(Dispatchers.IO).launch {
             collectSectionWordFlow(section!!)
+        }
+        
+        binding.wordList.setOnItemClickListener {parent, row, position, _ ->
+          //TODO take a picture and put it in the database
         }
 
 
@@ -65,7 +70,6 @@ class SectionDetail : AppCompatActivity() {
                 (binding.wordList.adapter as BaseAdapter).notifyDataSetChanged()
             }
         }
-
     }
 
     fun addSectionWord(sw : SectionWord) {

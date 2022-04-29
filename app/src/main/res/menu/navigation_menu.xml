@@ -31,4 +31,10 @@
         android:icon="@android:drawable/ic_menu_save"
         android:title="Text detection"
         />
+    <item
+        android:id="@+id/menuRevisionLink"
+        android:icon="@android:drawable/ic_menu_save"
+        android:title="Revision"
+        />
+
 </menu>

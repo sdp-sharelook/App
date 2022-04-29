@@ -64,7 +64,10 @@ class SRAlgo {
             val f: File = File(context.filesDir, filePath)
 
             if (!f.isFile || !f.canRead()) {
+                println(f.canRead())
+                return emptyList()
                 throw IOException("Could not read file to get revision words")
+
             }
             f.useLines { lines ->
                 return lines.map {

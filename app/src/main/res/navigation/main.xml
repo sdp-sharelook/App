@@ -56,6 +56,11 @@
         android:label="fragment_camera"
         tools:layout="@layout/fragment_camera" />
     <fragment
+        android:id="@+id/menuRevisionLink"
+        android:name="com.github.sdpsharelook.revision.ReviewFragment"
+        android:label="fragment_revision"
+        tools:layout="@layout/fragment_review" />
+    <fragment
         android:id="@+id/menuLoginLink"
         android:name="com.github.sdpsharelook.authorization.LoginFragment"
         android:label="fragment_login"

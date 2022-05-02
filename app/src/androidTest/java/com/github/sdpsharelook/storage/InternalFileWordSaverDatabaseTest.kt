@@ -11,6 +11,10 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class InternalFileWordSaverDatabaseTest {
+    @Test
+    fun empty() {
+
+    }
 
 //    @Test
 //    @ExperimentalCoroutinesApi

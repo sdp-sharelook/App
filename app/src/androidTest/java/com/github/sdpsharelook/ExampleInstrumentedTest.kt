@@ -14,6 +14,10 @@ import org.junit.runner.RunWith
  */
 @RunWith(AndroidJUnit4::class)
 class ExampleInstrumentedTest {
+    @Test
+    fun empty() {
+
+    }
 //    @Test
 //    fun useAppContext() {
 //        // Context of the app under test.

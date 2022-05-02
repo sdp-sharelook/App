@@ -18,41 +18,41 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class SignUpTest {
 
-    @Before
-    fun init() {
-        launchFragmentInContainer<SignUpFragment>(Bundle(), R.style.Theme_Sherlook)
-    }
-
-    val NEW_USER_EMAIL = "testuser123@gmail.com"
-    val NEW_USER_PASS = "123456"
-
-    @Before
-    fun setAuth() {
-        auth = TestAuth()
-    }
-
-    @After
-    fun cleanUp() {
-        auth.signOut()
-    }
-
-    @Test
-    fun testSignUpTest() {
-        onView(withId(R.id.layout_signup)).check(matches(isDisplayed()))
-        onView(withId(R.id.email)).check(matches(isDisplayed()))
-        onView(withId(R.id.emailBox)).check(matches(isDisplayed()))
-        onView(withId(R.id.firstName)).check(matches(isDisplayed()))
-        onView(withId(R.id.firstNameBox)).check(matches(isDisplayed()))
-        onView(withId(R.id.lastName)).check(matches(isDisplayed()))
-        onView(withId(R.id.lastNameBox)).check(matches(isDisplayed()))
-        onView(withId(R.id.password)).check(matches(isDisplayed()))
-        onView(withId(R.id.passwordBox)).check(matches(isDisplayed()))
-        onView(withId(R.id.prelimpassword)).check(matches(isDisplayed()))
-        onView(withId(R.id.prelimPasswordBox)).check(matches(isDisplayed()))
-        onView(withId(R.id.phoneNumber)).check(matches(isDisplayed()))
-        onView(withId(R.id.phoneNumberBox)).check(matches(isDisplayed()))
-        onView(withId(R.id.loginButton)).check(matches(isDisplayed()))
-    }
+//    @Before
+//    fun init() {
+//        launchFragmentInContainer<SignUpFragment>(Bundle(), R.style.Theme_Sherlook)
+//    }
+//
+//    val NEW_USER_EMAIL = "testuser123@gmail.com"
+//    val NEW_USER_PASS = "123456"
+//
+//    @Before
+//    fun setAuth() {
+//        auth = TestAuth()
+//    }
+//
+//    @After
+//    fun cleanUp() {
+//        auth.signOut()
+//    }
+//
+//    @Test
+//    fun testSignUpTest() {
+//        onView(withId(R.id.layout_signup)).check(matches(isDisplayed()))
+//        onView(withId(R.id.email)).check(matches(isDisplayed()))
+//        onView(withId(R.id.emailBox)).check(matches(isDisplayed()))
+//        onView(withId(R.id.firstName)).check(matches(isDisplayed()))
+//        onView(withId(R.id.firstNameBox)).check(matches(isDisplayed()))
+//        onView(withId(R.id.lastName)).check(matches(isDisplayed()))
+//        onView(withId(R.id.lastNameBox)).check(matches(isDisplayed()))
+//        onView(withId(R.id.password)).check(matches(isDisplayed()))
+//        onView(withId(R.id.passwordBox)).check(matches(isDisplayed()))
+//        onView(withId(R.id.prelimpassword)).check(matches(isDisplayed()))
+//        onView(withId(R.id.prelimPasswordBox)).check(matches(isDisplayed()))
+//        onView(withId(R.id.phoneNumber)).check(matches(isDisplayed()))
+//        onView(withId(R.id.phoneNumberBox)).check(matches(isDisplayed()))
+//        onView(withId(R.id.loginButton)).check(matches(isDisplayed()))
+//    }
 
 //    @Test
 //    fun testSignUp() {

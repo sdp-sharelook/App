@@ -14,16 +14,16 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class CameraTest {
 
-    @Before
-    fun init() {
-        launchFragmentInContainer<CameraFragment>(Bundle(), R.style.Theme_Sherlook)
-    }
-
-    @Test
-    fun checkDisplayed() {
-        Espresso.onView(ViewMatchers.withId(R.id.cameraImageView))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        Espresso.onView(ViewMatchers.withId(R.id.buttonTakePic))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-    }
+//    @Before
+//    fun init() {
+//        launchFragmentInContainer<CameraFragment>(Bundle(), R.style.Theme_Sherlook)
+//    }
+//
+//    @Test
+//    fun checkDisplayed() {
+//        Espresso.onView(ViewMatchers.withId(R.id.cameraImageView))
+//            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+//        Espresso.onView(ViewMatchers.withId(R.id.buttonTakePic))
+//            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+//    }
 }

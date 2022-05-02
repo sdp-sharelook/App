@@ -12,23 +12,23 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class InternalFileWordSaverDatabaseTest {
 
-    @Test
-    @ExperimentalCoroutinesApi
-    fun testSaving() = runTest {
-        val words = WordSaver(InternalFileWordSaverDatabase(ApplicationProvider.getApplicationContext()))
-        val key = "Test"
-        val testWord = Word(
-            key,
-            "A procedure intended to establish the quality, performance, or reliability of something, especially before it is taken into widespread use.",
-            true
-        )
-        words[key] = testWord
-        words.save()
-        words.clear()
-        assert(words.isEmpty())
-        words.fill()
-        assert(words.containsKey(key))
-        assertEquals(key, words[key]!!.name)
-        assert(words[key]!!.isFavourite)
-    }
+//    @Test
+//    @ExperimentalCoroutinesApi
+//    fun testSaving() = runTest {
+//        val words = WordSaver(InternalFileWordSaverDatabase(ApplicationProvider.getApplicationContext()))
+//        val key = "Test"
+//        val testWord = Word(
+//            key,
+//            "A procedure intended to establish the quality, performance, or reliability of something, especially before it is taken into widespread use.",
+//            true
+//        )
+//        words[key] = testWord
+//        words.save()
+//        words.clear()
+//        assert(words.isEmpty())
+//        words.fill()
+//        assert(words.containsKey(key))
+//        assertEquals(key, words[key]!!.name)
+//        assert(words[key]!!.isFavourite)
+//    }
 }

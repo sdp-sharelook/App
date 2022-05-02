@@ -21,9 +21,9 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class GreetingFragmentTest {
 
-    @Test
-    fun testMainActivity() {
-        launchFragmentInContainer<GreetingFragment>(bundleOf("name" to "World"), R.style.Theme_Sherlook)
-        onView(withId(R.id.greetingMessage)).check(matches(withText("Hello World!")))
-    }
+//    @Test
+//    fun testMainActivity() {
+//        launchFragmentInContainer<GreetingFragment>(bundleOf("name" to "World"), R.style.Theme_Sherlook)
+//        onView(withId(R.id.greetingMessage)).check(matches(withText("Hello World!")))
+//    }
 }

@@ -13,7 +13,12 @@ import kotlinx.coroutines.launch
 
 class SectionDetailFragment : Fragment() {
 
-    private lateinit var binding: FragmentSectionDetailBinding
+
+    /**
+     * This property is only valid between onCreateView and onDestroyView.
+     */
+    private val binding get() = _binding!!
+    private var _binding: FragmentSectionDetailBinding? = null
 
     private val wordList = mutableListOf<SectionWord>()
 
@@ -75,7 +80,12 @@ class SectionDetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentSectionDetailBinding.inflate(layoutInflater)
+        _binding = FragmentSectionDetailBinding.inflate(layoutInflater)
         return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

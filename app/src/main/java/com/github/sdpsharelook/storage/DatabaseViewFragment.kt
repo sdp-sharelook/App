@@ -15,7 +15,12 @@ import kotlinx.coroutines.withContext
 class DatabaseViewFragment : Fragment() {
 
     private val repository: IRepository<Any> = RTDBAnyRepository()
-    private lateinit var binding: FragmentDatabaseViewBinding
+
+    /**
+     * This property is only valid between onCreateView and onDestroyView.
+     */
+    private val binding get() = _binding!!
+    private var _binding: FragmentDatabaseViewBinding? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -51,7 +56,12 @@ class DatabaseViewFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentDatabaseViewBinding.inflate(layoutInflater)
+        _binding = FragmentDatabaseViewBinding.inflate(layoutInflater)
         return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

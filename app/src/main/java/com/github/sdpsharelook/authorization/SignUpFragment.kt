@@ -6,16 +6,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.github.sdpsharelook.databinding.FragmentSignUpBinding
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class SignUpFragment : Fragment() {
 
-    private lateinit var binding: FragmentSignUpBinding
+
+    /**
+     * This property is only valid between onCreateView and onDestroyView.
+     */
+    private val binding get() = _binding!!
+    private var _binding: FragmentSignUpBinding? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -94,7 +99,7 @@ class SignUpFragment : Fragment() {
         val oneDigit = "(.*?[0-9].*)".toRegex()
         val specialChar = "(.*?[#?!()@\$ %^&*-].*)".toRegex()
         val minLength8 = ".{8,}".toRegex()
-        return  if (binding.prelimpassword.text.toString() == "")
+        return if (binding.prelimpassword.text.toString() == "")
             "Required"
         else if (!binding.prelimpassword.text.toString().matches(upperCase))
             "Must contain an uppercase letter"
@@ -158,7 +163,7 @@ class SignUpFragment : Fragment() {
         val email = binding.email.text.toString()
         val password = binding.password.text.toString()
 
-        GlobalScope.launch {
+        lifecycleScope.launch {
             val user = auth.createUserWithEmailAndPassword(email, password)
             when {
                 user.isSuccess -> {
@@ -191,7 +196,12 @@ class SignUpFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentSignUpBinding.inflate(layoutInflater)
+        _binding = FragmentSignUpBinding.inflate(layoutInflater)
         return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

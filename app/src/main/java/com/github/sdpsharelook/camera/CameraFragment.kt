@@ -16,13 +16,19 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.github.sdpsharelook.R
 import com.github.sdpsharelook.databinding.FragmentCameraBinding
+import com.github.sdpsharelook.databinding.FragmentLoginBinding
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
 class CameraFragment : Fragment() {
 
-    private lateinit var binding: FragmentCameraBinding
+
+    /**
+     * This property is only valid between onCreateView and onDestroyView.
+     */
+    private val binding get() = _binding!!
+    private var _binding: FragmentCameraBinding? = null
     private var currentPath: String? = null
     private var hasPermissions = false
 
@@ -112,7 +118,12 @@ class CameraFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentCameraBinding.inflate(layoutInflater)
+        _binding = FragmentCameraBinding.inflate(layoutInflater)
         return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.test.espresso.IdlingResource
 import androidx.test.espresso.idling.CountingIdlingResource
 import com.github.sdpsharelook.R
+import com.github.sdpsharelook.databinding.FragmentCameraBinding
 import com.github.sdpsharelook.section.SectionWord
 import com.github.sdpsharelook.databinding.FragmentTranslateBinding
 import com.github.sdpsharelook.language.Language
@@ -26,8 +27,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class TranslateFragment : Fragment() {
-    private lateinit var binding: FragmentTranslateBinding
 
+    /**
+     * This property is only valid between onCreateView and onDestroyView.
+     */
+    private val binding get() = _binding!!
+    private var _binding: FragmentTranslateBinding? = null
     private lateinit var textToSpeech: TextToSpeech
     private lateinit var sourceLanguage: Language
     private lateinit var targetLanguage: Language
@@ -229,8 +234,13 @@ class TranslateFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentTranslateBinding.inflate(layoutInflater)
+        _binding = FragmentTranslateBinding.inflate(layoutInflater)
         return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     /**

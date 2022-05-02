@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.github.sdpsharelook.databinding.FragmentLoginBinding
 import kotlinx.coroutines.CoroutineScope
@@ -16,7 +17,12 @@ lateinit var auth: AuthProvider
 
 class LoginFragment : Fragment() {
 
-    private lateinit var binding: FragmentLoginBinding
+
+    /**
+     * This property is only valid between onCreateView and onDestroyView.
+     */
+    private val binding get() = _binding!!
+    private var _binding: FragmentLoginBinding? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -32,7 +38,7 @@ class LoginFragment : Fragment() {
 
         if (auth.currentUser != null) greet(auth.currentUser?.displayName)
 
-        CoroutineScope(Dispatchers.IO).launch {
+        lifecycleScope.launch {
             val user = auth.signInWithEmailAndPassword(email, password)
             if (user.isSuccess) {
                 requireActivity().runOnUiThread {
@@ -67,7 +73,12 @@ class LoginFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentLoginBinding.inflate(layoutInflater)
+        _binding = FragmentLoginBinding.inflate(layoutInflater)
         return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

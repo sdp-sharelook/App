@@ -21,7 +21,12 @@ import com.github.sdpsharelook.storage.RTDBWordListRepository
 var edit = false
 
 class SectionFragment : Fragment(), SectionClickListener {
-    private lateinit var binding: FragmentSectionBinding
+
+    /**
+     * This property is only valid between onCreateView and onDestroyView.
+     */
+    private val binding get() = _binding!!
+    private var _binding: FragmentSectionBinding? = null
     private lateinit var popupBinding: PopupBinding
     private lateinit var cardBinding: CardSectionBinding
     private var databaseWordList = RTDBWordListRepository()
@@ -109,7 +114,12 @@ class SectionFragment : Fragment(), SectionClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentSectionBinding.inflate(layoutInflater)
+        _binding = FragmentSectionBinding.inflate(layoutInflater)
         return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

@@ -18,7 +18,11 @@ import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 class TextDetectionFragment : Fragment() {
 
     private lateinit var inputImage: InputImage
-    private lateinit var binding: FragmentTextDetectionBinding
+    /**
+     * This property is only valid between onCreateView and onDestroyView.
+     */
+    private val binding get() = _binding!!
+    private var _binding: FragmentTextDetectionBinding? = null
     private val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -105,7 +109,12 @@ class TextDetectionFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentTextDetectionBinding.inflate(layoutInflater)
+        _binding = FragmentTextDetectionBinding.inflate(layoutInflater)
         return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

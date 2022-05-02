@@ -25,6 +25,10 @@ object UserConstants {
 
 @RunWith(AndroidJUnit4::class)
 class LoginSignUpTest {
+    @Test
+    fun empty() {
+
+    }
 
 //    @Before
 //    fun logOut() {

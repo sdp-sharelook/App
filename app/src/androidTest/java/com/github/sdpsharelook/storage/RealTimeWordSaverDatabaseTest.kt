@@ -13,6 +13,10 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class RealTimeWordSaverDatabaseTest {
+    @Test
+    fun empty() {
+
+    }
 
 //    val uid = "test"
 //    private val repository = object : IRepository<List<String>> {

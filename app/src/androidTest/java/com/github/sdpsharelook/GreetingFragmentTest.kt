@@ -20,6 +20,10 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class GreetingFragmentTest {
+    @Test
+    fun empty() {
+
+    }
 
 //    @Test
 //    fun testMainActivity() {

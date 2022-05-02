@@ -24,6 +24,10 @@ import org.junit.runner.RunWith
 @LargeTest
 @RunWith(AndroidJUnit4::class)
 class IncompleteCameraTest {
+    @Test
+    fun empty() {
+
+    }
 
 //    @Before
 //    fun init() {

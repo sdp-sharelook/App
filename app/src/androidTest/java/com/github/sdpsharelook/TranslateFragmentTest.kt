@@ -32,6 +32,11 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class TranslateFragmentTest {
+    @Test
+    fun empty() {
+
+    }
+
 //    private var mIdlingResource: IdlingResource? = null
 //
 //    private fun selectSourceLanguage(srcLang: String) {

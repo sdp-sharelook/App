@@ -54,9 +54,7 @@ class SectionFragment : Fragment(), SectionClickListener {
         // set up the popup when cliking on add button
         dialog = Dialog(requireContext())
         dialog.setContentView(popupBinding.root)
-        dialog.setOnDismissListener {
-            popupBinding.editSectionName.setText("Section name")
-        }
+        dialog.setOnDismissListener { popupBinding.editSectionName.text.clear() }
 
         // set up the spinner
         popupBinding.spinnerCountries.adapter = CountryAdapter(requireContext(), mainCountryList)
@@ -105,7 +103,7 @@ class SectionFragment : Fragment(), SectionClickListener {
 
     private fun addSection(section: Section) {
         sectionList.add(section)
-        binding.recyclerView.adapter?.notifyDataSetChanged()
+        binding.recyclerView.adapter?.notifyItemInserted(sectionList.lastIndex)
     }
 
     override fun onClick(section: Section) {

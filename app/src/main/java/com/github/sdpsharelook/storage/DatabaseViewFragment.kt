@@ -1,26 +1,30 @@
 package com.github.sdpsharelook.storage
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.github.sdpsharelook.R
 import com.github.sdpsharelook.databinding.FragmentDatabaseViewBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class DatabaseViewFragment : Fragment() {
-
-    private val repository: IRepository<Any> = RTDBAnyRepository()
 
     /**
      * This property is only valid between onCreateView and onDestroyView.
      */
     private val binding get() = _binding!!
     private var _binding: FragmentDatabaseViewBinding? = null
+
+    @Inject
+    lateinit var repository: IRepository<Any>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

@@ -1,11 +1,12 @@
-package com.github.sdpsharelook
+package com.github.sdpsharelook.storage
 
-import androidx.core.os.bundleOf
-import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.github.sdpsharelook.R
+import com.github.sdpsharelook.launchFragmentInHiltContainer
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -17,8 +18,7 @@ import org.junit.runner.RunWith
 @ExperimentalCoroutinesApi
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-class GreetingFragmentTestRobo {
-
+class DatabaseViewTest {
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
 
@@ -28,11 +28,10 @@ class GreetingFragmentTestRobo {
     }
 
     @Test
-    fun testHelloWorld() {
-        launchFragmentInHiltContainer<GreetingFragment>(
-            bundleOf("name" to "World"),
-            R.style.Theme_Sherlook
-        )
-        onView(withId(R.id.greetingMessage)).check(matches(withText("Hello World!")))
+    fun testReceivesAndPrintsHelloWorld() {
+//        launchFragmentInContainer<DatabaseViewFragment>(Bundle(), R.style.Theme_Sherlook)
+        launchFragmentInHiltContainer<DatabaseViewFragment>()
+        Espresso.onView(withId(R.id.database_contents))
+            .check(matches(withText("Hello World!")))
     }
 }

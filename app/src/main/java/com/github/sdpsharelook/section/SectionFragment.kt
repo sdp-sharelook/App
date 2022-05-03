@@ -16,10 +16,14 @@ import com.github.sdpsharelook.R
 import com.github.sdpsharelook.databinding.CardSectionBinding
 import com.github.sdpsharelook.databinding.FragmentSectionBinding
 import com.github.sdpsharelook.databinding.PopupBinding
+import com.github.sdpsharelook.storage.IRepository
 import com.github.sdpsharelook.storage.RTDBWordListRepository
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 var edit = false
 
+@AndroidEntryPoint
 class SectionFragment : Fragment(), SectionClickListener {
 
     /**
@@ -29,7 +33,8 @@ class SectionFragment : Fragment(), SectionClickListener {
     private var _binding: FragmentSectionBinding? = null
     private lateinit var popupBinding: PopupBinding
     private lateinit var cardBinding: CardSectionBinding
-    private var databaseWordList = RTDBWordListRepository()
+    @Inject
+    lateinit var databaseWordList: IRepository<List<String>>
 
     private lateinit var dialog: Dialog
     var mainCountryList = initList()

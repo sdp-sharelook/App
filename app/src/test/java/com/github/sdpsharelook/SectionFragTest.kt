@@ -51,7 +51,6 @@ class SectionFragTest {
 
     @Test
     fun testReceivesAndPrintsHelloWorld() {
-//        launchFragmentInContainer<DatabaseViewFragment>(Bundle(), R.style.Theme_Sherlook)
         launchFragmentInHiltContainer<SectionFragment>(Bundle.EMPTY)
         val floatingActionButton = onView(withId(R.id.addingBtn))
         floatingActionButton.perform(click())

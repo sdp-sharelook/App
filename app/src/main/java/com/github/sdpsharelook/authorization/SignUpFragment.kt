@@ -12,15 +12,18 @@ import com.github.sdpsharelook.databinding.FragmentSignUpBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 class SignUpFragment : Fragment() {
-
 
     /**
      * This property is only valid between onCreateView and onDestroyView.
      */
     private val binding get() = _binding!!
     private var _binding: FragmentSignUpBinding? = null
+
+    @Inject
+    lateinit var authProvider: AuthProvider
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -29,8 +32,6 @@ class SignUpFragment : Fragment() {
         emailListener()
         prelimPasswordListener()
         passwordListener()
-        auth = FireAuth()
-
         binding.loginButton.setOnClickListener { checkBeforeSignUp() }
     }
 
@@ -164,7 +165,7 @@ class SignUpFragment : Fragment() {
         val password = binding.password.text.toString()
 
         lifecycleScope.launch {
-            val user = auth.createUserWithEmailAndPassword(email, password)
+            val user = authProvider.createUserWithEmailAndPassword(email, password)
             when {
                 user.isSuccess -> {
                     withContext(Dispatchers.Main) {
@@ -187,7 +188,7 @@ class SignUpFragment : Fragment() {
 
     private fun greet(name: String?) {
         val tName =
-            if (name.isNullOrBlank() || auth.currentUser!!.isAnonymous) "anonymous" else name
+            if (name.isNullOrBlank() || authProvider.currentUser!!.isAnonymous) "anonymous" else name
         val action = SignUpFragmentDirections.actionSignUpFragmentToGreetingFragment(tName)
         findNavController().navigate(action)
     }

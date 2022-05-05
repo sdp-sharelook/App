@@ -23,7 +23,7 @@ class SignUpFragment : Fragment() {
     private var _binding: FragmentSignUpBinding? = null
 
     @Inject
-    lateinit var authProvider: AuthProvider
+    lateinit var auth: AuthProvider
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -165,7 +165,7 @@ class SignUpFragment : Fragment() {
         val password = binding.password.text.toString()
 
         lifecycleScope.launch {
-            val user = authProvider.createUserWithEmailAndPassword(email, password)
+            val user = auth.createUserWithEmailAndPassword(email, password)
             when {
                 user.isSuccess -> {
                     withContext(Dispatchers.Main) {
@@ -188,7 +188,7 @@ class SignUpFragment : Fragment() {
 
     private fun greet(name: String?) {
         val tName =
-            if (name.isNullOrBlank() || authProvider.currentUser!!.isAnonymous) "anonymous" else name
+            if (name.isNullOrBlank() || auth.currentUser!!.isAnonymous) "anonymous" else name
         val action = SignUpFragmentDirections.actionSignUpFragmentToGreetingFragment(tName)
         findNavController().navigate(action)
     }

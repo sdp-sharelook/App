@@ -3,6 +3,8 @@ package com.github.sdpsharelook
 import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import androidx.fragment.testing.R.style.FragmentScenarioEmptyFragmentActivityTheme
@@ -10,6 +12,7 @@ import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.core.internal.deps.guava.base.Preconditions
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.robolectric.shadows.ShadowDialog
 
 @ExperimentalCoroutinesApi
 inline fun <reified T : Fragment> launchFragmentInHiltContainer(
@@ -45,4 +48,11 @@ inline fun <reified T : Fragment> launchFragmentInHiltContainer(
 
         (fragment as T).action()
     }
+}
+
+inline fun <T : View> inDialogView(
+    @IdRes buttonId: Int,
+    crossinline action: T.() -> Unit = {}
+) {
+    ShadowDialog.getLatestDialog().findViewById<T>(buttonId).action()
 }

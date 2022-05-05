@@ -11,7 +11,7 @@ class InternalFileWordSaverDatabase(private val context: Context) : WordSaverDat
         @Suppress("BlockingMethodInNonBlockingContext") // there is a bug where kotlin thinks this is blocking because it throws IOException
         file.createNewFile()
         file.printWriter().use { out ->
-            wordSaver.filter { it.value?.isFavourite == true }.keys.forEach { out.println(it) }
+            wordSaver.filter { it.value.isFavourite == true }.keys.forEach { out.println(it) }
         }
     }
 

@@ -1,20 +1,22 @@
 package com.github.sdpsharelook.storage
 
+import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.github.sdpsharelook.R
+import com.github.sdpsharelook.Word
 import com.github.sdpsharelook.databinding.FragmentDatabaseViewBinding
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.github.sdpsharelook.dbWord
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.onEach
 
 class DatabaseViewFragment : Fragment() {
 
-    private val repository: IRepository<Any> = RTDBAnyRepository()
+    private val repository: RTDBWordListRepository = RTDBWordListRepository()
 
     /**
      * This property is only valid between onCreateView and onDestroyView.
@@ -26,15 +28,15 @@ class DatabaseViewFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.databaseContents.apply {
+            binding.databaseContents.
             text = context.getString(R.string.default_database_content)
         }
 
-        CoroutineScope(Dispatchers.IO).launch {
-            collectDBFlow()
-        }
+
     }
 
     private suspend fun collectDBFlow() {
+
         repository.flow().collect {
             when {
                 it.isSuccess -> {
@@ -57,6 +59,12 @@ class DatabaseViewFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentDatabaseViewBinding.inflate(layoutInflater)
+        val frag = this
+        Dispatchers.IO.dispatch(Dispatchers.IO){
+            runBlocking {
+                frag.collectDBFlow()
+            }
+        }
         return binding.root
     }
 

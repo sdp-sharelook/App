@@ -8,15 +8,15 @@ import java.util.*
 
 @IgnoreExtraProperties
 data class Word(
-    val uid: String,
+    val uid: String="",
     val source: String? = "",
-    val sourceLanguage: Language? =Language.auto,
+    val sourceLanguage: Language? =Language.auto ,
     val target: String? = "",
     val targetLanguage: Language? = Language.auto,
     val location: Location? = null,
     val savedDate: Date? = null,
     val picture: String? = null,
-    val isFavourite: Boolean?,
+    val isFavourite: Boolean?= false,
 ) {
     constructor(uid: String) : this(uid,"",null,null,null,null,null,"",false)
 
@@ -36,15 +36,15 @@ data class Word(
     }
 }
 data class dbWord(
-    val source: String,
-    val sourceLanguage: String,
-    val target: String,
-    val targetLanguage: String,
-    val location: String?,
-    val savedDate: String?,
-    val picture: String?,
-    val uid: String,
-    val isFavourite: Boolean
+    val source: String="",
+    val sourceLanguage: String="",
+    val target: String="",
+    val targetLanguage: String="",
+    val location: String?="",
+    val savedDate: String?="",
+    val picture: String?="",
+    val uid: String="",
+    val isFavourite: Boolean =false,
 ) {
     // fun synonyms(): Set<Word> = TODO("not implemented yet")
     // ...
@@ -60,4 +60,5 @@ data class dbWord(
             "isFavorite" to isFavourite
         )
     }
+    constructor(): this("","","","","","","","",false)
 }

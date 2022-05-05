@@ -1,5 +1,7 @@
 package com.github.sdpsharelook.di
 
+import com.github.sdpsharelook.Word
+import com.github.sdpsharelook.dbWord
 import com.github.sdpsharelook.storage.IRepository
 import com.github.sdpsharelook.storage.RTDBAnyRepository
 import com.github.sdpsharelook.storage.RTDBWordListRepository
@@ -21,7 +23,7 @@ abstract class StorageBindsModule {
 
     @Singleton
     @Binds
-    abstract fun bindWordListRepo(r: RTDBWordListRepository): IRepository<List<String>>
+    abstract fun bindWordListRepo(r: RTDBWordListRepository): IRepository<List<Word>>
 }
 
 @Module

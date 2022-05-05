@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.github.sdpsharelook.auth
 import com.github.sdpsharelook.databinding.FragmentSignUpBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

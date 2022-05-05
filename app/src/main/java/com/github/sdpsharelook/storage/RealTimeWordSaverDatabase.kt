@@ -16,7 +16,7 @@ class RealTimeWordSaverDatabase(
 ) : WordSaverDatabase {
 
     override suspend fun saveFavourites(wordSaver: WordSaver) {
-        val value = wordSaver.filter { it.value?.isFavourite == true }.keys.toList()
+        val value = wordSaver.filter { it.value.isFavourite == true }.keys.toList()
         repository.insert(uid, value)
     }
 

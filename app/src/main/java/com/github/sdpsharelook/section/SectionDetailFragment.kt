@@ -50,7 +50,7 @@ class SectionDetailFragment : Fragment() {
         // If we are adding a word from the translator Activity
         if (sectionWord != null) {
             CoroutineScope(Dispatchers.IO).launch {
-                section?.databaseRepo?.insert(section.sectionRepo, sectionWord.toList())
+                //TODO: add word to database
             }
             addSectionWord(sectionWord)
         }

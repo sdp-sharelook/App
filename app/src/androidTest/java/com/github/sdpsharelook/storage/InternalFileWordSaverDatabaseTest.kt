@@ -11,6 +11,7 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class InternalFileWordSaverDatabaseTest {
+
     @Test
     fun empty() {
 
@@ -23,8 +24,8 @@ class InternalFileWordSaverDatabaseTest {
 //        val key = "Test"
 //        val testWord = Word(
 //            key,
-//            "A procedure intended to establish the quality, performance, or reliability of something, especially before it is taken into widespread use.",
-//            true
+//            source = "A procedure intended to establish the quality, performance, or reliability of something, especially before it is taken into widespread use.",
+//            isFavourite = true
 //        )
 //        words[key] = testWord
 //        words.save()

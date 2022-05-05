@@ -1,13 +1,22 @@
 package com.github.sdpsharelook.translate
 
+import android.widget.EditText
+import android.widget.ListView
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.github.sdpsharelook.R
 import com.github.sdpsharelook.launchFragmentInHiltContainer
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.junit.Assert
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.robolectric.shadows.ShadowDialog
+import org.robolectric.shadows.ShadowLooper
 
 @ExperimentalCoroutinesApi
 @HiltAndroidTest
@@ -31,35 +40,34 @@ class TranslateFragmentTest {
 ////            IdlingRegistry.getInstance().register(mIdlingResource)
 ////        }
 //    }
-//
-//    private fun selectSourceLanguage(srcLang: String) {
-//        onView(withId(R.id.buttonSourceLang)).perform(click())
-//        val dialog = ShadowDialog.getLatestDialog()
-//        Assert.assertTrue(dialog.isShowing)
-//        // Don't work, have to find how to select the lang
-//
-//
-//        val et = dialog.findViewById<EditText>(R.id.edit_text_search_language)
-//        et.setText(srcLang)
-//        val lv = dialog.findViewById<ListView>(R.id.list_view_languages)
-//        Assert.assertTrue(lv.count != 0)
-//
-//        //val lv = inDialogView<ListView>(R.id.list_view_languages)
-//        //elementAt(0).performClick()
-//
-//
-//        ShadowLooper.runUiThreadTasks()
-//        Assert.assertFalse(dialog.isShowing)
-//    }
-//
-//    private fun selectTargetLanguage(targetLang: String) {
-//        onView(withId(R.id.buttonTargetLang)).perform(click())
-//        val dialog = ShadowDialog.getLatestDialog()
-//        Assert.assertTrue(dialog.isShowing)
-//
-//        // Don't work, have to find how to select the lang
-//        //onData(withTag(containsString(targetLang))).perform(click())
-//    }
+
+    private fun selectSourceLanguage(srcLang: String) {
+        Espresso.onView(ViewMatchers.withId(R.id.buttonSourceLang)).perform(ViewActions.click())
+        val dialog = ShadowDialog.getLatestDialog()
+        Assert.assertTrue(dialog.isShowing)
+
+        val et = dialog.findViewById<EditText>(R.id.edit_text_search_language)
+        et.setText(srcLang)
+        val lv = dialog.findViewById<ListView>(R.id.list_view_languages)
+        lv.performItemClick(null, 0, 0)
+
+        ShadowLooper.runUiThreadTasks()
+        Assert.assertFalse(dialog.isShowing)
+    }
+
+    private fun selectTargetLanguage(targetLang: String) {
+        Espresso.onView(ViewMatchers.withId(R.id.buttonTargetLang)).perform(ViewActions.click())
+        val dialog = ShadowDialog.getLatestDialog()
+        Assert.assertTrue(dialog.isShowing)
+
+        val et = dialog.findViewById<EditText>(R.id.edit_text_search_language)
+        et.setText(targetLang)
+        val lv = dialog.findViewById<ListView>(R.id.list_view_languages)
+        lv.performItemClick(null, 0, 0)
+
+        ShadowLooper.runUiThreadTasks()
+        Assert.assertFalse(dialog.isShowing)
+    }
 //
 //    @Test
 //    fun example() {

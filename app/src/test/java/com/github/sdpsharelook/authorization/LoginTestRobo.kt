@@ -12,6 +12,8 @@ import com.github.sdpsharelook.launchFragmentInHiltContainer
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -32,24 +34,27 @@ class LoginTestRobo {
     @Before
     fun init() {
         hiltRule.inject()
+        launchFragmentInHiltContainer<LoginFragment>(Bundle(), R.style.Theme_Sherlook)
+    }
+
+    @After
+    fun cleanUp() {
         auth.signOut()
     }
 
     @Test
-    fun `test login with test user`() {
-        launchFragmentInHiltContainer<LoginFragment>(Bundle(), R.style.Theme_Sherlook)
+    fun `test login with test user`() = runTest {
         onView(withId(R.id.email)).perform(typeText(TEST_USER_EMAIL))
-        onView(withId(R.id.confirmPassword)).perform(typeText(TEST_USER_PASS))
+        onView(withId(R.id.password)).perform(typeText(TEST_USER_PASS))
         onView(withId(R.id.loginButton)).perform(click())
         assert(auth.currentUser!!.email == TEST_USER_EMAIL)
     }
 
     @Test
-    fun `test login with no email`() {
-        launchFragmentInHiltContainer<LoginFragment>(Bundle(), R.style.Theme_Sherlook)
+    fun `test login with no email`() = runTest {
         onView(withId(R.id.loginButton)).perform(swipeLeft())
         onView(withId(R.id.email)).perform(typeText(""))
-        onView(withId(R.id.confirmPassword)).perform(typeText(TEST_USER_PASS))
+        onView(withId(R.id.password)).perform(typeText(TEST_USER_PASS))
         onView(withId(R.id.loginButton)).perform(click()).also {
             assert(auth.currentUser == null)
         }

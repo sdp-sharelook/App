@@ -1,7 +1,6 @@
 package com.github.sdpsharelook.authorization
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -140,7 +139,6 @@ class SignUpFragment : Fragment() {
         val emailValid = binding.email.error == null
         val prelimPassValid = binding.prelimPasswordBox.helperText == null
         val passValid = binding.password.error == null && binding.passwordBox.helperText == null
-        Log.e("REGISTER","checks: $firstNameValid $lastNameValid $emailValid $prelimPassValid $passValid")
         if (firstNameValid && lastNameValid && emailValid && prelimPassValid && passValid) {
             signUp()
         } else {

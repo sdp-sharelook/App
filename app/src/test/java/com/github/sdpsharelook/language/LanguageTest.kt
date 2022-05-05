@@ -1,7 +1,6 @@
-package com.github.sdpsharelook
+package com.github.sdpsharelook.language
 
 
-import com.github.sdpsharelook.language.Language
 import org.junit.Assert
 import org.junit.Test
 import java.util.*

@@ -52,7 +52,6 @@ class SignUpTestRobo {
 
     @Test
     fun `test sign up is displayed`() = runTest {
-        launchFragmentInHiltContainer<SignUpFragment>(Bundle(), R.style.Theme_Sherlook)
         onView(withId(R.id.layout_signup)).check(matches(isDisplayed()))
         onView(withId(R.id.email)).check(matches(isDisplayed()))
         onView(withId(R.id.emailBox)).check(matches(isDisplayed()))
@@ -71,9 +70,6 @@ class SignUpTestRobo {
 
     @Test
     fun `test sign up`() = runTest {
-        launchFragmentInHiltContainer<SignUpFragment>(Bundle(), R.style.Theme_Sherlook) {
-            auth
-        }
         onView(withId(R.id.firstName)).perform(replaceText("Jean"), closeSoftKeyboard())
         onView(withId(R.id.lastName)).perform(replaceText("Paul"), closeSoftKeyboard())
 //        onView(withId(R.id.phoneNumber)).perform(replaceText("000 000 00 00"), closeSoftKeyboard())
@@ -91,7 +87,6 @@ class SignUpTestRobo {
 
     @Test
     fun `test sign up no email`() = runTest {
-        launchFragmentInHiltContainer<SignUpFragment>(Bundle(), R.style.Theme_Sherlook)
         onView(withId(R.id.email)).perform(replaceText(" "), closeSoftKeyboard())
         onView(withId(R.id.confirmPassword)).perform(replaceText(TEST_USER_PASS), closeSoftKeyboard())
         onView(allOf(withId(R.id.loginButton), withText("Sign Up !"))).perform(click())

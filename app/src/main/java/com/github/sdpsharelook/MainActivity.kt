@@ -18,8 +18,7 @@ import com.github.sdpsharelook.textDetection.TextDetectionActivity
 import com.github.sdpsharelook.storage.DatabaseViewActivity
 import com.google.android.material.navigation.NavigationView
 import com.github.sdpsharelook.camera.CameraActivity
-
-
+import java.io.Serializable
 
 
 const val EXTRA_MESSAGE = "com.github.sdpsharelook.NAME"
@@ -81,4 +80,8 @@ class MainActivity : AppCompatActivity() {
 
     fun signUpActivity(@Suppress("UNUSED_PARAMETER") view: View) =
         startActivity(Intent(this, LoginActivity::class.java))
+
+    fun mapActivity(@Suppress("UNUSED_PARAMETER") view: View) {
+        startActivity(Intent(this, MapsActivity::class.java))
+    }
 }

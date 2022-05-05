@@ -147,6 +147,13 @@
                 android:onClick="signUpActivity"
                 android:text="sign up" />
 
+            <Button
+                android:id="@+id/mapButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="mapActivity"
+                android:text="Map" />
+
 
         </LinearLayout>
 

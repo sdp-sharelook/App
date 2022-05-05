@@ -128,4 +128,5 @@
     <string name="search">Search…</string>
     <string name="section_name_hint">Section name</string>
     <string name="word_image">Image</string>
+    <string name="title_activity_maps">MapsActivity</string>
 </resources>

@@ -6,8 +6,8 @@ import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.sdpsharelook.R
-import com.github.sdpsharelook.authorization.UserConstants.TEST_USER_EMAIL
-import com.github.sdpsharelook.authorization.UserConstants.TEST_USER_PASS
+import com.github.sdpsharelook.authorization.TestUserConstants.TEST_USER_EMAIL
+import com.github.sdpsharelook.authorization.TestUserConstants.TEST_USER_PASS
 import com.github.sdpsharelook.launchFragmentInHiltContainer
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -17,11 +17,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import javax.inject.Inject
-
-object UserConstants {
-    const val TEST_USER_EMAIL = "testuser@gmail.com"
-    const val TEST_USER_PASS = "123456"
-}
 
 @ExperimentalCoroutinesApi
 @HiltAndroidTest
@@ -44,7 +39,7 @@ class LoginTestRobo {
     fun `test login with test user`() {
         launchFragmentInHiltContainer<LoginFragment>(Bundle(), R.style.Theme_Sherlook)
         onView(withId(R.id.email)).perform(typeText(TEST_USER_EMAIL))
-        onView(withId(R.id.password)).perform(typeText(TEST_USER_PASS))
+        onView(withId(R.id.confirmPassword)).perform(typeText(TEST_USER_PASS))
         onView(withId(R.id.loginButton)).perform(click())
         assert(auth.currentUser!!.email == TEST_USER_EMAIL)
     }
@@ -54,7 +49,7 @@ class LoginTestRobo {
         launchFragmentInHiltContainer<LoginFragment>(Bundle(), R.style.Theme_Sherlook)
         onView(withId(R.id.loginButton)).perform(swipeLeft())
         onView(withId(R.id.email)).perform(typeText(""))
-        onView(withId(R.id.password)).perform(typeText(TEST_USER_PASS))
+        onView(withId(R.id.confirmPassword)).perform(typeText(TEST_USER_PASS))
         onView(withId(R.id.loginButton)).perform(click()).also {
             assert(auth.currentUser == null)
         }

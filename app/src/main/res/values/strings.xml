@@ -129,4 +129,11 @@
     <string name="section_name_hint">Section name</string>
     <string name="word_image">Image</string>
     <string name="save_section_name">Save</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="email">Email</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="password">Password</string>
+    <string name="repeat_password">Repeat Password</string>
+    <string name="sign_up">Sign Up !</string>
 </resources>

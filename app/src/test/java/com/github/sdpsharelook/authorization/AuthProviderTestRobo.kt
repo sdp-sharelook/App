@@ -25,16 +25,16 @@ class AuthProviderTestRobo {
     val hiltRule = HiltAndroidRule(this)
 
     @Before
-    fun resetAuthProvider(){
+    fun init() {
         hiltRule.inject()
     }
 
     @Test
     fun testLogin() = runTest {
         auth.signInWithEmailAndPassword(TEST_USER_EMAIL, TEST_USER_PASS)
-        assert(auth.currentUser!!.email==TEST_USER_EMAIL)
+        assert(auth.currentUser!!.email == TEST_USER_EMAIL)
         auth.signOut()
-        assert(auth.currentUser==null)
+        assert(auth.currentUser == null)
     }
 
     @Test
@@ -44,7 +44,7 @@ class AuthProviderTestRobo {
     }
 
     @Test
-    fun signUpAlreadyUsedEmail() = runTest{
+    fun signUpAlreadyUsedEmail() = runTest {
         val result = auth.createUserWithEmailAndPassword(TEST_USER_EMAIL, TEST_USER_PASS)
         assert(result.isFailure)
     }

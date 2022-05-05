@@ -17,11 +17,11 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
-class MockFirebaseAuth(p0: FirebaseApp, p1: Provider<*>) : FirebaseAuth(p0, p1)
-object UserConstants {
-    const val TEST_USER_EMAIL = "testuser@gmail.com"
-    const val TEST_USER_PASS = "123456"
-}
+//class MockFirebaseAuth(p0: FirebaseApp, p1: Provider<*>) : FirebaseAuth(p0, p1)
+//object UserConstants {
+//    const val TEST_USER_EMAIL = "testuser@gmail.com"
+//    const val TEST_USER_PASS = "123456"
+//}
 
 @RunWith(AndroidJUnit4::class)
 class LoginSignUpTest {

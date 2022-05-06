@@ -8,7 +8,7 @@ import android.widget.ListView
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.FragmentActivity
 import com.github.sdpsharelook.R
-import com.github.sdpsharelook.translate.Translator
+import com.github.sdpsharelook.translate.MLKitTranslator
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -58,7 +58,7 @@ class LanguageSelectionDialog private constructor(
     companion object {
         suspend fun selectLanguage(
             activity: FragmentActivity,
-            languages: Set<Language> = Translator.availableLanguages,
+            languages: Set<Language> = MLKitTranslator.availableLanguages,
             translatorAvailable: Set<Language>? = null,
             ttsAvailable: Set<Language>? = null,
             srAvailable: Set<Language>? = null,

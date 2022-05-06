@@ -2,9 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="400dp"
     android:layout_height="120dp"
-    android:layout_gravity="right"
+    android:layout_gravity="end"
     android:layout_marginTop="500dp"
-    android:layout_marginRight="10dp"
+    android:layout_marginEnd="10dp"
     android:background="@drawable/popupbackground">
 
 
@@ -15,13 +15,13 @@
         android:layout_marginLeft="30dp"
         android:layout_marginTop="70dp"
         android:layout_marginRight="30dp"
-        android:text="Save" />
+        android:text="@string/save_section_name" />
 
     <Spinner
         android:id="@+id/spinner_countries"
         android:layout_width="106dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:contentDescription="@string/appName"
         android:minHeight="48dp" />
 
@@ -31,9 +31,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:ems="10"
-        android:gravity="left"
+        android:gravity="start"
+        android:hint="@string/section_name_hint"
         android:inputType="textPersonName"
         android:minHeight="48dp"
-        android:text="Section name"
-        android:textSize="20sp" />
+        android:textColorHint="#78909C"
+        android:textSize="20sp"
+        android:importantForAutofill="no" />
 </RelativeLayout>

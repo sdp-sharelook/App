@@ -1,7 +1,6 @@
-package com.github.sdpsharelook
+package com.github.sdpsharelook.language
 
 
-import com.github.sdpsharelook.language.Language
 import org.junit.Assert
 import org.junit.Test
 import java.util.*
@@ -13,8 +12,8 @@ class LanguageTest {
         val locale=Locale.ENGLISH
         val tag = locale.toLanguageTag()
         val l = Language(tag)
-        Assert.assertEquals(l.tag, tag)
-        Assert.assertEquals(l.locale, locale)
-        Assert.assertEquals(l.displayName, locale.displayName)
+        Assert.assertEquals(tag, l.tag)
+        Assert.assertEquals(locale, l.locale)
+        Assert.assertEquals(locale.displayName, l.displayName)
     }
 }

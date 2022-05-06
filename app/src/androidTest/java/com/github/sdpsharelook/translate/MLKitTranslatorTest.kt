@@ -15,16 +15,14 @@ import org.junit.runner.RunWith
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 @RunWith(AndroidJUnit4::class)
-class TranslatorTest {
-    @Test
-    fun empty() {
+class MLKitTranslatorTest {
 
+    @Test
+    @ExperimentalCoroutinesApi
+    fun translatorTestWithCoroutines() = runTest {
+        //according to google, mlkit can only be tested on androidTest
+        val t = MLKitTranslator(TranslateLanguage.FRENCH, TranslateLanguage.ENGLISH)
+        val translatedText = t.translate("Bonjour.")
+        assertEquals("Hello.", translatedText)
     }
-//    @Test
-//    @ExperimentalCoroutinesApi
-//    fun translatorTestWithCoroutines() = runTest {
-//        val t = Translator(TranslateLanguage.FRENCH, TranslateLanguage.ENGLISH)
-//        val translatedText = t.translate("Bonjour.")
-//        assertEquals("Hello.", translatedText)
-//    }
 }

@@ -1,19 +1,20 @@
 package com.github.sdpsharelook.authorization
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.github.sdpsharelook.auth
 import com.github.sdpsharelook.databinding.FragmentLoginBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class LoginFragment : Fragment() {
-
 
     /**
      * This property is only valid between onCreateView and onDestroyView.
@@ -21,9 +22,11 @@ class LoginFragment : Fragment() {
     private val binding get() = _binding!!
     private var _binding: FragmentLoginBinding? = null
 
+    @Inject
+    lateinit var auth: AuthProvider
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        auth = FireAuth()
         binding.loginButton.setOnClickListener { logIn() }
         binding.signUpButton.setOnClickListener { goToSignUp() }
     }

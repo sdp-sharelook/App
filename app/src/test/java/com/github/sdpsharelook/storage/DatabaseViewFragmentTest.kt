@@ -10,6 +10,7 @@ import com.github.sdpsharelook.launchFragmentInHiltContainer
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -32,6 +33,7 @@ class DatabaseViewFragmentTest {
     @Test
     fun testReceivesAndPrintsHelloWorld() = runTest {
 //        launchFragmentInContainer<DatabaseViewFragment>(Bundle(), R.style.Theme_Sherlook)
+        delay(100)
         onView(withId(R.id.database_contents))
             .check(matches(withText("Hello World!")))
     }

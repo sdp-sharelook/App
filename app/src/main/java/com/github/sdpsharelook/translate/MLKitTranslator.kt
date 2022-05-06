@@ -14,7 +14,7 @@ import kotlinx.coroutines.tasks.await
  * @param src : String defined in TranslateLanguage class | source language
  * @param dst : String defined in TranslateLanguage class | destination language
  */
-class Translator(src: String, dst: String) {
+class MLKitTranslator(src: String, dst: String) {
 
     private var translator: Translator
 
@@ -43,9 +43,9 @@ class Translator(src: String, dst: String) {
     }
 
     companion object {
-        suspend fun detectLanguage(text: String) : String {
-            return LanguageIdentification.getClient().identifyLanguage(text).await()
-        }
+        suspend fun detectLanguage(text: String) : String =
+            LanguageIdentification.getClient().identifyLanguage(text).await()
+
         val availableLanguages: Set<Language> =
             TranslateLanguage.getAllLanguages().map {
                 Language(it)

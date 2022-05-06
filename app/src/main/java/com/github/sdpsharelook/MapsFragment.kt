@@ -29,7 +29,7 @@ import androidx.fragment.app.FragmentManager
 class MapsFragment : Fragment() {
 
     private var hashMap : HashMap<Marker?, Word> = HashMap<Marker?, Word> ()
-    @RequiresApi(Build.VERSION_CODES.O)
+    //@RequiresApi(Build.VERSION_CODES.O)
     private val callback = OnMapReadyCallback { googleMap ->
         /**
          * Manipulates the map once available.
@@ -104,7 +104,7 @@ class MapsFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_maps, container, false)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    //@RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
@@ -128,7 +128,7 @@ class MapsFragment : Fragment() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    //@RequiresApi(Build.VERSION_CODES.O)
     private fun openImage(map: GoogleMap) {
         map.setOnMarkerClickListener { marker ->
             val word = hashMap[marker]
@@ -148,7 +148,7 @@ class MapsFragment : Fragment() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    //@RequiresApi(Build.VERSION_CODES.O)
     private fun encodeImage(bm: Bitmap): String? {
         val baos = ByteArrayOutputStream()
         bm.compress(Bitmap.CompressFormat.JPEG, 100, baos)
@@ -156,7 +156,7 @@ class MapsFragment : Fragment() {
         return Base64.getEncoder().encodeToString(b) //getEncoder().encodeToString(b)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    //@RequiresApi(Build.VERSION_CODES.O)
     private fun decodeImage(s: String): Bitmap {
         var p = Base64.getDecoder().decode(s)
         return BitmapFactory.decodeByteArray(p, 0, p.size)

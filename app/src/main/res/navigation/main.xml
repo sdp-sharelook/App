@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     app:startDestination="@id/menuTranslateLink">
-
     <fragment
         android:id="@+id/menuTranslateLink"
         android:name="com.github.sdpsharelook.translate.TranslateFragment"
@@ -90,4 +89,9 @@
         android:name="com.github.sdpsharelook.textDetection.TextDetectionFragment"
         android:label="fragment_text_detection"
         tools:layout="@layout/fragment_text_detection" />
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.github.sdpsharelook.MapsFragment"
+        android:label="fragment_maps"
+        tools:layout="@layout/fragment_maps" />
 </navigation>

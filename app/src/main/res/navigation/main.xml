@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    app:startDestination="@id/menuTranslateLink">
+
+    <fragment
+        android:id="@+id/menuTranslateLink"
+        android:name="com.github.sdpsharelook.translate.TranslateFragment"
+        android:label="fragment_translate"
+        tools:layout="@layout/fragment_translate" >
+        <action
+            android:id="@+id/action_menuTranslateLink_to_menuSectionsLink"
+            app:destination="@id/menuSectionsLink"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+    <fragment
+        android:id="@+id/menuSectionsLink"
+        android:name="com.github.sdpsharelook.section.SectionFragment"
+        android:label="fragment_section"
+        tools:layout="@layout/fragment_section" >
+        <argument
+            android:name="sectionWord"
+            app:argType="com.github.sdpsharelook.section.SectionWord"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <action
+            android:id="@+id/action_menuSectionsLink_to_sectionDetailFragment"
+            app:destination="@id/sectionDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/sectionDetailFragment"
+        android:name="com.github.sdpsharelook.section.SectionDetailFragment"
+        android:label="SectionDetailFragment" >
+        <argument
+            android:name="sectionID"
+            app:argType="integer" />
+        <argument
+            android:name="sectionWord"
+            app:argType="com.github.sdpsharelook.section.SectionWord"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+    <fragment
+        android:id="@+id/menuDatabaseViewLink"
+        android:name="com.github.sdpsharelook.storage.DatabaseViewFragment"
+        android:label="fragment_database_view"
+        tools:layout="@layout/fragment_database_view" />
+    <fragment
+        android:id="@+id/menuCameraLink"
+        android:name="com.github.sdpsharelook.camera.CameraFragment"
+        android:label="fragment_camera"
+        tools:layout="@layout/fragment_camera" />
+    <fragment
+        android:id="@+id/menuLoginLink"
+        android:name="com.github.sdpsharelook.authorization.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_menuLoginLink_to_signUpFragment"
+            app:destination="@id/signUpFragment" />
+        <action
+            android:id="@+id/action_menuLoginLink_to_greetingFragment"
+            app:destination="@id/greetingFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="com.github.sdpsharelook.authorization.SignUpFragment"
+        android:label="fragment_sign_up"
+        tools:layout="@layout/fragment_sign_up" >
+        <action
+            android:id="@+id/action_signUpFragment_to_greetingFragment"
+            app:destination="@id/greetingFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/greetingFragment"
+        android:name="com.github.sdpsharelook.GreetingFragment"
+        android:label="fragment_greeting"
+        tools:layout="@layout/fragment_greeting" >
+        <argument
+            android:name="name"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/menuTextDetectionLink"
+        android:name="com.github.sdpsharelook.textDetection.TextDetectionFragment"
+        android:label="fragment_text_detection"
+        tools:layout="@layout/fragment_text_detection" />
+</navigation>

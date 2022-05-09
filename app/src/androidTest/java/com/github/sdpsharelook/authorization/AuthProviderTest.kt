@@ -9,26 +9,26 @@ import org.junit.Test
 
 @ExperimentalCoroutinesApi
 class AuthProviderTest {
-    @Before
-    fun resetAuthProvider(){
-        auth= TestAuth()
-    }
-    @Test
-    fun testLogin() = runTest{
-        auth.signInWithEmailAndPassword(TEST_USER_EMAIL, TEST_USER_PASS)
-        assert(auth.currentUser!!.email==TEST_USER_EMAIL)
-        auth.signOut()
-        assert(auth.currentUser==null)
-    }
-    @Test
-    fun testInvalidLogin() = runTest {
-        val result = auth.signInWithEmailAndPassword(TEST_USER_EMAIL, "")
-        assert(result.isFailure)
-    }
-    @Test
-    fun signUpAlreadyUsedEmail() = runTest{
-        val result = auth.createUserWithEmailAndPassword(TEST_USER_EMAIL, TEST_USER_PASS)
-        assert(result.isFailure)
-    }
+//    @Before
+//    fun resetAuthProvider(){
+//        auth= TestAuth()
+//    }
+//    @Test
+//    fun testLogin() = runTest{
+//        auth.signInWithEmailAndPassword(TEST_USER_EMAIL, TEST_USER_PASS)
+//        assert(auth.currentUser!!.email==TEST_USER_EMAIL)
+//        auth.signOut()
+//        assert(auth.currentUser==null)
+//    }
+//    @Test
+//    fun testInvalidLogin() = runTest {
+//        val result = auth.signInWithEmailAndPassword(TEST_USER_EMAIL, "")
+//        assert(result.isFailure)
+//    }
+//    @Test
+//    fun signUpAlreadyUsedEmail() = runTest{
+//        val result = auth.createUserWithEmailAndPassword(TEST_USER_EMAIL, TEST_USER_PASS)
+//        assert(result.isFailure)
+//    }
 
 }

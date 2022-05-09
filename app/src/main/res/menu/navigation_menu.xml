@@ -3,17 +3,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <item
-        android:id="@+id/menuTTSLink"
+        android:id="@+id/menuTranslateLink"
         android:icon="@drawable/ic_speaker"
-        android:title="Text to speech"
+        android:title="Translate"
         />
     <item
-        android:id="@+id/menuSpeechRecognitionLink"
+        android:id="@+id/menuDatabaseViewLink"
         android:icon="@drawable/ic_microphone"
-        android:title="Speech recognition" />
+        android:title="Database" />
     <item
         android:id="@+id/menuSectionsLink"
         android:icon="@android:drawable/ic_menu_save"
-        android:title="Saved Words"
+        android:title="Saved words"
+        />
+    <item
+        android:id="@+id/menuCameraLink"
+        android:icon="@android:drawable/ic_menu_save"
+        android:title="Camera"
+        />
+    <item
+        android:id="@+id/menuLoginLink"
+        android:icon="@android:drawable/ic_menu_save"
+        android:title="Login"
+        />
+    <item
+        android:id="@+id/menuTextDetectionLink"
+        android:icon="@android:drawable/ic_menu_save"
+        android:title="Text detection"
         />
 </menu>

@@ -4,9 +4,9 @@ import android.util.Log
 import com.github.sdpsharelook.authorization.TestUserConstants.TEST_USER_EMAIL
 import com.github.sdpsharelook.authorization.TestUserConstants.TEST_USER_PASS
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 
 data class User(
     val email: String,
@@ -29,7 +29,7 @@ object TestUserConstants {
     const val TEST_USER_PASS2 = "Abcdef1!"
 }
 
-open class TestAuth : AuthProvider {
+open class TestAuth @Inject constructor() : AuthProvider {
 
     override fun signOut() {
         currentUser = null
@@ -60,8 +60,9 @@ open class TestAuth : AuthProvider {
 
 }
 
-class FireAuth : AuthProvider {
-    private val auth = FirebaseAuth.getInstance()
+class FireAuth @Inject constructor(
+    private val auth: FirebaseAuth
+) : AuthProvider {
     override fun signOut() {
         auth.signOut()
     }
@@ -96,6 +97,4 @@ class FireAuth : AuthProvider {
 
     override var currentUser: User? = null
         get() = auth.currentUser?.let { firebaseToAppUser(it) }
-
-
 }

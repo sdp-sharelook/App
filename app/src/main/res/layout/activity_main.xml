@@ -44,118 +44,16 @@
 
         </LinearLayout>
 
-
-
-        <LinearLayout
-            android:id="@+id/linearLayout"
+        <fragment
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:baselineAligned="true"
-            android:orientation="vertical"
-            android:padding="15dp"
-            app:layout_constraintTop_toBottomOf="@+id/layoutToolBar"
-            tools:layout_editor_absoluteX="40dp">
-
-            <EditText
-                android:id="@+id/edit_text_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:autofillHints="name"
-                android:ems="10"
-                android:hint="@string/nameHint"
-                android:inputType="textPersonName"
-                android:minHeight="48dp" />
-
-            <Button
-                android:id="@+id/button_greet"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:onClick="greet"
-                android:text="@string/greet" />
-
-            <androidx.constraintlayout.widget.Barrier
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:barrierDirection="top"
-                app:constraint_referenced_ids="menu_hamburger" />
-
-            <Button
-                android:id="@+id/button_text_to_speech"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:onClick="textToSpeech"
-                android:text="@string/textToSpeechButtonText" />
-
-            <androidx.constraintlayout.widget.Barrier
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:barrierDirection="top" />
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:onClick="voiceRecognition"
-                android:text="@string/speech_recognition" />
-
-            <androidx.constraintlayout.widget.Barrier
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:barrierDirection="top" />
-
-            <Button
-                android:id="@+id/sectionButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:onClick="sectionActivity"
-                android:text="@string/sectionsButtonName" />
-
-            <androidx.constraintlayout.widget.Barrier
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:barrierDirection="top" />
-
-            <Button
-                android:id="@+id/translateButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:onClick="translatorActivity"
-                android:text="@string/translateButtonName" />
-
-            <androidx.constraintlayout.widget.Barrier
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:barrierDirection="top" />
-
-            <Button
-                android:id="@+id/databaseButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:onClick="databaseActivity"
-                android:text="@string/database" />
-
-            <Button
-                android:id="@+id/cameraButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:onClick="cameraActivity"
-                android:text="camera" />
-
-            <Button
-                android:id="@+id/cameraButton2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:onClick="signUpActivity"
-                android:text="sign up" />
-
-            <Button
-                android:id="@+id/cameraButton3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:onClick="textDetectionActivity"
-                android:text="sign up" />
-
-
-        </LinearLayout>
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/layoutToolBar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:id="@+id/navHostFragment"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            app:defaultNavHost="true"
+            app:navGraph="@navigation/main"
+            />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

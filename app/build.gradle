@@ -6,7 +6,6 @@ plugins {
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
     id 'androidx.navigation.safeargs.kotlin'
-    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
 tasks.whenTaskAdded { task ->

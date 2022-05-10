@@ -8,9 +8,8 @@ import androidx.fragment.app.Fragment
 import com.github.sdpsharelook.R
 import com.github.sdpsharelook.databinding.FragmentDatabaseViewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -33,9 +32,9 @@ class DatabaseViewFragment : Fragment() {
             text = context.getString(R.string.default_database_content)
         }
 
-        CoroutineScope(Dispatchers.IO).launch {
-            collectDBFlow()
-        }
+//        CoroutineScope(Dispatchers.IO).launch {
+//            collectDBFlow()
+//        }
     }
 
     private suspend fun collectDBFlow() {
@@ -61,6 +60,12 @@ class DatabaseViewFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentDatabaseViewBinding.inflate(layoutInflater)
+        val frag = this
+        Dispatchers.IO.dispatch(Dispatchers.IO){
+            runBlocking {
+                frag.collectDBFlow()
+            }
+        }
         return binding.root
     }
 

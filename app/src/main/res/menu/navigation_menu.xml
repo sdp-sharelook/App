@@ -31,4 +31,9 @@
         android:icon="@android:drawable/ic_menu_save"
         android:title="Text detection"
         />
+    <item
+        android:id="@+id/mapFragment"
+        android:icon="@android:drawable/ic_menu_save"
+        android:title="Map"
+        />
 </menu>

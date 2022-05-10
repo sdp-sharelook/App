@@ -7,10 +7,9 @@ plugins {
     id 'dagger.hilt.android.plugin'
     id 'androidx.navigation.safeargs.kotlin'
 }
-apply plugin: 'com.google.gms.google-services'
 
-tasks.whenTaskAdded {task ->
-    if(task.name.contains("ReleaseUnitTest")) {
+tasks.whenTaskAdded { task ->
+    if (task.name.contains("ReleaseUnitTest")) {
         task.enabled = false
     }
 }
@@ -61,10 +60,6 @@ android {
             includeAndroidResources true
         }
 
-//        unitTests.all { task ->
-//            // Verify if task should be enabled.
-//            task.isEnabled = task.name != "testDebugUnitTest"
-//        }
     }
 }
 
@@ -87,6 +82,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-testing:2.4.2'
     implementation 'androidx.navigation:navigation-ui-ktx:2.4.2'
     implementation 'androidx.test.espresso:espresso-idling-resource:3.4.0'
+    implementation 'com.google.android.gms:play-services-maps:18.0.2'
     implementation 'com.google.android.gms:play-services-mlkit-text-recognition:18.0.0'
     implementation 'com.google.android.material:material:1.6.0'
     implementation 'com.google.code.gson:gson:2.9.0'

@@ -41,15 +41,17 @@ class RTDBWordListRepository @Inject constructor(
                     trySendBlocking(Result.success(list))
                 }
 
-                override fun onChildRemoved(snapshot: DataSnapshot) {
+                override fun onChildRemoved(snapshot: DataSnapshot){
                     val list: List<Word> = listOfNotNull(snapshot.getValue<Word>())
                     trySendBlocking(Result.success(list))
                 }
 
                 override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
 
+
                 override fun onCancelled(error: DatabaseError) {
-                    trySendBlocking(Result.failure(error.toException()))
+                    val result = Result.failure<List<Word>>(error.toException())
+                    trySendBlocking(result)
                 }
 
             }

@@ -17,7 +17,7 @@ class RTDBWordListRepository @Inject constructor(
     private val auth: AuthProvider
 ) : IRepository<List<@JvmSuppressWildcards Word>> {
 
-    private val reference: DatabaseReference by lazy { firebaseDatabase.reference.child("wordlists") }
+    private val reference: DatabaseReference by lazy { firebaseDatabase.getReference("wordlists") }
 
 
     /**
@@ -41,7 +41,7 @@ class RTDBWordListRepository @Inject constructor(
                     trySendBlocking(Result.success(list))
                 }
 
-                override fun onChildRemoved(snapshot: DataSnapshot){
+                override fun onChildRemoved(snapshot: DataSnapshot) {
                     val list: List<Word> = listOfNotNull(snapshot.getValue<Word>())
                     trySendBlocking(Result.success(list))
                 }
@@ -61,11 +61,11 @@ class RTDBWordListRepository @Inject constructor(
             }
         }
 
-    fun getUserReference(): DatabaseReference {
+    private fun getUserReference(): DatabaseReference {
         val user = auth.currentUser
         //TODO: handle when user not logged
         if (user != null) {
-            return firebaseDatabase.getReference("users/" + user.uid+"/words")
+            return firebaseDatabase.getReference("users/" + user.uid + "/words")
         }
         return firebaseDatabase.getReference("users/guest/words")
     }
@@ -77,8 +77,11 @@ class RTDBWordListRepository @Inject constructor(
      * @param entity Entity
      */
     override suspend fun insert(name: String, entity: List<Word>) {
-        entity.forEach { getUserReference().child(it.uid).setValue(Gson().toJson(it).toString()).addOnSuccessListener {
-        } }
+        entity.forEach {
+            getUserReference().child(it.uid).setValue(Gson().toJson(it).toString())
+                .addOnSuccessListener {
+                }
+        }
     }
 
     /**
@@ -109,9 +112,7 @@ class RTDBWordListRepository @Inject constructor(
      * @param name identifier of entity
      */
     override suspend fun delete(name: String) {
-        val databaseReference =
-            databaseReference(name)
-        databaseReference.removeValue().await()
+        databaseReference(name).removeValue().await()
     }
 
     private fun databaseReference(name: String): DatabaseReference {

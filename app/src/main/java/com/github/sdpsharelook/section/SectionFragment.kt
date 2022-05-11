@@ -50,7 +50,7 @@ class SectionFragment : Fragment(), SectionClickListener {
         //init list of possible languages for the spinner
         initList()
 
-        // set up the popup when cliking on add button
+        // set up the popup when clicking on add button
         dialog = Dialog(requireContext())
         dialog.setContentView(popupBinding.root)
         dialog.setOnDismissListener { popupBinding.editSectionName.text.clear() }
@@ -73,9 +73,9 @@ class SectionFragment : Fragment(), SectionClickListener {
         popupBinding.popupAddBtn.setOnClickListener {
             val sectionName = popupBinding.editSectionName.text.toString()
             val countryIndex = popupBinding.spinnerCountries.selectedItemPosition
-            // Popu do 2 different things if it is editing a section or creating one
+            // Popup do 2 different things if it is editing a section or creating one
             if (edit) {
-                cardAdapter.editItem(sectionName, mainCountryList.get(countryIndex).flag)
+                cardAdapter.editItem(sectionName, mainCountryList[countryIndex].flag)
             } else {
                 addSection(
                     Section(

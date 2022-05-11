@@ -20,7 +20,7 @@ interface IRepository<T> {
      * @param name identifier of entity
      * @param entity Entity
      */
-    suspend fun insert(name: String, entity: T)
+    suspend fun insert(name: String = "test", entity: T)
 
     /**
      * Read data at [name] once asynchronously.
@@ -28,7 +28,7 @@ interface IRepository<T> {
      * @param name identifier of entity
      * @return [T] or null
      */
-    suspend fun read(name: String): T?
+    suspend fun read(name: String = "test"): T?
 
     /**
      * Update data entry at [name].
@@ -38,12 +38,12 @@ interface IRepository<T> {
      * @param name Caution: wrong [name] can overwrite data.
      * @param entity Entity
      */
-    suspend fun update(name: String, entity: T)
+    suspend fun update(name: String = "test", entity: T)
 
     /**
      * Delete repository entry at [name].
      *
      * @param name identifier of entity
      */
-    suspend fun delete(name : String)
+    suspend fun delete(name : String = "test")
 }

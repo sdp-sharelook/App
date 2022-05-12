@@ -69,18 +69,7 @@ class CameraFragment : Fragment() {
             val uri = Uri.fromFile(file)
             val imageView = binding.cameraImageView
             imageView.setImageURI(uri)
-            val bitmap = imageView.drawable as BitmapDrawable
-            lifecycleScope.launch{
-                imageStorage.saveImage(bitmap.bitmap, object: ImageUrlCallback{
-                    override fun onCallback(url: String?) {
-                        if (url != null) {
-                            Log.e("Url", url)
-                        }
-                    }
 
-                })
-
-            }
         } else {
             showAlert("Error while taking picture")
         }

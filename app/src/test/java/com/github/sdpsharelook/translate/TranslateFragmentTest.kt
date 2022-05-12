@@ -1,5 +1,6 @@
 package com.github.sdpsharelook.translate
 
+import android.os.Bundle
 import android.widget.EditText
 import android.widget.ListView
 import androidx.test.espresso.Espresso
@@ -27,7 +28,7 @@ class TranslateFragmentTest {
     val hiltRule = HiltAndroidRule(this)
     @Test
     fun empty() {
-        launchFragmentInHiltContainer<TranslateFragment>()
+        launchFragmentInHiltContainer<TranslateFragment>(fragmentArgs = Bundle.EMPTY)
     }
 //
 //    @Before

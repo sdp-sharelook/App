@@ -19,15 +19,19 @@ import com.github.sdpsharelook.R
 import com.github.sdpsharelook.databinding.FragmentCameraBinding
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
+import com.google.mlkit.common.MlKit
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.Text
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.TextRecognizer
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
+import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class CameraFragment : Fragment() {
 
 
@@ -40,9 +44,8 @@ class CameraFragment : Fragment() {
     private var hasPermissions = false
     private var textDetected = "Aucun Text"
 
-//    @Inject
-    var recognizer : TextRecognizer =
-        TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
+    @Inject
+    lateinit var recognizer : TextRecognizer
 
     private fun showAlert(message: String) {
         val builder = AlertDialog.Builder(requireContext())

@@ -1,6 +1,6 @@
 package com.github.sdpsharelook.storage
 
-import com.github.sdpsharelook.Section.SectionWord
+import com.github.sdpsharelook.section.SectionWord
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
 import kotlinx.coroutines.channels.awaitClose

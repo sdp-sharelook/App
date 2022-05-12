@@ -25,6 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.*
 
 @AndroidEntryPoint
 class TranslateFragment : Fragment() {
@@ -210,7 +211,8 @@ class TranslateFragment : Fragment() {
                 binding.targetText.text = getString(R.string.translation_running)
 
                 targetTextString = t.translate(textToTranslate)
-                sectionWord = Word( source = textToTranslate,
+                sectionWord = Word(uid = UUID.randomUUID().toString() ,
+                    source = textToTranslate,
                     sourceLanguage = sourceLanguage,
                     target = targetTextString ?: "ERROR",
                     targetLanguage = targetLanguage )

@@ -25,7 +25,8 @@
         <argument
             android:name="sectionWord"
             app:argType="com.github.sdpsharelook.Word"
-            app:nullable="true" />
+            app:nullable="true"
+            android:defaultValue="@null" />
         <action
             android:id="@+id/action_menuSectionsLink_to_sectionDetailFragment"
             app:destination="@id/sectionDetailFragment" />

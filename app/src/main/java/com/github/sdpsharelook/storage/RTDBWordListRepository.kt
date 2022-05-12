@@ -55,19 +55,18 @@ class RTDBWordListRepository @Inject constructor(
                 }
 
             }
-            databaseReference(name).addChildEventListener(fireListener)
+            getSectionReference(name).addChildEventListener(fireListener)
             awaitClose {
-                databaseReference(name).removeEventListener(fireListener)
+                getSectionReference(name).removeEventListener(fireListener)
             }
         }
 
-    fun getUserReference(): DatabaseReference {
+    fun getSectionReference(uid: String): DatabaseReference {
         val user = auth.currentUser
-        //TODO: handle when user not logged
         if (user != null) {
-            return firebaseDatabase.getReference("users/" + user.uid+"/words")
+            return firebaseDatabase.getReference("users/" + user.uid + "/"+ uid)
         }
-        return firebaseDatabase.getReference("users/guest/words")
+        return firebaseDatabase.getReference("users/guest/$uid")
     }
 
     /**
@@ -77,7 +76,7 @@ class RTDBWordListRepository @Inject constructor(
      * @param entity Entity
      */
     override suspend fun insert(name: String, entity: List<Word>) {
-        entity.forEach { getUserReference().child(it.uid).setValue(Gson().toJson(it).toString()).addOnSuccessListener {
+        entity.forEach { getSectionReference(name).child(it.uid).setValue(Gson().toJson(it).toString()).addOnSuccessListener {
         } }
     }
 
@@ -98,9 +97,9 @@ class RTDBWordListRepository @Inject constructor(
      * @param entity Entity
      */
     override suspend fun update(name: String, entity: List<Word>) {
-        val databaseReference =
-            databaseReference(name)
-        databaseReference.setValue(entity).await()
+//        val databaseReference =
+//            databaseReference(name)
+//        databaseReference.setValue(entity).await()
     }
 
     /**
@@ -109,13 +108,9 @@ class RTDBWordListRepository @Inject constructor(
      * @param name identifier of entity
      */
     override suspend fun delete(name: String) {
-        val databaseReference =
-            databaseReference(name)
-        databaseReference.removeValue().await()
-    }
-
-    private fun databaseReference(name: String): DatabaseReference {
-        return if (name == "test") getUserReference() else reference.child(name)
+//        val databaseReference =
+//            databaseReference(name)
+//        databaseReference.removeValue().await()
     }
 
 }

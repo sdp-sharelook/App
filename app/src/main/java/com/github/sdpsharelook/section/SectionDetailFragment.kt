@@ -1,18 +1,16 @@
 package com.github.sdpsharelook.section
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.BaseAdapter
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.github.sdpsharelook.Word
 import com.github.sdpsharelook.databinding.FragmentSectionDetailBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -42,23 +40,34 @@ class SectionDetailFragment : Fragment() {
         binding.wordList.adapter = SectionWordAdapter(requireContext(), wordList)
 
 
-        lifecycleScope.launch {
-            collectListFlow(section!!)
-        }
+
 
         /**Check if we are adding a word from the translator Activity**/
         if (sectionWord != null) {
             lifecycleScope.launch {
-                section?.databaseRepo?.insert(section.sectionRepo, listOf(sectionWord))
+                section?.databaseRepo?.insert(section.id, listOf(sectionWord))
             }
-            addSectionWord(sectionWord)
+        }
+
+        lifecycleScope.launch {
+            collectListFlow(section!!)
         }
 
     }
 
-    private fun collectListFlow(section: Section) {
-        //Todo
-
+    private suspend fun collectListFlow(section: Section) {
+        section.databaseRepo.flow(section.id).collect{
+            when {
+                it.isSuccess -> {
+                    val words = it.getOrNull()
+                    words!!.forEach { word -> addSectionWord(word) }
+                }
+                it.isFailure -> {
+                    it.exceptionOrNull()?.printStackTrace()
+                }
+            }
+            (binding.wordList.adapter as BaseAdapter).notifyDataSetChanged()
+        }
     }
 
     private fun addSectionWord(sw: Word) {
@@ -67,7 +76,7 @@ class SectionDetailFragment : Fragment() {
 
     private fun sectionFromId(sectionID: Int): Section? {
         for (section in sectionList) {
-            if (sectionID == section.id) {
+            if (sectionID == section.sectionSize) {
                 return section
             }
         }

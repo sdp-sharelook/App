@@ -17,7 +17,6 @@ import com.github.sdpsharelook.Word
 import com.github.sdpsharelook.databinding.CardSectionBinding
 import com.github.sdpsharelook.databinding.FragmentSectionBinding
 import com.github.sdpsharelook.databinding.PopupBinding
-import com.github.sdpsharelook.storage.IRepository
 import com.github.sdpsharelook.storage.RTDBWordListRepository
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -81,6 +80,9 @@ class SectionFragment : Fragment(), SectionClickListener {
                 databaseWordList,
                 sectionName + countryIndex
             )
+
+            //TODO databaseWordList.insert(Section)
+
             // Popu do 2 different things if it is editing a section or creating one
             if (edit) {
                 cardAdapter.editItem(sectionName, mainCountryList.get(countryIndex).flag)
@@ -88,11 +90,8 @@ class SectionFragment : Fragment(), SectionClickListener {
                 Toast.makeText(requireContext(), "Section: $sectionName saved", Toast.LENGTH_SHORT).show()
             }else{
                 // if the section already exist
-                Toast.makeText(requireContext(), "This $sectionName already exist", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "$sectionName already exist", Toast.LENGTH_SHORT).show()
             }
-
-            Toast.makeText(requireContext(), "Section: $sectionName saved", Toast.LENGTH_SHORT)
-                .show()
             dialog.dismiss()
         }
     }
@@ -117,7 +116,7 @@ class SectionFragment : Fragment(), SectionClickListener {
 
     override fun onClick(section: Section) {
         val action = SectionFragmentDirections.actionMenuSectionsLinkToSectionDetailFragment(
-            section.id!!, sectionWord
+            section.sectionSize!!, sectionWord
         )
         findNavController().navigate(action)
     }

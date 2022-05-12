@@ -10,11 +10,12 @@ import android.speech.SpeechRecognizer as GoogleSpeechRecognizer
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
 import com.github.sdpsharelook.language.Language
 import java.util.*
 
 
-class SpeechRecognizer(private val activity: AppCompatActivity) {
+class SpeechRecognizer(private val activity: FragmentActivity) {
 
     /** Start the speech recognition
      * @param listener: the listener for callback when the result is ready

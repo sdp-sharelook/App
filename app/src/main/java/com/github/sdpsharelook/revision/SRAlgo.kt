@@ -53,8 +53,8 @@ class SRAlgo {
 
     companion object {
 
-        val MIN_EF = 1.3;
-        val MAX_EF = 2.5;
+        val MIN_EF = 1.3
+        val MAX_EF = 2.5
 
         @JvmStatic
         fun loadRevWordsFromLocal(

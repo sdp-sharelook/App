@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout android:layout_height="match_parent" android:layout_width="match_parent" xmlns:tools="http://schemas.android.com/tools" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout android:layout_height="match_parent" android:layout_width="match_parent" android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/popUpImage"
+            android:layout_width="400dp"
+            android:layout_height="500dp"
+            app:srcCompat="@drawable/default_user_path" />
+        <TextView android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/popUpSource" android:textSize="24sp" android:text="Source "/>
+        <TextView android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/popUpTarget" android:textSize="24sp" android:text="Target"/>
+        <TextView android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/popUpDate" android:textSize="24sp" android:text="Date"/>
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nice" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

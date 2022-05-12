@@ -10,7 +10,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 
 class SplashScreenActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        val splash = installSplashScreen();
+        val splash = installSplashScreen()
         super.onCreate(savedInstanceState)
 
         splash.setKeepOnScreenCondition{true}

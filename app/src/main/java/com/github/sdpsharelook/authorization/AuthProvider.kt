@@ -3,12 +3,14 @@ package com.github.sdpsharelook.authorization
 import android.util.Log
 import com.github.sdpsharelook.authorization.TestUserConstants.TEST_USER_EMAIL
 import com.github.sdpsharelook.authorization.TestUserConstants.TEST_USER_PASS
+import com.github.sdpsharelook.authorization.TestUserConstants.TEST_USER_UID
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 
 data class User(
+    val uid : String,
     val email: String,
     val displayName: String = "anonymous",
     val isAnonymous: Boolean = true
@@ -25,11 +27,12 @@ interface AuthProvider {
 
 object TestUserConstants {
     const val TEST_USER_EMAIL = "testuser@gmail.com"
+    const val TEST_USER_UID = "DSKjhf23dskjfhalfaJFSD"
     const val TEST_USER_PASS = "123456"
     const val TEST_USER_PASS2 = "Abcdef1!"
 }
 
-open class TestAuth : AuthProvider {
+open class TestAuth @Inject constructor() : AuthProvider {
 
     override fun signOut() {
         currentUser = null
@@ -42,14 +45,14 @@ open class TestAuth : AuthProvider {
         if (email == TEST_USER_EMAIL) return Result.failure(exception = IllegalArgumentException("email already in use"))
 
         Log.d("REGISTER","registering user")
-        currentUser = User(email)
-        return Result.success(User(email))
+        currentUser = User(TEST_USER_UID,email)
+        return Result.success(User(TEST_USER_UID,email))
     }
 
     override suspend fun signInWithEmailAndPassword(email: String, password: String): Result<User> {
         if (email == TEST_USER_EMAIL && password == TEST_USER_PASS) {
-            currentUser = User(email)
-            return Result.success(User(email))
+            currentUser = User(uid = TEST_USER_UID,email)
+            return Result.success(User(TEST_USER_UID,email))
         }
         return Result.failure( exception =  IllegalArgumentException("could not login, no such login "))
 
@@ -60,14 +63,15 @@ open class TestAuth : AuthProvider {
 
 }
 
-class FireAuth : AuthProvider {
-    private val auth = FirebaseAuth.getInstance()
+class FireAuth @Inject constructor(
+    private val auth: FirebaseAuth
+) : AuthProvider {
     override fun signOut() {
         auth.signOut()
     }
 
     private fun firebaseToAppUser(fbUser: FirebaseUser): User {
-        return User(fbUser.email.toString(), fbUser.displayName.toString(), fbUser.isAnonymous)
+        return User(fbUser.uid,fbUser.email.toString(), fbUser.displayName.toString(), fbUser.isAnonymous)
     }
 
     override suspend fun createUserWithEmailAndPassword(
@@ -96,6 +100,4 @@ class FireAuth : AuthProvider {
 
     override var currentUser: User? = null
         get() = auth.currentUser?.let { firebaseToAppUser(it) }
-
-
 }

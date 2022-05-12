@@ -91,8 +91,10 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth-ktx'
     implementation 'com.google.firebase:firebase-database-ktx'
     implementation 'com.google.firebase:firebase-functions'
+    implementation 'com.google.firebase:firebase-storage-ktx'
     implementation 'com.google.mlkit:language-id:17.0.3'
     implementation 'com.google.mlkit:translate:17.0.0'
+    implementation "io.coil-kt:coil:2.0.0"
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.0'
     testImplementation 'androidx.test:core-ktx:1.4.0' // necessary for kotlin tests

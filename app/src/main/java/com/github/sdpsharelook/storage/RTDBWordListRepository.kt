@@ -1,18 +1,22 @@
 package com.github.sdpsharelook.storage
 
-import android.util.Log
+import android.graphics.Bitmap
 import com.github.sdpsharelook.Word
 import com.github.sdpsharelook.authorization.AuthProvider
-import com.google.android.datatransport.cct.internal.LogResponse.fromJson
 import com.google.firebase.database.*
-import com.google.firebase.database.ktx.getValue
+import com.google.firebase.storage.FirebaseStorage
 import com.google.gson.Gson
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
+import okhttp3.internal.wait
+import java.io.ByteArrayOutputStream
+import java.util.*
 import javax.inject.Inject
+import javax.security.auth.callback.Callback
 
 class RTDBWordListRepository @Inject constructor(
     private val firebaseDatabase: FirebaseDatabase,
@@ -40,15 +44,15 @@ class RTDBWordListRepository @Inject constructor(
 
                 override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
                     val word = Gson().fromJson(snapshot.value.toString(), Word::class.java)
-                    val oldWord = wordList.find { w ->w.uid==word.uid}
+                    val oldWord = wordList.find { w -> w.uid == word.uid }
                     wordList[wordList.indexOf(oldWord)] = word.copy()
                     trySendBlocking(Result.success(wordList))
                 }
 
-                override fun onChildRemoved(snapshot: DataSnapshot){
+                override fun onChildRemoved(snapshot: DataSnapshot) {
                     val word = Gson().fromJson(snapshot.value.toString(), Word::class.java)
-                    val changedWord = wordList.find {w->
-                        w.uid==word.uid
+                    val changedWord = wordList.find { w ->
+                        w.uid == word.uid
                     }
                     wordList[wordList.indexOf(changedWord)] = word
                     trySendBlocking(Result.success(wordList))
@@ -73,7 +77,7 @@ class RTDBWordListRepository @Inject constructor(
         val user = auth.currentUser
         //TODO: handle when user not logged
         if (user != null) {
-            return firebaseDatabase.getReference("users/" + user.uid+"/words")
+            return firebaseDatabase.getReference("users/" + user.uid + "/words")
         }
         return firebaseDatabase.getReference("users/guest/words")
     }
@@ -86,13 +90,12 @@ class RTDBWordListRepository @Inject constructor(
      */
     override suspend fun insert(name: String, entity: List<Word>) {
         entity.forEach {
-            getUserReference().child(it.uid).setValue(Gson().toJson(it).toString()).addOnSuccessListener {
-                //TODO: SHOULD MAYBE DO SOMETHING ON SUCCESS ?
-            }
+            getUserReference().child(it.uid).setValue(Gson().toJson(it).toString())
+                .addOnSuccessListener {
+                    //TODO: SHOULD MAYBE DO SOMETHING ON SUCCESS ?
+                }
         }
     }
-
-
 
 
     /**
@@ -119,6 +122,9 @@ class RTDBWordListRepository @Inject constructor(
     fun databaseReference(name: String): DatabaseReference {
         return if (name == "test") getUserReference() else reference.child(name)
     }
+
+
+
 
     /**
      * Read data at [name] once asynchronously.

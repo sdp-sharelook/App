@@ -3,9 +3,11 @@ package com.github.sdpsharelook.camera
 import android.Manifest
 import android.app.AlertDialog
 import android.content.pm.PackageManager
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,13 +16,21 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.lifecycle.lifecycleScope
 import com.github.sdpsharelook.R
 import com.github.sdpsharelook.databinding.FragmentCameraBinding
 import com.github.sdpsharelook.databinding.FragmentLoginBinding
+import com.github.sdpsharelook.storage.ImageStorage
+import com.github.sdpsharelook.storage.ImageUrlCallback
+import com.github.sdpsharelook.storage.RTDBWordListRepository
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class CameraFragment : Fragment() {
 
 
@@ -31,6 +41,10 @@ class CameraFragment : Fragment() {
     private var _binding: FragmentCameraBinding? = null
     private var currentPath: String? = null
     private var hasPermissions = false
+
+
+    @Inject
+    lateinit var imageStorage: ImageStorage
 
     private fun showAlert(message: String) {
         val builder = AlertDialog.Builder(requireContext())
@@ -55,6 +69,18 @@ class CameraFragment : Fragment() {
             val uri = Uri.fromFile(file)
             val imageView = binding.cameraImageView
             imageView.setImageURI(uri)
+            val bitmap = imageView.drawable as BitmapDrawable
+            lifecycleScope.launch{
+                imageStorage.saveImage(bitmap.bitmap, object: ImageUrlCallback{
+                    override fun onCallback(url: String?) {
+                        if (url != null) {
+                            Log.e("Url", url)
+                        }
+                    }
+
+                })
+
+            }
         } else {
             showAlert("Error while taking picture")
         }

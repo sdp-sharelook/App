@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="section.SectionDetailFragment">
+
+    <LinearLayout
+        android:id="@+id/linearHolder"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/sectionTitle"
+            android:layout_width="153dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Section name"
+            android:textColor="@color/black"
+            android:textSize="25dp"
+            android:textStyle="bold"
+            android:layout_margin="8dp"/>
+
+        <ImageView
+            android:id="@+id/sectionFlag"
+            android:layout_width="51dp"
+            android:layout_height="43dp"
+            android:layout_weight="1"
+            android:layout_gravity="end"
+            app:srcCompat="@drawable/spain" />
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/wordList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>

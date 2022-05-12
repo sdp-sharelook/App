@@ -50,9 +50,11 @@ class TextDetectionFragmentTest {
     }
     @Test
     fun textDetectionActivityTest() {
+        //TODO recognizer is not injected exception
         val textView = onView(allOf(withId(R.id.text_data), withText("Detect the text")))
         textView.check(matches(isDisplayed()))
         val detectButton = onView(withId(R.id.detectButton))
+        detectButton.check(matches(isDisplayed()))
         detectButton.perform(click())
 
         ShadowLooper.runUiThreadTasks()

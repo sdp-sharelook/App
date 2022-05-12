@@ -17,8 +17,7 @@ import javax.inject.Singleton
 object TextDetectionModule {
     @Singleton
     @Provides
-    fun provideTextRecognizer(@ApplicationContext appContext: Context): TextRecognizer{
-        MlKit.initialize(appContext)
+    fun provideTextRecognizer(): TextRecognizer{
         return TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
     }
 }

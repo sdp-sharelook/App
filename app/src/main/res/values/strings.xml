@@ -128,6 +128,7 @@
     <string name="search">Search…</string>
     <string name="section_name_hint">Section name</string>
     <string name="word_image">Image</string>
+    <string name="no_result_found">no result found</string>
     <string name="save_section_name">Save</string>
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>

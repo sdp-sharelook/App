@@ -1,14 +1,18 @@
 package com.github.sdpsharelook.section
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
+import com.github.sdpsharelook.Word
 import com.github.sdpsharelook.databinding.FragmentSectionDetailBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -21,7 +25,7 @@ class SectionDetailFragment : Fragment() {
     private val binding get() = _binding!!
     private var _binding: FragmentSectionDetailBinding? = null
 
-    private val wordList = mutableListOf<SectionWord>()
+    private val wordList = mutableListOf<Word>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -29,42 +33,35 @@ class SectionDetailFragment : Fragment() {
         val section = sectionFromId(args.sectionID)
         val sectionWord = args.sectionWord
 
-//        CoroutineScope(Dispatchers.IO).launch {
-//            section!!.databaseRepo.flow().collect {
-//                when {
-//                    it.isSuccess -> {
-//                        val message = it.getOrNull().toString()
-//                        withContext(Dispatchers.Main) {
-//                            findViewById<TextView>(R.id.database_contents).apply {
-//                                text = message
-//                            }
-//                        }
-//                    }
-//                    it.isFailure -> {
-//                        it.exceptionOrNull()?.printStackTrace()
-//                    }
-//                }
-//            }
-//        }
-
-
-        // If we are adding a word from the translator Activity
-        if (sectionWord != null) {
-            lifecycleScope.launch {
-                section?.databaseRepo?.insert(section.sectionRepo, sectionWord.toList())
-            }
-            addSectionWord(sectionWord)
-        }
-
+        /**set the section detail**/
         if (section != null) {
             binding.sectionTitle.text = section.title
             binding.sectionFlag.setImageResource(section.flag)
         }
 
         binding.wordList.adapter = SectionWordAdapter(requireContext(), wordList)
+
+
+        lifecycleScope.launch {
+            collectListFlow(section!!)
+        }
+
+        /**Check if we are adding a word from the translator Activity**/
+        if (sectionWord != null) {
+            lifecycleScope.launch {
+                section?.databaseRepo?.insert(section.sectionRepo, listOf(sectionWord))
+            }
+            addSectionWord(sectionWord)
+        }
+
     }
 
-    private fun addSectionWord(sw: SectionWord) {
+    private fun collectListFlow(section: Section) {
+        //Todo
+
+    }
+
+    private fun addSectionWord(sw: Word) {
         wordList.add(sw)
     }
 

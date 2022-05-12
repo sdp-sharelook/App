@@ -13,10 +13,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.sdpsharelook.R
+import com.github.sdpsharelook.Word
 import com.github.sdpsharelook.databinding.CardSectionBinding
 import com.github.sdpsharelook.databinding.FragmentSectionBinding
 import com.github.sdpsharelook.databinding.PopupBinding
 import com.github.sdpsharelook.storage.IRepository
+import com.github.sdpsharelook.storage.RTDBWordListRepository
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -33,12 +35,12 @@ class SectionFragment : Fragment(), SectionClickListener {
     private lateinit var popupBinding: PopupBinding
     private lateinit var cardBinding: CardSectionBinding
     @Inject
-    lateinit var databaseWordList: IRepository<List<String>>
+    lateinit var databaseWordList: RTDBWordListRepository
 
     private lateinit var dialog: Dialog
     var mainCountryList = initList()
 
-    private var sectionWord: SectionWord? = null
+    private var sectionWord: Word? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -73,18 +75,20 @@ class SectionFragment : Fragment(), SectionClickListener {
         popupBinding.popupAddBtn.setOnClickListener {
             val sectionName = popupBinding.editSectionName.text.toString()
             val countryIndex = popupBinding.spinnerCountries.selectedItemPosition
+            val newSection = Section(
+                sectionName,
+                mainCountryList[countryIndex].flag,
+                databaseWordList,
+                sectionName + countryIndex
+            )
             // Popu do 2 different things if it is editing a section or creating one
             if (edit) {
                 cardAdapter.editItem(sectionName, mainCountryList.get(countryIndex).flag)
-            } else {
-                addSection(
-                    Section(
-                        sectionName,
-                        mainCountryList[countryIndex].flag,
-                        databaseWordList,
-                        sectionName + countryIndex
-                    )
-                )
+            } else if(addSection(newSection)){
+                Toast.makeText(requireContext(), "Section: $sectionName saved", Toast.LENGTH_SHORT).show()
+            }else{
+                // if the section already exist
+                Toast.makeText(requireContext(), "This $sectionName already exist", Toast.LENGTH_SHORT).show()
             }
 
             Toast.makeText(requireContext(), "Section: $sectionName saved", Toast.LENGTH_SHORT)
@@ -100,14 +104,20 @@ class SectionFragment : Fragment(), SectionClickListener {
         return list
     }
 
-    private fun addSection(section: Section) {
-        sectionList.add(section)
-        binding.recyclerView.adapter?.notifyItemInserted(sectionList.lastIndex)
+    private fun addSection(section: Section): Boolean {
+        // if the section already exist do not add it
+        return if(sectionList.contains(section)){
+            false
+        }else{
+            sectionList.add(section)
+            binding.recyclerView.adapter?.notifyItemInserted(sectionList.lastIndex)
+            true
+        }
     }
 
     override fun onClick(section: Section) {
         val action = SectionFragmentDirections.actionMenuSectionsLinkToSectionDetailFragment(
-            section.id, sectionWord
+            section.id!!, sectionWord
         )
         findNavController().navigate(action)
     }

@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.test.espresso.IdlingResource
 import androidx.test.espresso.idling.CountingIdlingResource
 import com.github.sdpsharelook.R
+import com.github.sdpsharelook.Word
 import com.github.sdpsharelook.databinding.FragmentTranslateBinding
 import com.github.sdpsharelook.language.Language
 import com.github.sdpsharelook.language.LanguageSelectionDialog
@@ -39,7 +40,7 @@ class TranslateFragment : Fragment() {
     //private lateinit var speechRecognizer: SpeechRecognizer
 
     private var targetTextString: String? = null
-    private var sectionWord: SectionWord? = null
+    private var sectionWord: Word? = null
 
     private var mIdlingResource: CountingIdlingResource? = null
 
@@ -209,7 +210,10 @@ class TranslateFragment : Fragment() {
                 binding.targetText.text = getString(R.string.translation_running)
 
                 targetTextString = t.translate(textToTranslate)
-                sectionWord = SectionWord(textToTranslate, targetTextString ?: "ERROR", null)
+                sectionWord = Word( source = textToTranslate,
+                    sourceLanguage = sourceLanguage,
+                    target = targetTextString ?: "ERROR",
+                    targetLanguage = targetLanguage )
                 binding.targetText.text = targetTextString
                 mIdlingResource?.decrement()
             }

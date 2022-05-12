@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.location.Location
 import com.github.sdpsharelook.language.Language
 import com.google.firebase.database.IgnoreExtraProperties
+import java.io.Serializable
 import java.util.*
 
 @IgnoreExtraProperties
@@ -17,7 +18,7 @@ data class Word(
     val savedDate: Date? = null,
     val picture: String? = null,
     val isFavourite: Boolean?= false,
-) {
+): Serializable {
     constructor(uid: String) : this(uid,"",null,null,null,null,null,"",false)
 
     // fun synonyms(): Set<Word> = TODO("not implemented yet")

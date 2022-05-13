@@ -41,8 +41,8 @@ class SelectPictureFragment(private val word: Word) : BottomSheetDialogFragment(
             var bitmap: Bitmap? = null
             CoroutineScope(Dispatchers.Main).launch {
                 val onlinePic = OnlinePictureFragment(
-                    word.source!!,
-                    word.sourceLanguage!!
+                    word.source,
+                    word.sourceLanguage
                 ).show(parentFragmentManager, null)
             }
 

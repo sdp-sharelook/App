@@ -4,7 +4,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Base64.*
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -39,7 +38,6 @@ class MapsFragment : Fragment(R.layout.fragment_maps) {
      * user has installed Google Play services and returned to the app.
      */
     private val callback = OnMapReadyCallback { googleMap ->
-        var words = listOf<Word>()
 
 
         // ===========================================================================================================

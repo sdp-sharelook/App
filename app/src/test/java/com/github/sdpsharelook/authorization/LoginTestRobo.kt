@@ -40,7 +40,6 @@ class LoginTestRobo {
     @Before
     fun init() {
         hiltRule.inject()
-        launchFragmentInHiltContainer<LoginFragment>(Bundle(), R.style.Theme_Sherlook)
     }
 
     @After
@@ -50,14 +49,27 @@ class LoginTestRobo {
 
     @Test
     fun `test login with test user`() = runTest {
+        val navController = TestNavHostController(ApplicationProvider.getApplicationContext())
+        fragmentScenarioRule.scenario.onFragment {
+            navController.setGraph(R.navigation.main)
+            navController.setCurrentDestination(R.id.menuLoginLink)
+            Navigation.setViewNavController(requireView(), navController)
+        }
         onView(withId(R.id.email)).perform(typeText(TEST_USER_EMAIL))
         onView(withId(R.id.password)).perform(typeText(TEST_USER_PASS))
         onView(withId(R.id.loginButton)).perform(click())
+        assertEquals(R.id.greetingFragment, navController.currentDestination!!.id)
         assert(auth.currentUser!!.email == TEST_USER_EMAIL)
     }
 
     @Test
     fun `test login with no email`() = runTest {
+        val navController = TestNavHostController(ApplicationProvider.getApplicationContext())
+        fragmentScenarioRule.scenario.onFragment {
+            navController.setGraph(R.navigation.main)
+            navController.setCurrentDestination(R.id.menuLoginLink)
+            Navigation.setViewNavController(requireView(), navController)
+        }
         onView(withId(R.id.loginButton)).perform(swipeLeft())
         onView(withId(R.id.email)).perform(typeText(""))
         onView(withId(R.id.password)).perform(typeText(TEST_USER_PASS))

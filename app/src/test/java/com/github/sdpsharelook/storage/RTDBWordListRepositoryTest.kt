@@ -67,7 +67,7 @@ class RTDBWordListRepositoryTest {
 
     @Test
     fun `test flow`() = runTest(dispatchTimeoutMs = 5000) {
-        val changed = testWord.copy(source = "test2")
+//        val changed = testWord.copy(source = "test2")
         var i = 0
         val job = testFlow
             .onEach { result ->

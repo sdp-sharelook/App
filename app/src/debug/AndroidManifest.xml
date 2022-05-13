@@ -5,7 +5,7 @@
     <application
         tools:ignore="MissingApplicationIcon">
         <activity
-            android:name=".HiltTestActivity"
+            android:name=".utils.HiltTestActivity"
             android:exported="false" />
     </application>
 

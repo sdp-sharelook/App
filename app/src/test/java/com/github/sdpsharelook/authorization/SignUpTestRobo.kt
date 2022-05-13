@@ -11,7 +11,7 @@ import com.github.sdpsharelook.R
 import com.github.sdpsharelook.authorization.TestUserConstants.TEST_USER_EMAIL
 import com.github.sdpsharelook.authorization.TestUserConstants.TEST_USER_PASS
 import com.github.sdpsharelook.authorization.TestUserConstants.TEST_USER_PASS2
-import com.github.sdpsharelook.launchFragmentInHiltContainer
+import com.github.sdpsharelook.utils.launchFragmentInHiltContainer
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi

@@ -2,6 +2,7 @@ package com.github.sdpsharelook.storage
 
 import com.github.sdpsharelook.Word
 import com.github.sdpsharelook.authorization.AuthProvider
+import com.github.sdpsharelook.section.Section
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
 import com.google.gson.Gson
@@ -16,8 +17,8 @@ class RTDBWordListRepository @Inject constructor(
     private val firebaseDatabase: FirebaseDatabase,
     private val auth: AuthProvider
 ) : IRepository<List<@JvmSuppressWildcards Word>> {
-
-    private val reference: DatabaseReference by lazy { firebaseDatabase.reference.child("wordlists") }
+    private val user = auth.currentUser
+    private val reference: DatabaseReference by lazy { firebaseDatabase.getReference("users/" + user!!.uid) }
 
 
     /**
@@ -61,8 +62,7 @@ class RTDBWordListRepository @Inject constructor(
             }
         }
 
-    fun getSectionReference(uid: String): DatabaseReference {
-        val user = auth.currentUser
+    private fun getSectionReference(uid: String): DatabaseReference {
         if (user != null) {
             return firebaseDatabase.getReference("users/" + user.uid + "/"+ uid)
         }
@@ -78,6 +78,10 @@ class RTDBWordListRepository @Inject constructor(
     override suspend fun insert(name: String, entity: List<Word>) {
         entity.forEach { getSectionReference(name).child(it.uid).setValue(Gson().toJson(it).toString()).addOnSuccessListener {
         } }
+    }
+
+    suspend fun insertSection(entity: Section) {
+        getSectionReference(entity.id).setValue(entity)
     }
 
     /**
@@ -108,9 +112,7 @@ class RTDBWordListRepository @Inject constructor(
      * @param name identifier of entity
      */
     override suspend fun delete(name: String) {
-//        val databaseReference =
-//            databaseReference(name)
-//        databaseReference.removeValue().await()
+        getSectionReference(name).removeValue().await()
     }
 
 }

@@ -54,7 +54,7 @@ class CardAdapter(
         Log.d("INDEX", index.toString())
         sectionList.removeAt(index)
         CoroutineScope(Dispatchers.IO).launch{
-            section.databaseRepo.delete(section.sectionRepo)
+            section.databaseRepo.delete(section.id)
         }
         notifyItemRemoved(viewHolder.adapterPosition)
         notifyDataSetChanged()

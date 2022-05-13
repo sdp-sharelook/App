@@ -33,6 +33,7 @@ class SectionFragment : Fragment(), SectionClickListener {
     private var _binding: FragmentSectionBinding? = null
     private lateinit var popupBinding: PopupBinding
     private lateinit var cardBinding: CardSectionBinding
+
     @Inject
     lateinit var databaseWordList: RTDBWordListRepository
 
@@ -80,8 +81,9 @@ class SectionFragment : Fragment(), SectionClickListener {
                 databaseWordList,
                 sectionName + countryIndex
             )
-
-            //TODO databaseWordList.insert(Section)
+//            lifecycleScope.launch {
+//                databaseWordList.insertSection(newSection)
+//            }
 
             // Popu do 2 different things if it is editing a section or creating one
             if (edit) {

@@ -1,5 +1,6 @@
 package com.github.sdpsharelook.section
 
+import com.github.sdpsharelook.Word
 import com.github.sdpsharelook.storage.IRepository
 
 var sectionList = mutableListOf<Section>()

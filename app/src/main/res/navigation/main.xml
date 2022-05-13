@@ -23,8 +23,8 @@
         android:label="fragment_section"
         tools:layout="@layout/fragment_section" >
         <argument
-            android:name="sectionWord"
-            app:argType="com.github.sdpsharelook.section.SectionWord"
+            android:name="word"
+            app:argType="com.github.sdpsharelook.Word"
             app:nullable="true"
             android:defaultValue="@null" />
         <action
@@ -39,8 +39,8 @@
             android:name="sectionID"
             app:argType="integer" />
         <argument
-            android:name="sectionWord"
-            app:argType="com.github.sdpsharelook.section.SectionWord"
+            android:name="word"
+            app:argType="com.github.sdpsharelook.Word"
             app:nullable="true"
             android:defaultValue="@null" />
     </fragment>

@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.sdpsharelook.R
+import com.github.sdpsharelook.Word
 import com.github.sdpsharelook.databinding.CardSectionBinding
 import com.github.sdpsharelook.databinding.FragmentSectionBinding
 import com.github.sdpsharelook.databinding.PopupBinding
@@ -34,16 +35,14 @@ class SectionFragment : Fragment(), SectionClickListener {
     private lateinit var cardBinding: CardSectionBinding
     @Inject
     lateinit var databaseWordList: IRepository<List<String>>
-
+    private var word: Word? = null
     private lateinit var dialog: Dialog
     var mainCountryList = initList()
-
-    private var sectionWord: SectionWord? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val args: SectionFragmentArgs by navArgs()
-        sectionWord = args.sectionWord
+        word = args.word
         popupBinding = PopupBinding.inflate(layoutInflater)
         cardBinding = CardSectionBinding.inflate(layoutInflater)
 
@@ -107,14 +106,14 @@ class SectionFragment : Fragment(), SectionClickListener {
 
     override fun onClick(section: Section) {
         val action = SectionFragmentDirections.actionMenuSectionsLinkToSectionDetailFragment(
-            section.id, sectionWord
+            section.id, word
         )
         findNavController().navigate(action)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentSectionBinding.inflate(layoutInflater)
         return binding.root

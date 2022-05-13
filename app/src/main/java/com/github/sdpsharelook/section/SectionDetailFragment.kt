@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.github.sdpsharelook.SelectPictureFragment
+import com.github.sdpsharelook.Word
 import com.github.sdpsharelook.databinding.FragmentSectionDetailBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -22,13 +23,13 @@ class SectionDetailFragment : Fragment() {
     private val binding get() = _binding!!
     private var _binding: FragmentSectionDetailBinding? = null
 
-    private val wordList = mutableListOf<SectionWord>()
+    private val wordList = mutableListOf<Word>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val args: SectionDetailFragmentArgs by navArgs()
         val section = sectionFromId(args.sectionID)
-        val sectionWord = args.sectionWord
+        val word = args.word
 
 //        CoroutineScope(Dispatchers.IO).launch {
 //            section!!.databaseRepo.flow().collect {
@@ -50,11 +51,11 @@ class SectionDetailFragment : Fragment() {
 
 
         // If we are adding a word from the translator Activity
-        if (sectionWord != null) {
+        if (word != null) {
             lifecycleScope.launch {
-                section?.databaseRepo?.insert(section.sectionRepo, sectionWord.toList())
+                section?.databaseRepo?.insert(section.sectionRepo, word.toList())
             }
-            addSectionWord(sectionWord)
+            addSectionWord(word)
         }
 
         if (section != null) {
@@ -62,14 +63,14 @@ class SectionDetailFragment : Fragment() {
             binding.sectionFlag.setImageResource(section.flag)
         }
 
-        binding.wordList.adapter = SectionWordAdapter(requireContext(), wordList)
+        binding.wordList.adapter = WordAdapter(requireContext(), wordList)
         binding.wordList.setOnItemClickListener { _, _, _, _ ->
-            SelectPictureFragment().show(parentFragmentManager, null)
+            SelectPictureFragment(word!!).show(parentFragmentManager, null)
         }
     }
 
-    private fun addSectionWord(sw: SectionWord) {
-        wordList.add(sw)
+    private fun addSectionWord(word: Word) {
+        wordList.add(word)
     }
 
     private fun sectionFromId(sectionID: Int): Section? {

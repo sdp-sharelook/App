@@ -13,10 +13,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.test.espresso.IdlingResource
 import androidx.test.espresso.idling.CountingIdlingResource
 import com.github.sdpsharelook.R
+import com.github.sdpsharelook.Word
 import com.github.sdpsharelook.databinding.FragmentTranslateBinding
 import com.github.sdpsharelook.language.Language
 import com.github.sdpsharelook.language.LanguageSelectionDialog
-import com.github.sdpsharelook.section.SectionWord
 import com.github.sdpsharelook.speechRecognition.RecognitionListener
 import com.github.sdpsharelook.textToSpeech.TextToSpeech
 import com.google.mlkit.nl.translate.TranslateLanguage
@@ -39,7 +39,7 @@ class TranslateFragment : Fragment() {
     //private lateinit var speechRecognizer: SpeechRecognizer
 
     private var targetTextString: String? = null
-    private var sectionWord: SectionWord? = null
+    private var word: Word? = null
 
     private var mIdlingResource: CountingIdlingResource? = null
 
@@ -95,7 +95,7 @@ class TranslateFragment : Fragment() {
         button: Button,
         translatorLanguages: Set<Language>,
         buttonSource: Button,
-        buttonTarget: Button
+        buttonTarget: Button,
     ) {
         val ttsLanguages =
             translatorLanguages.filter { textToSpeech.isLanguageAvailable(it) }.toSet()
@@ -209,7 +209,12 @@ class TranslateFragment : Fragment() {
                 binding.targetText.text = getString(R.string.translation_running)
 
                 targetTextString = t.translate(textToTranslate)
-                sectionWord = SectionWord(textToTranslate, targetTextString ?: "ERROR", null)
+                word = Word(
+                    sourceLanguage = sourceLanguage,
+                    targetLanguage = targetLanguage,
+                    source = textToTranslate,
+                    target = targetTextString ?: ""
+                )
                 binding.targetText.text = targetTextString
                 mIdlingResource?.decrement()
             }
@@ -217,9 +222,9 @@ class TranslateFragment : Fragment() {
     }
 
     private fun addWordToSection() {
-        if (sectionWord != null) {
+        if (word != null) {
             val action = TranslateFragmentDirections.actionMenuTranslateLinkToMenuSectionsLink(
-                sectionWord!!
+                word!!
             )
             findNavController().navigate(action)
         }
@@ -227,7 +232,7 @@ class TranslateFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentTranslateBinding.inflate(layoutInflater)
         return binding.root

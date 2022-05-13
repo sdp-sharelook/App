@@ -19,9 +19,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class SelectPictureFragment : BottomSheetDialogFragment() {
-    private val camera=Camera(this@SelectPictureFragment).apply {
-        setOnErrorListener { Toast.makeText(requireContext(), "Error taking picture", Toast.LENGTH_SHORT).show() }
+class SelectPictureFragment(private val word: Word) : BottomSheetDialogFragment() {
+    private val camera = Camera(this@SelectPictureFragment).apply {
+        setOnErrorListener {
+            Toast.makeText(requireContext(),
+                "Error taking picture",
+                Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onCreateView(
@@ -37,8 +41,8 @@ class SelectPictureFragment : BottomSheetDialogFragment() {
             var bitmap: Bitmap? = null
             CoroutineScope(Dispatchers.Main).launch {
                 val onlinePic = OnlinePictureFragment(
-                    "Pineapple",
-                    Language("en")
+                    word.source!!,
+                    word.sourceLanguage!!
                 ).show(parentFragmentManager, null)
             }
 

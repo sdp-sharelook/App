@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import com.github.sdpsharelook.R
+import com.github.sdpsharelook.SelectPictureFragment
 
 class SectionWordAdapter(context: Context, sectionWordList: List<SectionWord>) :
     ArrayAdapter<SectionWord>(context, R.layout.wordlist_section, sectionWordList) {
@@ -20,7 +21,6 @@ class SectionWordAdapter(context: Context, sectionWordList: List<SectionWord>) :
 
         sourceWord?.text  = sw?.sourceText
         translatedWord?.text = sw?.translatedText
-
         return view
     }
 }

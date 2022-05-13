@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
+import com.github.sdpsharelook.SelectPictureFragment
 import com.github.sdpsharelook.databinding.FragmentSectionDetailBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -62,6 +63,9 @@ class SectionDetailFragment : Fragment() {
         }
 
         binding.wordList.adapter = SectionWordAdapter(requireContext(), wordList)
+        binding.wordList.setOnItemClickListener { _, _, _, _ ->
+            SelectPictureFragment().show(parentFragmentManager, null)
+        }
     }
 
     private fun addSectionWord(sw: SectionWord) {
@@ -79,7 +83,7 @@ class SectionDetailFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentSectionDetailBinding.inflate(layoutInflater)
         return binding.root

@@ -43,13 +43,10 @@ class SectionDetailFragment : Fragment() {
 
 
         /**Check if we are adding a word from the translator Activity**/
-        if (sectionWord != null) {
-            lifecycleScope.launch {
-                section?.databaseRepo?.insert(section.id, listOf(sectionWord))
-            }
-        }
-
         lifecycleScope.launch {
+            if (sectionWord != null) {
+                section?.databaseRepo?.insert(section.id, sectionWord)
+            }
             collectListFlow(section!!)
         }
 
@@ -59,8 +56,8 @@ class SectionDetailFragment : Fragment() {
         section.databaseRepo.flow(section.id).collect{
             when {
                 it.isSuccess -> {
-                    val words = it.getOrNull()
-                    words!!.forEach { word -> addSectionWord(word) }
+                    val word = it.getOrNull() as Word
+                    addSectionWord(word)
                 }
                 it.isFailure -> {
                     it.exceptionOrNull()?.printStackTrace()

@@ -16,7 +16,7 @@ import javax.inject.Inject
 class RTDBWordListRepository @Inject constructor(
     private val firebaseDatabase: FirebaseDatabase,
     private val auth: AuthProvider
-) : IRepository<List<@JvmSuppressWildcards Word>> {
+) : IRepository<@JvmSuppressWildcards Word> {
     private val user = auth.currentUser
     private val reference: DatabaseReference by lazy { firebaseDatabase.getReference("users/" + user!!.uid) }
 
@@ -27,32 +27,28 @@ class RTDBWordListRepository @Inject constructor(
      * @param name format: "path/name"
      * @return [Flow] of changes in the database at [name]
      */
-    override fun flow(name: String): Flow<Result<List<Word>?>> =
+    override fun flow(name: String): Flow<Result<Word?>> =
         callbackFlow {
             val fireListener = object : ChildEventListener {
-                val wordList = mutableListOf<Word>()
                 override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                    val word = Gson().fromJson(snapshot.value.toString(), Word::class.java)
-                    wordList.add(wordList.size, word)
-                    trySendBlocking(Result.success(wordList))
+                    var word = Gson().fromJson(snapshot.value.toString(), Word::class.java)
+                    trySendBlocking(Result.success(word))
                 }
 
                 override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                    val list = listOfNotNull(snapshot.getValue<Word>())
-                    trySendBlocking(Result.success(list))
+                    var word = snapshot.getValue<Word>()
+                    trySendBlocking(Result.success(word))
                 }
 
-                override fun onChildRemoved(snapshot: DataSnapshot){
-                    val list: List<Word> = listOfNotNull(snapshot.getValue<Word>())
-                    trySendBlocking(Result.success(list))
+                override fun onChildRemoved(snapshot: DataSnapshot) {
+                    var word = snapshot.getValue<Word>()
+                    trySendBlocking(Result.success(word))
                 }
 
                 override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
 
-
                 override fun onCancelled(error: DatabaseError) {
-                    val result = Result.failure<List<Word>>(error.toException())
-                    trySendBlocking(result)
+                    trySendBlocking(Result.failure(error.toException()))
                 }
 
             }
@@ -75,9 +71,11 @@ class RTDBWordListRepository @Inject constructor(
      * @param name identifier of entity
      * @param entity Entity
      */
-    override suspend fun insert(name: String, entity: List<Word>) {
-        entity.forEach { getSectionReference(name).child(it.uid).setValue(Gson().toJson(it).toString()).addOnSuccessListener {
-        } }
+    override suspend fun insert(name: String, entity: Word) {
+        getSectionReference(name).child(entity.uid).setValue(Gson().toJson(entity).toString())
+    }
+    suspend fun insertList(name: String, entity: List<Word>) {
+        entity.forEach { insert(name, it) }
     }
 
     suspend fun insertSection(entity: Section) {
@@ -87,7 +85,7 @@ class RTDBWordListRepository @Inject constructor(
     /**
      * Don't use
      */
-    override suspend fun read(name: String): List<Word> {
+    override suspend fun read(name: String): Word {
         throw UnsupportedOperationException("Use flow function for lists")
     }
 
@@ -100,7 +98,7 @@ class RTDBWordListRepository @Inject constructor(
      * @param name Caution: wrong [name] can overwrite data.
      * @param entity Entity
      */
-    override suspend fun update(name: String, entity: List<Word>) {
+    override suspend fun update(name: String, entity: Word) {
 //        val databaseReference =
 //            databaseReference(name)
 //        databaseReference.setValue(entity).await()

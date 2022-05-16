@@ -14,7 +14,9 @@ import dagger.hilt.android.AndroidEntryPoint
 const val EXTRA_MESSAGE = "com.github.sdpsharelook.NAME"
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : MainActivityLift()
+
+open class MainActivityLift : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()

@@ -31,7 +31,7 @@
         android:label="@string/appName"
         android:roundIcon="@drawable/ic_svg_path"
         android:supportsRtl="true"
-        android:theme="@style/Theme.App.Starting">
+        android:theme="@style/Theme.Sherlook">
 
         <!--
              TODO: Before you run your application, you need a Google Maps API key.

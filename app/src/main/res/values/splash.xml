@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        // Set the splash screen background
+        <item name="windowSplashScreenBackground">@color/md_theme_light_primary</item>
+
+        // animated icons
+        <item name="windowSplashScreenAnimatedIcon">@drawable/logo</item>
+
+        // animation duration.
+<!--        <item name="windowSplashScreenAnimationDuration">0</item>-->
+
+        // Set the theme of the Activity that directly follows your splash screen.
+        <item name="postSplashScreenTheme">@style/Theme.Sherlook</item>  # Required.
+    </style>
+</resources>

@@ -17,8 +17,8 @@ const val EXTRA_MESSAGE = "com.github.sdpsharelook.NAME"
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         installSplashScreen()
+        super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setDrawerListener()
     }

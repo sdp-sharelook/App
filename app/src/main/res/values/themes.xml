@@ -18,17 +18,7 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
-    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
-        // Set the splash screen background
-<!--        <item name="windowSplashScreenBackground">@color/material_dynamic_primary99 </item>-->
-        <item name="windowSplashScreenBackground">#34FFFF22</item>
-        // animated icons
-        <item name="windowSplashScreenAnimatedIcon">@drawable/spain</item>
-        // animation duration.
-        <item name="windowSplashScreenAnimationDuration">1000</item>
-        // Set the theme of the Activity that directly follows your splash screen.
-        <item name="postSplashScreenTheme">@style/Theme.Sherlook</item>  # Required.
-    </style>
+
     <style name="Theme.MyBootcamp.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.MyBootcamp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

@@ -26,7 +26,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class TranslateFragment : Fragment() {
+class TranslateFragment : TranslateFragmentLift()
+
+open class TranslateFragmentLift : Fragment() {
 
     /**
      * This property is only valid between onCreateView and onDestroyView.

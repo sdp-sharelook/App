@@ -10,8 +10,9 @@ import com.github.sdpsharelook.utils.FragmentScenarioRule
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
+import org.hamcrest.CoreMatchers.anyOf
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -33,9 +34,9 @@ class DatabaseViewFragmentTest {
     }
 
     @Test
-    fun testReceivesAndPrintsHelloWorld() = runTest {
-        delay(100)
+    fun `test receives and prints hello world`() = runTest {
+        advanceUntilIdle()
         onView(withId(R.id.database_contents))
-            .check(matches(withText("Hello World!")))
+            .check(matches(anyOf(withText("Hello World!"), withText("Default Database Content: database not yet reached"))))
     }
 }

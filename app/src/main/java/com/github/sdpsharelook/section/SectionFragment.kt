@@ -23,7 +23,9 @@ import javax.inject.Inject
 var edit = false
 
 @AndroidEntryPoint
-class SectionFragment : Fragment(), SectionClickListener {
+class SectionFragment : SectionFragmentLift()
+
+open class SectionFragmentLift : Fragment(), SectionClickListener {
 
     /**
      * This property is only valid between onCreateView and onDestroyView.

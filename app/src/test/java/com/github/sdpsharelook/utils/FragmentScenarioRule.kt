@@ -1,5 +1,6 @@
 package com.github.sdpsharelook.utils
 
+import android.os.Bundle
 import androidx.fragment.app.Fragment
 import kotlin.reflect.KClass
 
@@ -21,5 +22,12 @@ class FragmentScenarioRule<F : Fragment>(
             supplier: () -> F
         ): FragmentScenarioRule<F> =
             FragmentScenarioRule { FragmentScenario.launch(fragmentClass, supplier) }
+
+        fun <F : Fragment> launch(
+            fragmentClass: KClass<F>,
+            supplier: (() -> F)?,
+            fragmentArgs: Bundle
+        ): FragmentScenarioRule<F> =
+            FragmentScenarioRule { FragmentScenario.launch(fragmentClass, supplier,fragmentArgs) }
     }
 }

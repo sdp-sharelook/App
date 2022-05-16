@@ -149,7 +149,7 @@ class FragmentScenario<A : AppCompatActivity, F : Fragment> private constructor(
          * @return the launched scenario
          */
         fun <F : Fragment> launch(
-            fragmentClass: KClass<F>, fragmentSupplier: () -> F
+            fragmentClass: KClass<F>, fragmentSupplier: (() -> F)? = null
         ): FragmentScenario<HiltTestActivity, F> = launchIn(
             HiltTestActivity::class,
             Bundle.EMPTY,
@@ -157,6 +157,25 @@ class FragmentScenario<A : AppCompatActivity, F : Fragment> private constructor(
             fragmentClass,
             factory<Fragment>(fragmentSupplier),
             Bundle.EMPTY
+        )
+
+        /**
+         * Launch a new FragmentScenario
+         *
+         * @param fragmentClass fragment to launch the scenario on
+         * @param fragmentSupplier supplier that creates the fragment object
+         * @param [F] Fragment type
+         * @return the launched scenario
+         */
+        fun <F : Fragment> launch(
+            fragmentClass: KClass<F>, fragmentSupplier: (() -> F)? = null, fragmentArgs: Bundle?
+        ): FragmentScenario<HiltTestActivity, F> = launchIn(
+            HiltTestActivity::class,
+            Bundle.EMPTY,
+            R.id.content,
+            fragmentClass,
+            factory<Fragment>(fragmentSupplier),
+            fragmentArgs
         )
 
         /**
@@ -234,8 +253,8 @@ class FragmentScenario<A : AppCompatActivity, F : Fragment> private constructor(
             Bundle.EMPTY
         )
 
-        private fun <F : Fragment> factory(fragmentSupplier: () -> F): FragmentFactory =
-            SimpleFragmentFactory(fragmentSupplier)
+        private fun <F : Fragment> factory(fragmentSupplier: (() -> F)?): FragmentFactory? =
+            fragmentSupplier?.let { SimpleFragmentFactory(it) }
 
         const val TAG = "FRAGMENT"
 

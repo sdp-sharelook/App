@@ -1,5 +1,7 @@
 package com.github.sdpsharelook.authorization
 
+import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.tasks.await
@@ -25,19 +27,21 @@ class FireAuth @Inject constructor(
         email: String,
         password: String
     ): Result<User> {
-        return try {
-            val res = auth.createUserWithEmailAndPassword(email, password).await()
-            val user = res.user
-            Result.success(firebaseToAppUser(user!!))
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-
+        return tryOnAuth { createUserWithEmailAndPassword(email, password) }
     }
 
-    override suspend fun signInWithEmailAndPassword(email: String, password: String): Result<User> {
+    override suspend fun signInWithEmailAndPassword(
+        email: String,
+        password: String
+    ): Result<User> {
+        return tryOnAuth { signInWithEmailAndPassword(email, password) }
+    }
+
+    private suspend fun tryOnAuth(
+        action: FirebaseAuth.() -> Task<AuthResult>
+    ): Result<User> {
         return try {
-            val res = auth.signInWithEmailAndPassword(email, password).await()
+            val res = auth.action().await()
             val user = res.user
             Result.success(firebaseToAppUser(user!!))
         } catch (e: Exception) {

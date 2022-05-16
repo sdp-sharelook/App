@@ -7,7 +7,7 @@ import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.sdpsharelook.R
-import com.github.sdpsharelook.utils.launchFragmentInHiltContainer
+import com.github.sdpsharelook.utils.FragmentScenarioRule
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -25,10 +25,12 @@ class TranslateFragmentTest {
     //    private var mIdlingResource: IdlingResource? = null
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
+
+    @get:Rule(order = 1)
+    val fragmentScenarioRule = FragmentScenarioRule.launch(TranslateFragment::class)
+
     @Test
-    fun empty() {
-        launchFragmentInHiltContainer<TranslateFragment>()
-    }
+    fun empty() {}
 //
 //    @Before
 //    fun init() {

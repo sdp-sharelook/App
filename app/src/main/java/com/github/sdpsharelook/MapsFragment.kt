@@ -7,7 +7,7 @@ import android.util.Base64.*
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.github.sdpsharelook.storage.RTDBWordListRepository
+import com.github.sdpsharelook.storage.IRepository
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -21,12 +21,14 @@ import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MapsFragment : Fragment(R.layout.fragment_maps) {
+class MapsFragment : MapsFragmentLift()
+
+open class MapsFragmentLift : Fragment(R.layout.fragment_maps) {
 
     private var markerMap: HashMap<Marker?, Word> = HashMap<Marker?, Word>()
 
     @Inject
-    lateinit var wordRepos: RTDBWordListRepository
+    lateinit var wordRepos: IRepository<List<Word>>
 
     /**
      * Manipulates the map once available.

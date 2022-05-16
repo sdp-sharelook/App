@@ -1,6 +1,5 @@
 package com.github.sdpsharelook.section
 
-import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import androidx.test.espresso.Espresso.onView
@@ -10,7 +9,7 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.sdpsharelook.R
-import com.github.sdpsharelook.utils.launchFragmentInHiltContainer
+import com.github.sdpsharelook.utils.FragmentScenarioRule
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -33,10 +32,12 @@ class SectionFragmentTest {
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
 
+    @get:Rule(order = 1)
+    val fragmentScenarioRule = FragmentScenarioRule.launch(SectionFragment::class)
+
     @Before
     fun init() {
         hiltRule.inject()
-        launchFragmentInHiltContainer<SectionFragment>(fragmentArgs = Bundle.EMPTY)
     }
 
     @Test

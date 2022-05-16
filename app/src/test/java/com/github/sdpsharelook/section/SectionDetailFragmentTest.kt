@@ -6,8 +6,8 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.sdpsharelook.R
-import com.github.sdpsharelook.utils.launchFragmentInHiltContainer
 import com.github.sdpsharelook.storage.IRepository
+import com.github.sdpsharelook.utils.FragmentScenarioRule
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -22,24 +22,31 @@ import javax.inject.Inject
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 class SectionDetailFragmentTest {
-
+    private val section = Section(
+        "Hello World!",
+        R.drawable.spain,
+        repo,
+        "testHelloWorld"
+    )
+    private val sectionWord = SectionWord("Hola", "Bonjour", null)
+    private val fragmentArgs = bundleOf("sectionID" to 0, "sectionWord" to sectionWord)
     @Inject
     lateinit var repo: IRepository<List<String>>
 
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
 
+    @get:Rule(order = 1)
+    val fragmentScenarioRule = FragmentScenarioRule.launch(
+        SectionDetailFragment::class,
+        null,
+        fragmentArgs
+    )
+
     @Before
     fun setUp() {
         hiltRule.inject()
-        val section = Section("Hello World!", R.drawable.spain, repo, "testHelloWorld")
         sectionList.add(0, section)
-        val sectionWord = SectionWord("Hola", "Bonjour", null)
-        val fragmentArgs = bundleOf(
-            "sectionID" to 0,
-            "sectionWord" to sectionWord
-        )
-        launchFragmentInHiltContainer<SectionDetailFragment>(fragmentArgs, R.style.Theme_Sherlook)
     }
 
     @Test

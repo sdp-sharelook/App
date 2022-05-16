@@ -6,7 +6,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.sdpsharelook.R
-import com.github.sdpsharelook.utils.launchFragmentInHiltContainer
+import com.github.sdpsharelook.utils.FragmentScenarioRule
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -24,15 +24,16 @@ class DatabaseViewFragmentTest {
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
 
+    @get:Rule(order = 1)
+    val fragmentScenarioRule = FragmentScenarioRule.launch(DatabaseViewFragment::class)
+
     @Before
     fun init() {
         hiltRule.inject()
-        launchFragmentInHiltContainer<DatabaseViewFragment>()
     }
 
     @Test
     fun testReceivesAndPrintsHelloWorld() = runTest {
-//        launchFragmentInContainer<DatabaseViewFragment>(Bundle(), R.style.Theme_Sherlook)
         delay(100)
         onView(withId(R.id.database_contents))
             .check(matches(withText("Hello World!")))

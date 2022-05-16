@@ -6,7 +6,7 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.sdpsharelook.textDetection.TextDetectionFragment
-import com.github.sdpsharelook.utils.launchFragmentInHiltContainer
+import com.github.sdpsharelook.utils.FragmentScenarioRule
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -24,11 +24,14 @@ class TextDetectionFragmentTest {
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
 
+    @get:Rule(order = 1)
+    val fragmentScenarioRule = FragmentScenarioRule.launch(TextDetectionFragment::class)
+
     @Before
     fun init() {
         hiltRule.inject()
-        launchFragmentInHiltContainer<TextDetectionFragment>()
     }
+
     @Test
     fun textDetectionActivityTest() {
         val textView = onView(allOf(withId(R.id.text_data), withText("Detect the text")))

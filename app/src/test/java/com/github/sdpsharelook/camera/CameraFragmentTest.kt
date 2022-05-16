@@ -9,7 +9,7 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.GrantPermissionRule
 import com.github.sdpsharelook.R
-import com.github.sdpsharelook.utils.launchFragmentInHiltContainer
+import com.github.sdpsharelook.utils.FragmentScenarioRule
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -25,6 +25,9 @@ class CameraFragmentTest {
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
 
+    @get:Rule(order = 1)
+    val fragmentScenarioRule = FragmentScenarioRule.launch(CameraFragment::class)
+
     @Before
     fun init() {
         hiltRule.inject()
@@ -32,14 +35,13 @@ class CameraFragmentTest {
 
     @Rule
     @JvmField
-    var mGrantPermissionRule =
+    var mGrantPermissionRule: GrantPermissionRule =
         GrantPermissionRule.grant(
             "android.permission.CAMERA"
         )
 
     @Test
     fun testReceivesAndPrintsHelloWorld() {
-        launchFragmentInHiltContainer<CameraFragment>()
         val cameraView = Espresso.onView(ViewMatchers.withId(R.id.cameraImageView))
         cameraView.check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         val captureButton = Espresso.onView(ViewMatchers.withId(R.id.buttonTakePic))

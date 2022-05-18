@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,6 +20,7 @@ import com.github.sdpsharelook.databinding.FragmentSectionBinding
 import com.github.sdpsharelook.databinding.PopupBinding
 import com.github.sdpsharelook.storage.RTDBWordListRepository
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 var edit = false
@@ -65,6 +67,10 @@ class SectionFragment : Fragment(), SectionClickListener {
         val cardAdapter = CardAdapter(sectionList, this, dialog)
         binding.recyclerView.adapter = cardAdapter
 
+        /**Load all the Sections from the database**/
+        lifecycleScope.launch {
+            collectSectionFlow()
+        }
 
         binding.addingBtn.setOnClickListener {
             dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -81,20 +87,36 @@ class SectionFragment : Fragment(), SectionClickListener {
                 databaseWordList,
                 sectionName + countryIndex
             )
-//            lifecycleScope.launch {
-//                databaseWordList.insertSection(newSection)
-//            }
 
             // Popu do 2 different things if it is editing a section or creating one
             if (edit) {
                 cardAdapter.editItem(sectionName, mainCountryList.get(countryIndex).flag)
             } else if(addSection(newSection)){
+                // TODO
+                //lifecycleScope.launch {
+                //    databaseWordList.insertSection(newSection)
+                //}
                 Toast.makeText(requireContext(), "Section: $sectionName saved", Toast.LENGTH_SHORT).show()
             }else{
                 // if the section already exist
                 Toast.makeText(requireContext(), "$sectionName already exist", Toast.LENGTH_SHORT).show()
             }
             dialog.dismiss()
+        }
+    }
+
+    private suspend fun collectSectionFlow() {
+        databaseWordList.flow().collect{
+            when {
+                it.isSuccess -> {
+                    val section = it.getOrNull() as Section
+                    addSection(section)
+                }
+                it.isFailure -> {
+                    it.exceptionOrNull()?.printStackTrace()
+                }
+            }
+            binding.recyclerView.adapter?.notifyDataSetChanged()
         }
     }
 

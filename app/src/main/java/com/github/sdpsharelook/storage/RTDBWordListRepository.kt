@@ -74,13 +74,57 @@ class RTDBWordListRepository @Inject constructor(
     override suspend fun insert(name: String, entity: Word) {
         getSectionReference(name).child(entity.uid).setValue(Gson().toJson(entity).toString())
     }
+
+    /**
+     * Create permanent repository entry
+     *
+     * @param name identifier of entity
+     * @param entity Entity List of words
+     */
     suspend fun insertList(name: String, entity: List<Word>) {
         entity.forEach { insert(name, it) }
     }
 
+    /**
+     * Create permanent repository entry
+     *
+     * @param name identifier of entity
+     * @param entity Entity Section
+     */
     suspend fun insertSection(entity: Section) {
-        getSectionReference(entity.id).setValue(entity)
+        getSectionReference(entity.id).setValue(Gson().toJson(entity).toString())
     }
+
+    fun flowSection(): Flow<Result<Section?>> =
+        callbackFlow {
+            val fireListener = object : ChildEventListener {
+                override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                    var section = Gson().fromJson(snapshot.value.toString(), Section::class.java)
+                    trySendBlocking(Result.success(section))
+                }
+
+                override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                    var section = snapshot.getValue<Section>()
+                    trySendBlocking(Result.success(section))
+                }
+
+                override fun onChildRemoved(snapshot: DataSnapshot) {
+                    var section = snapshot.getValue<Section>()
+                    trySendBlocking(Result.success(section))
+                }
+
+                override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
+
+                override fun onCancelled(error: DatabaseError) {
+                    trySendBlocking(Result.failure(error.toException()))
+                }
+
+            }
+            getSectionReference("SectionList").addChildEventListener(fireListener)
+            awaitClose {
+                getSectionReference("SectionList").removeEventListener(fireListener)
+            }
+        }
 
     /**
      * Don't use

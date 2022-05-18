@@ -42,7 +42,7 @@ class SectionDetailFragment : Fragment() {
 
 
 
-        /**Check if we are adding a word from the translator Activity**/
+        /**Check if we are adding a word from the translator Fragment**/
         lifecycleScope.launch {
             if (sectionWord != null) {
                 section?.databaseRepo?.insert(section.id, sectionWord)

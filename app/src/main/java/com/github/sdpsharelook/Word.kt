@@ -42,36 +42,24 @@ data class Word(
     @RequiresApi(Build.VERSION_CODES.O)
     companion object {
         val testWord by lazy {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                Word(
-                    "testinguidneveractuallyusethis",
-                    "test",
-                    Language("French"),
-                    "test",
-                    Language("English"),
-                    LatLng(46.0, 6.0),
-                    Date.from(Instant.ofEpochMilli(1000000000)),
-                    "gs://billinguee.appspot.com/Pepe_rare-2469629177",
-                    true
-                )
-            } else {
-                Word(
-                    "testinguidneveractuallyusethis",
-                    "test",
-                    Language("French"),
-                    "test",
-                    Language("English"),
-                    LatLng(46.0, 6.0),
-                    null,
-                    "gs://billinguee.appspot.com/Pepe_rare-2469629177",
-                    true
-                )
-            }
+            Word(
+                "testinguidneveractuallyusethis",
+                "test",
+                Language("French"),
+                "test",
+                Language("English"),
+                LatLng(46.0, 6.0),
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) Date.from(
+                    Instant.ofEpochMilli(1000000000)
+                ) else null,
+                "gs://billinguee.appspot.com/Pepe_rare-2469629177",
+                true
+            )
         }
     }
 }
 
-data class dbWord(
+data class DBWord(
     val source: String = "",
     val sourceLanguage: String = "",
     val target: String = "",

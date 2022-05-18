@@ -19,14 +19,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class SelectPictureFragment(private val word: Word) : BottomSheetDialogFragment() {
-    private val camera = Camera(this@SelectPictureFragment).apply {
-        setOnErrorListener {
-            Toast.makeText(requireContext(),
-                "Error taking picture",
-                Toast.LENGTH_SHORT).show()
-        }
-    }
+class SelectPictureFragment(
+    private val word: Word,
+    private val onPictureSelected: (String?) -> Unit = {},
+) : BottomSheetDialogFragment() {
+    private val camera = Camera(this)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,19 +31,16 @@ class SelectPictureFragment(private val word: Word) : BottomSheetDialogFragment(
         savedInstanceState: Bundle?,
     ): View = FragmentChoosePictureBinding.inflate(inflater, container, false).apply {
         buttonCamera.setOnClickListener {
-            camera.takePic(requireContext())
+            camera.takePic(requireContext()) { returnUri(it) }
         }
-        buttonStorage.setOnClickListener { }
+        buttonClearPicture.setOnClickListener { returnUri(null) }
         buttonWeb.setOnClickListener {
-            var bitmap: Bitmap? = null
-            CoroutineScope(Dispatchers.Main).launch {
-                val onlinePic = OnlinePictureFragment(
-                    word.source,
-                    word.sourceLanguage
-                ).show(parentFragmentManager, null)
-            }
-
+            OnlinePictureFragment(
+                word.source,
+                word.sourceLanguage
+            ).show(parentFragmentManager, null) { returnUri(it.mediumLink) }
         }
     }.root
 
+    private fun returnUri(picture: String?) = onPictureSelected(picture)
 }

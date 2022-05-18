@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.FragmentManager
 import com.github.sdpsharelook.databinding.FragmentOnlinePictureSelectionBinding
 import com.github.sdpsharelook.language.Language
+import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,6 +20,7 @@ import kotlinx.coroutines.launch
 class OnlinePictureFragment(
     private val keyword: String,
     private val language: Language,
+    private var onSuccessListener: (OnlinePicture) -> Unit = {},
 ) : BottomSheetDialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,10 +58,15 @@ class OnlinePictureFragment(
                             gridViewPictures.setOnItemClickListener { _, _, i, _ ->
                                 dismiss()
                                 val picture = adapter.getItem(i) as OnlinePicture
-                                // TODO use picture here
+                                onSuccessListener(picture)
                             }
                         }
                     }
                 }
             }.root
+
+    fun show(manager: FragmentManager, tag: String?, onSuccessListener: (OnlinePicture) -> Unit) {
+        this.onSuccessListener = onSuccessListener
+        super.show(manager, tag)
+    }
 }

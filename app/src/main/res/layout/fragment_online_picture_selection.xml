@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:indeterminateTint="@color/white" />
+        android:indeterminateTint="@color/md_theme_light_primary" />
 
     <LinearLayout
         android:id="@+id/linear_layout_pictures"
@@ -47,7 +47,7 @@
         android:layout_height="match_parent"
         android:text="@string/no_result_found"
         android:textAlignment="center"
-        android:textColor="@color/white"
+        android:textColor="@color/md_theme_light_primary"
         android:textSize="20sp"
         android:visibility="gone">
 

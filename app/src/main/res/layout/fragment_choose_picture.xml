@@ -32,13 +32,13 @@
         android:src="@drawable/ic_online" />
 
     <ImageButton
-        android:id="@+id/button_storage"
+        android:id="@+id/button_clear_picture"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_margin="10dp"
         android:backgroundTint="@color/transparent"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_storage" />
+        android:src="@drawable/ic_clear" />
 
     <View
         android:layout_width="0dp"

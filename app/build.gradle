@@ -187,19 +187,10 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'crea
             '**/di/*'
     ]
 
-//    def javaTree = fileTree(dir: "${project.buildDir}/intermediates/javac/$sourceName/classes", excludes: fileFilter)
-//def kotlinTree = fileTree(dir: "${project.buildDir}/tmp/kotlin-classes/$sourceName", excludes: fileFilter)
-//classDirectories.from = files([javaTree], [kotlinTree])
-
     def javaTree = fileTree(dir: "${project.buildDir}/intermediates/javac/debug", excludes: fileFilter)
     def kotlinTree = fileTree(dir: "${project.buildDir}/tmp/kotlin-classes/debug", excludes: fileFilter)
 
-    def sourceFilter = [
-            '**/databinding/*',
-            '**/di/*'
-    ]
-
-    def mainSrc = fileTree(dir: "${project.projectDir}/src/main/java", excludes: sourceFilter)
+    def mainSrc = "${project.projectDir}/src/main/java"
 
     sourceDirectories.from = (files([mainSrc]))
     classDirectories.from = (files([kotlinTree], [javaTree]))

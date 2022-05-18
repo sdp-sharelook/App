@@ -154,6 +154,7 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'crea
             '**/android/databinding/*Binding.class',
             '**/android/databinding/*',
             '**/androidx/databinding/*',
+            '**/databinding/*',
             '**/BR.*',
             // android
             '**/R.class',
@@ -167,6 +168,8 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'crea
             '**/BuildConfig.*',
             '**/*BR*.*',
             '**/Manifest*.*',
+            '**/*$Lambda$*.*',
+            '**/*$Lambda*.*',
             '**/*Companion*.*',
             '**/*Module*.*',
             '**/*Extensions*.*',
@@ -181,7 +184,7 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'crea
             '**/*_Provide*Factory*.*',
             '**/*_MembersInjector.class',
             '**/*_MembersInjector**',
-            // sealed and data classes
+            '**/di/*'
     ]
 
 //    def javaTree = fileTree(dir: "${project.buildDir}/intermediates/javac/$sourceName/classes", excludes: fileFilter)
@@ -190,10 +193,16 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'crea
 
     def javaTree = fileTree(dir: "${project.buildDir}/intermediates/javac/debug", excludes: fileFilter)
     def kotlinTree = fileTree(dir: "${project.buildDir}/tmp/kotlin-classes/debug", excludes: fileFilter)
-    def mainSrc = "${project.projectDir}/src/main/java"
+
+    def sourceFilter = [
+            '**/databinding/*',
+            '**/di/*'
+    ]
+
+    def mainSrc = fileTree(dir: "${project.projectDir}/src/main/java", excludes: sourceFilter)
 
     sourceDirectories.from = (files([mainSrc]))
-    classDirectories.from = (files([kotlinTree],[javaTree]))
+    classDirectories.from = (files([kotlinTree], [javaTree]))
     executionData.setFrom(fileTree(dir: project.buildDir, includes: [
             'outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec',
             'outputs/code_coverage/debugAndroidTest/connected/*/coverage.ec',

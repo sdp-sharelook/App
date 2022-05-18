@@ -42,5 +42,8 @@ class SelectPictureFragment(
         }
     }.root
 
-    private fun returnUri(picture: String?) = onPictureSelected(picture)
+    private fun returnUri(picture: String?) {
+        dismiss()
+        onPictureSelected(picture)
+    }
 }

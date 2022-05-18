@@ -3,6 +3,8 @@ package com.github.sdpsharelook.translate
 import android.widget.EditText
 import android.widget.ListView
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.IdlingRegistry
+import androidx.test.espresso.IdlingResource
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -12,6 +14,7 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Assert
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -22,26 +25,27 @@ import org.robolectric.shadows.ShadowLooper
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 class TranslateFragmentTest {
-    //    private var mIdlingResource: IdlingResource? = null
+    private var mIdlingResource: IdlingResource? = null
+
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
 
     @get:Rule(order = 1)
     val fragmentScenarioRule = FragmentScenarioRule.launch(TranslateFragment::class)
 
+    @Before
+    fun init() {
+        hiltRule.inject()
+        fragmentScenarioRule.scenario.onFragment {
+            mIdlingResource = getIdlingResource()
+            // To prove that the test fails, omit this call:
+            IdlingRegistry.getInstance().register(mIdlingResource)
+        }
+    }
+
     @Test
-    fun empty() {}
-//
-//    @Before
-//    fun init() {
-//        hiltRule.inject()
-//        launchFragmentInHiltContainer<TranslateFragment>(fragmentArgs = Bundle.EMPTY)
-////            .onFragment {
-////            mIdlingResource = it.getIdlingResource()
-////            // To prove that the test fails, omit this call:
-////            IdlingRegistry.getInstance().register(mIdlingResource)
-////        }
-//    }
+    fun empty() {
+    }
 
     private fun selectSourceLanguage(srcLang: String) {
         Espresso.onView(ViewMatchers.withId(R.id.buttonSourceLang)).perform(ViewActions.click())

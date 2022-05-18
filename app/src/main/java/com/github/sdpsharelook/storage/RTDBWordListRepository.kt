@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-open class RTDBWordListRepository @Inject constructor(
+class RTDBWordListRepository @Inject constructor(
     private val firebaseDatabase: FirebaseDatabase,
     private val auth: AuthProvider
 ) : IRepository<List<@JvmSuppressWildcards Word>> {

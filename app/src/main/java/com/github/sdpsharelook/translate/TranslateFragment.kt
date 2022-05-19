@@ -17,7 +17,6 @@ import com.github.sdpsharelook.R
 import com.github.sdpsharelook.databinding.FragmentTranslateBinding
 import com.github.sdpsharelook.language.Language
 import com.github.sdpsharelook.language.LanguageSelectionDialog
-import com.github.sdpsharelook.section.SectionFragmentArgs
 import com.github.sdpsharelook.section.SectionWord
 import com.github.sdpsharelook.speechRecognition.RecognitionListener
 import com.github.sdpsharelook.textToSpeech.TextToSpeech
@@ -63,7 +62,7 @@ open class TranslateFragmentLift : Fragment() {
             setOnClickListener { selectLanguage(this) }
         }
 
-        binding.captureImageButton.setOnClickListener{
+        binding.captureImageButton.setOnClickListener {
             captureImage()
         }
 
@@ -239,7 +238,7 @@ open class TranslateFragmentLift : Fragment() {
         }
     }
 
-  private fun captureImage() {
+    private fun captureImage() {
         val action = TranslateFragmentDirections.actionMenuTranslateLinkToMenuCameraLink()
         findNavController().navigate(action)
     }

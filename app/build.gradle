@@ -104,6 +104,8 @@ dependencies {
     testImplementation "com.google.dagger:hilt-android-testing:$hilt"
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0'
+    testImplementation 'org.mockito:mockito-core:4.5.1'
+    testImplementation 'org.mockito.kotlin:mockito-kotlin:4.0.0'
     testImplementation 'org.robolectric:robolectric:4.6' // add all test dependencies
     androidTestImplementation 'androidx.test:core-ktx:1.4.0' // necessary for kotlin tests
     androidTestImplementation 'androidx.test:rules:1.4.0'

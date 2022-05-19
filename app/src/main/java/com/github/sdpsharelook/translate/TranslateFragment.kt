@@ -237,14 +237,9 @@ class TranslateFragment : Fragment() {
         }
     }
 
-    private fun captureImage() {
+  private fun captureImage() {
         val action = TranslateFragmentDirections.actionMenuTranslateLinkToMenuCameraLink()
         findNavController().navigate(action)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        //speechRecognizer = SpeechRecognizer(requireActivity())
     }
 
     override fun onCreateView(

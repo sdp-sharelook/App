@@ -12,7 +12,7 @@ interface IRepository<T> {
      * @param name identifier of entity
      * @return [Flow] of changes in the database at [name]
      */
-    fun flow(name: String = "test"): Flow<Result<T?>>
+    fun flow(name: String = "test"): Flow<Result<@JvmSuppressWildcards T?>>
 
     /**
      * Insert repository entity into existing list

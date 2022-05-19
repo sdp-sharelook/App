@@ -17,7 +17,6 @@ import com.github.sdpsharelook.databinding.CardSectionBinding
 import com.github.sdpsharelook.databinding.FragmentSectionBinding
 import com.github.sdpsharelook.databinding.PopupBinding
 import com.github.sdpsharelook.storage.IRepository
-import com.github.sdpsharelook.storage.RTDBWordListRepository
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

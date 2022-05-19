@@ -67,10 +67,11 @@ class SectionFragment : Fragment(), SectionClickListener {
         val cardAdapter = CardAdapter(sectionList, this, dialog)
         binding.recyclerView.adapter = cardAdapter
 
-        /**Load all the Sections from the database**/
-        lifecycleScope.launch {
-            collectSectionFlow()
-        }
+        //TODO
+//        /**Load all the Sections from the database**/
+//        lifecycleScope.launch {
+//            collectSectionFlow()
+//        }
 
         binding.addingBtn.setOnClickListener {
             dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))

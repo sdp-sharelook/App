@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,13 +13,25 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.github.sdpsharelook.R
 import com.github.sdpsharelook.databinding.FragmentCameraBinding
-import com.github.sdpsharelook.databinding.FragmentLoginBinding
+import com.google.android.gms.tasks.OnFailureListener
+import com.google.android.gms.tasks.OnSuccessListener
+import com.google.mlkit.common.MlKit
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.text.Text
+import com.google.mlkit.vision.text.TextRecognition
+import com.google.mlkit.vision.text.TextRecognizer
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions
+import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class CameraFragment : Fragment() {
 
 
@@ -31,6 +42,10 @@ class CameraFragment : Fragment() {
     private var _binding: FragmentCameraBinding? = null
     private var currentPath: String? = null
     private var hasPermissions = false
+    private var textDetected = "Aucun Text"
+
+    @Inject
+    lateinit var recognizer : TextRecognizer
 
     private fun showAlert(message: String) {
         val builder = AlertDialog.Builder(requireContext())
@@ -45,6 +60,12 @@ class CameraFragment : Fragment() {
         binding.buttonTakePic.setOnClickListener {
             takePic()
         }
+
+        binding.buttonTraduire.isEnabled = false
+
+        binding.buttonTraduire.setOnClickListener{
+            translatWord()
+        }
     }
 
     private var tempImageUri: Uri? = null
@@ -55,9 +76,23 @@ class CameraFragment : Fragment() {
             val uri = Uri.fromFile(file)
             val imageView = binding.cameraImageView
             imageView.setImageURI(uri)
+            // Once the image is captured recognize text
+            recognizeText(InputImage.fromFilePath(requireContext(), uri))
         } else {
             showAlert("Error while taking picture")
         }
+    }
+
+    private fun recognizeText(image: InputImage) {
+        recognizer.process(image)
+            .addOnSuccessListener(
+                OnSuccessListener<Text?> { texts ->
+                    processTextBlock(texts)
+                })
+            .addOnFailureListener(
+                OnFailureListener { e -> // Task failed with an exception
+                    e.printStackTrace()
+                })
     }
 
     private val requestPermissionLauncher =
@@ -125,5 +160,21 @@ class CameraFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun processTextBlock(result: Text) {
+        if (result.text.isBlank()){
+            textDetected = "Aucun Text"
+            binding.textData.text = "Aucun Text"
+        }else{
+            binding.buttonTraduire.isEnabled = true
+            textDetected = result.text
+            binding.textData.text = result.text
+        }
+    }
+
+    fun translatWord(){
+        val action = CameraFragmentDirections.actionMenuCameraLinkToMenuTranslateLink2(textDetected)
+        findNavController().navigate(action)
     }
 }

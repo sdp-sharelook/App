@@ -10,12 +10,14 @@ import androidx.annotation.VisibleForTesting
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.test.espresso.IdlingResource
 import androidx.test.espresso.idling.CountingIdlingResource
 import com.github.sdpsharelook.R
 import com.github.sdpsharelook.databinding.FragmentTranslateBinding
 import com.github.sdpsharelook.language.Language
 import com.github.sdpsharelook.language.LanguageSelectionDialog
+import com.github.sdpsharelook.section.SectionFragmentArgs
 import com.github.sdpsharelook.section.SectionWord
 import com.github.sdpsharelook.speechRecognition.RecognitionListener
 import com.github.sdpsharelook.textToSpeech.TextToSpeech
@@ -47,10 +49,12 @@ open class TranslateFragmentLift : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         initTranslator()
         initTextToSpeech()
         initSpeechRecognizer()
         setSource(Language.auto)
+
         setTarget(Language("en"), true)
         binding.buttonSourceLang.apply {
             setOnClickListener { selectLanguage(this) }
@@ -58,7 +62,15 @@ open class TranslateFragmentLift : Fragment() {
         binding.buttonTargetLang.apply {
             setOnClickListener { selectLanguage(this) }
         }
+
+        binding.captureImageButton.setOnClickListener{
+            captureImage()
+        }
+
         binding.addWordToSectionButton.setOnClickListener { addWordToSection() }
+
+        val args: TranslateFragmentArgs by navArgs()
+        binding.sourceText.setText(args.textDetected)
     }
 
     private fun setSource(language: Language) {
@@ -225,6 +237,11 @@ open class TranslateFragmentLift : Fragment() {
             )
             findNavController().navigate(action)
         }
+    }
+
+  private fun captureImage() {
+        val action = TranslateFragmentDirections.actionMenuTranslateLinkToMenuCameraLink()
+        findNavController().navigate(action)
     }
 
     override fun onCreateView(

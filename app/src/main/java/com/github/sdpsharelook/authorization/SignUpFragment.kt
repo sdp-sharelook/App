@@ -16,7 +16,9 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SignUpFragment : Fragment() {
+class SignUpFragment : SignUpFragmentLift()
+
+open class SignUpFragmentLift : Fragment() {
 
     /**
      * This property is only valid between onCreateView and onDestroyView.

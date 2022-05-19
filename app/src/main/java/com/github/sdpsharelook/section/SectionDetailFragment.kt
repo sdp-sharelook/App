@@ -12,7 +12,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class SectionDetailFragment : Fragment() {
+class SectionDetailFragment : SectionDetailFragmentLift()
+
+open class SectionDetailFragmentLift : Fragment() {
 
 
     /**

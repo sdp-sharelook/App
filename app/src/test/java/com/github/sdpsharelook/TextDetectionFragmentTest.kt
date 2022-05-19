@@ -1,12 +1,12 @@
 package com.github.sdpsharelook
 
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.sdpsharelook.di.TextDetectionModule
 import com.github.sdpsharelook.textDetection.TextDetectionFragment
+import com.github.sdpsharelook.utils.FragmentScenarioRule
 import com.google.android.gms.tasks.Tasks
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.Text
@@ -24,8 +24,6 @@ import org.junit.runner.RunWith
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.verify
-import org.robolectric.shadows.ShadowLooper
 
 @ExperimentalCoroutinesApi
 @UninstallModules(TextDetectionModule::class)
@@ -34,6 +32,9 @@ import org.robolectric.shadows.ShadowLooper
 class TextDetectionFragmentTest {
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
+
+    @get:Rule(order = 1)
+    val fragmentScenarioRule = FragmentScenarioRule.launch(TextDetectionFragment::class)
 
     @BindValue
     val textReco: TextRecognizer = mock {
@@ -46,8 +47,8 @@ class TextDetectionFragmentTest {
     @Before
     fun init() {
         hiltRule.inject()
-        launchFragmentInHiltContainer<TextDetectionFragment>()
     }
+
     @Test
     fun textDetectionActivityTest() {
         //TODO recognizer is not injected exception

@@ -1,13 +1,10 @@
 package com.github.sdpsharelook.SRAlgo
 
 import android.content.Context
-import android.os.Bundle
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.github.sdpsharelook.launchFragmentInHiltContainer
 import com.github.sdpsharelook.revision.SRAlgo
 import com.github.sdpsharelook.revision.revisionWord
-import com.github.sdpsharelook.section.SectionFragment
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi

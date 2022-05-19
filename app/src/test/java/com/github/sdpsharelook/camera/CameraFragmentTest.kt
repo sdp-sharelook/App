@@ -10,13 +10,11 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.GrantPermissionRule
 import com.github.sdpsharelook.R
 import com.github.sdpsharelook.di.TextDetectionModule
-import com.github.sdpsharelook.launchFragmentInHiltContainer
+import com.github.sdpsharelook.utils.FragmentScenarioRule
 import com.google.android.gms.tasks.Tasks
-import com.google.mlkit.common.MlKit
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.Text
 import com.google.mlkit.vision.text.TextRecognizer
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -38,6 +36,9 @@ class CameraFragmentTest {
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
 
+    @get:Rule(order = 1)
+    val fragmentScenarioRule = FragmentScenarioRule.launch(CameraFragment::class)
+
     @BindValue
     val textReco: TextRecognizer = mock {
         on { process(any<InputImage>()) } doReturn Tasks.forResult(txtMock)
@@ -53,14 +54,13 @@ class CameraFragmentTest {
 
     @Rule
     @JvmField
-    var mGrantPermissionRule =
+    var mGrantPermissionRule: GrantPermissionRule =
         GrantPermissionRule.grant(
             "android.permission.CAMERA"
         )
 
     @Test
     fun testCamera() {
-        launchFragmentInHiltContainer<CameraFragment>()
         val cameraView = Espresso.onView(ViewMatchers.withId(R.id.cameraImageView))
         cameraView.check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         val captureButton = Espresso.onView(ViewMatchers.withId(R.id.buttonTakePic))

@@ -19,12 +19,9 @@ import com.github.sdpsharelook.R
 import com.github.sdpsharelook.databinding.FragmentCameraBinding
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
-import com.google.mlkit.common.MlKit
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.Text
-import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.TextRecognizer
-import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.text.SimpleDateFormat
@@ -32,7 +29,9 @@ import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CameraFragment : Fragment() {
+class CameraFragment : CameraFragmentLift()
+
+open class CameraFragmentLift : Fragment() {
 
 
     /**

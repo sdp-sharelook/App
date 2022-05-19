@@ -17,7 +17,6 @@ import com.github.sdpsharelook.R
 import com.github.sdpsharelook.databinding.FragmentTranslateBinding
 import com.github.sdpsharelook.language.Language
 import com.github.sdpsharelook.language.LanguageSelectionDialog
-import com.github.sdpsharelook.section.SectionFragmentArgs
 import com.github.sdpsharelook.section.SectionWord
 import com.github.sdpsharelook.speechRecognition.RecognitionListener
 import com.github.sdpsharelook.textToSpeech.TextToSpeech
@@ -28,7 +27,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class TranslateFragment : Fragment() {
+class TranslateFragment : TranslateFragmentLift()
+
+open class TranslateFragmentLift : Fragment() {
 
     /**
      * This property is only valid between onCreateView and onDestroyView.
@@ -61,7 +62,7 @@ class TranslateFragment : Fragment() {
             setOnClickListener { selectLanguage(this) }
         }
 
-        binding.captureImageButton.setOnClickListener{
+        binding.captureImageButton.setOnClickListener {
             captureImage()
         }
 
@@ -237,7 +238,7 @@ class TranslateFragment : Fragment() {
         }
     }
 
-  private fun captureImage() {
+    private fun captureImage() {
         val action = TranslateFragmentDirections.actionMenuTranslateLinkToMenuCameraLink()
         findNavController().navigate(action)
     }

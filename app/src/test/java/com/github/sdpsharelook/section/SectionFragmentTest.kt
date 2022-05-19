@@ -1,20 +1,22 @@
 package com.github.sdpsharelook.section
 
-import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
-import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.pressBack
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import org.junit.Assert.*
 import com.github.sdpsharelook.R
-import com.github.sdpsharelook.launchFragmentInHiltContainer
+import com.github.sdpsharelook.utils.FragmentScenarioRule
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
+import org.hamcrest.CoreMatchers.allOf
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -30,14 +32,16 @@ class SectionFragmentTest {
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
 
+    @get:Rule(order = 1)
+    val fragmentScenarioRule = FragmentScenarioRule.launch(SectionFragment::class)
+
     @Before
     fun init() {
         hiltRule.inject()
-        launchFragmentInHiltContainer<SectionFragment>(fragmentArgs = Bundle.EMPTY)
     }
 
     @Test
-    fun testReceivesAndPrintsHelloWorld() {
+    fun `test receives and prints hello world`() = runTest {
         val floatingActionButton = onView(withId(R.id.addingBtn))
         floatingActionButton.perform(click())
 
@@ -54,10 +58,11 @@ class SectionFragmentTest {
         Robolectric.flushForegroundThreadScheduler()
         val recyclerView = onView(withId(R.id.recyclerView))
         recyclerView.perform(click())
+        recyclerView.perform(pressBack())
 
         //chek that we are in section details
         onView(withText("section")).check(matches(isDisplayed()))
-        onView(withId(R.id.sectionFlag)).check(matches(isDisplayed()))
+        onView(allOf(withId(R.id.sectionFlag), isDisplayed()))
     }
 
 }

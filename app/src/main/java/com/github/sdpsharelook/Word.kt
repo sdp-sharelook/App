@@ -1,37 +1,28 @@
 package com.github.sdpsharelook
 
-import android.graphics.Bitmap
-import android.location.Location
-import android.os.Parcel
-import android.os.Parcelable
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.github.sdpsharelook.language.Language
-import com.google.android.datatransport.runtime.dagger.Provides
+import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.database.IgnoreExtraProperties
-import java.io.Serializable
+import com.google.gson.annotations.Expose
+import java.time.Instant
 import java.util.*
-import javax.inject.Inject
 
+@IgnoreExtraProperties
 data class Word(
     val uid: String = "",
-    val source: String = "",
-    val sourceLanguage: Language = Language.auto,
-    val target: String = "",
-    val targetLanguage: Language = Language.auto,
-    val location: Location? = null,
+    val source: String? = "",
+    val sourceLanguage: Language? = Language.auto,
+    val target: String? = "",
+    val targetLanguage: Language? = Language.auto,
+    @Expose(serialize = true, deserialize = true)
+    var location: LatLng? = null,
     val savedDate: Date? = null,
     val picture: String? = null,
-    val isFavourite: Boolean = false,
-) : Serializable {
-
-    constructor(uid: String) : this(uid,
-        "",
-        Language.auto,
-        "",
-        Language.auto,
-        null,
-        null,
-        "",
-        false)
+    val isFavourite: Boolean? = false,
+) {
+    constructor(uid: String) : this(uid, "", null, null, null, null, null, "", false)
 
     // fun synonyms(): Set<Word> = TODO("not implemented yet")
     // ...
@@ -48,17 +39,23 @@ data class Word(
         )
     }
 
-    fun toList(): List<String> =
-        listOf(uid, source, sourceLanguage.tag, target, targetLanguage.tag)
+    @RequiresApi(Build.VERSION_CODES.O)
+    companion object {
+        val testWord by lazy {
+            Word(
+                "testinguidneveractuallyusethis",
+                "test",
+                Language("French"),
+                "test",
+                Language("English"),
+                LatLng(46.0, 6.0),
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) Date.from(
+                    Instant.ofEpochMilli(1000000000)
+                ) else null,
+                "gs://billinguee.appspot.com/Pepe_rare-2469629177",
+                true
+            )
+        }
+    }
 }
 
-fun List<String>.toWord(): Word {
-    val (uid, source, sourceLangTag, target, targetLangTag) = this
-    return Word(
-        uid = uid,
-        source = source,
-        target = target,
-        sourceLanguage = Language(sourceLangTag),
-        targetLanguage = Language(targetLangTag)
-    )
-}

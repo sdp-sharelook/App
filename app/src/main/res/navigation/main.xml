@@ -16,6 +16,13 @@
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/action_menuTranslateLink_to_menuCameraLink"
+            app:destination="@id/menuCameraLink" />
+        <argument
+            android:name="textDetected"
+            app:argType="string"
+            android:defaultValue="Nothing Detected" />
     </fragment>
     <fragment
         android:id="@+id/menuSectionsLink"
@@ -53,7 +60,15 @@
         android:id="@+id/menuCameraLink"
         android:name="com.github.sdpsharelook.camera.CameraFragment"
         android:label="fragment_camera"
-        tools:layout="@layout/fragment_camera" />
+        tools:layout="@layout/fragment_camera" >
+        <action
+            android:id="@+id/action_menuCameraLink_to_menuTranslateLink2"
+            app:destination="@id/menuTranslateLink"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@animator/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
     <fragment
         android:id="@+id/menuLoginLink"
         android:name="com.github.sdpsharelook.authorization.LoginFragment"

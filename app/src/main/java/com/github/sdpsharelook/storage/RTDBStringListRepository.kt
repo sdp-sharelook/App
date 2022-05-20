@@ -13,7 +13,7 @@ class RTDBStringListRepository @Inject constructor(
     private val firebaseDatabase: FirebaseDatabase
 ) : IRepository<List<@JvmSuppressWildcards String>> {
 
-    private val reference: DatabaseReference by lazy { firebaseDatabase.reference.child("wordlists") }
+    private val reference: DatabaseReference by lazy { firebaseDatabase.getReference("wordlists") }
 
     /**
      * Gets an asynchronous data stream any updated [List] of [String]s
@@ -45,9 +45,9 @@ class RTDBStringListRepository @Inject constructor(
             }
 
         }
-        firebaseDatabase.getReference(name).addChildEventListener(fireListener)
+        databaseReference(name).addChildEventListener(fireListener)
         awaitClose {
-            firebaseDatabase.getReference(name).removeEventListener(fireListener)
+            databaseReference(name).removeEventListener(fireListener)
         }
     }
 
@@ -58,9 +58,7 @@ class RTDBStringListRepository @Inject constructor(
      * @param entity Entity
      */
     override suspend fun insert(name: String, entity: List<String>) {
-        val databaseReference =
-            databaseReference(name)
-        entity.forEach { databaseReference.push().setValue(it).await() }
+        entity.forEach { databaseReference(name).push().setValue(it).await() }
     }
 
     /**
@@ -80,9 +78,7 @@ class RTDBStringListRepository @Inject constructor(
      * @param entity Entity
      */
     override suspend fun update(name: String, entity: List<String>) {
-        val databaseReference =
-            databaseReference(name)
-        databaseReference.setValue(entity).await()
+        databaseReference(name).setValue(entity).await()
     }
 
     /**
@@ -91,13 +87,8 @@ class RTDBStringListRepository @Inject constructor(
      * @param name identifier of entity
      */
     override suspend fun delete(name: String) {
-        val databaseReference =
-            databaseReference(name)
-        databaseReference.removeValue().await()
+        databaseReference(name).removeValue().await()
     }
 
-    private fun databaseReference(name: String): DatabaseReference {
-        return if (name == "test") firebaseDatabase.getReference(name) else reference.child(name)
-    }
-
+    private fun databaseReference(name: String) = reference.child(name)
 }

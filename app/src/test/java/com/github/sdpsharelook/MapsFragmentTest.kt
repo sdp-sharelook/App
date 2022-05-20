@@ -1,42 +1,45 @@
-package com.github.sdpsharelook.storage
+package com.github.sdpsharelook
 
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.github.sdpsharelook.R
+import com.github.sdpsharelook.di.StorageModule
+import com.github.sdpsharelook.storage.IRepository
 import com.github.sdpsharelook.utils.FragmentScenarioRule
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.UninstallModules
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
-import org.hamcrest.CoreMatchers.anyOf
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import javax.inject.Inject
 
+@UninstallModules(StorageModule::class)
 @ExperimentalCoroutinesApi
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-class DatabaseViewFragmentTest {
+class MapsFragmentTest {
+    @Inject
+    lateinit var repo: IRepository<List<Word>>
+    private lateinit var testFlow: Flow<Result<List<Word>?>>
+
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
 
     @get:Rule(order = 1)
-    val fragmentScenarioRule = FragmentScenarioRule.launch(DatabaseViewFragment::class)
+    val fragmentScenarioRule = FragmentScenarioRule.launch(MapsFragment::class)
 
     @Before
-    fun init() {
+    fun setUp() {
         hiltRule.inject()
+        testFlow = repo.flow()
     }
 
     @Test
-    fun `test receives and prints hello world`() = runTest {
+    fun `test maps fragment displays`() = runTest {
         advanceUntilIdle()
-        onView(withId(R.id.database_contents))
-            .check(matches(anyOf(withText("Hello World!"), withText("Default Database Content: database not yet reached"))))
     }
 }

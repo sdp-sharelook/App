@@ -9,6 +9,7 @@ import java.util.*
 
 @IgnoreExtraProperties
 data class Word(
+
     val uid: String="",
     val source: String? = "",
     val sourceLanguage: Language? =Language.auto ,
@@ -18,7 +19,7 @@ data class Word(
     val savedDate: Date? = null,
     val picture: String? = null,
     val isFavourite: Boolean?= false,
-): Serializable {
+) {
     constructor(uid: String) : this(uid,"",null,null,null,null,null,"",false)
 
     // fun synonyms(): Set<Word> = TODO("not implemented yet")

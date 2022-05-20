@@ -2,11 +2,13 @@ package com.github.sdpsharelook.section
 
 import com.github.sdpsharelook.storage.IRepository
 import com.github.sdpsharelook.storage.RTDBWordListRepository
+import kotlinx.serialization.Serializable
 import java.util.*
 
 var sectionList = mutableListOf<Section>()
 
 
+@Serializable
 class Section(
     var title: String,
     var flag: Int,

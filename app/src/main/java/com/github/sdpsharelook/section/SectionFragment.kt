@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -107,6 +108,7 @@ class SectionFragment : Fragment(), SectionClickListener {
     }
 
     private suspend fun collectSectionFlow() {
+        Log.e("","Collecting section flow")
         databaseWordList.flow().collect{
             when {
                 it.isSuccess -> {

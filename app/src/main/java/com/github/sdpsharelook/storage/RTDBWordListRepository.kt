@@ -1,5 +1,6 @@
 package com.github.sdpsharelook.storage
 
+import android.util.Log
 import com.github.sdpsharelook.Word
 import com.github.sdpsharelook.authorization.AuthProvider
 import com.github.sdpsharelook.section.Section
@@ -31,7 +32,9 @@ class RTDBWordListRepository @Inject constructor(
         callbackFlow {
             val fireListener = object : ChildEventListener {
                 override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                    Log.e("","getting word")
                     var word = Gson().fromJson(snapshot.value.toString(), Word::class.java)
+                    Log.e("","got word")
                     trySendBlocking(Result.success(word))
                 }
 

@@ -2,16 +2,19 @@ package com.github.sdpsharelook.language
 
 import android.content.Context
 import com.github.sdpsharelook.R
+import kotlinx.serialization.Serializable
 import java.util.*
 
+@Serializable
 data class Language(
     val tag: String
 ) {
-    val locale: Locale? =
+    val locale: Locale by lazy {
         when (tag) {
-            AUTO_TAG -> null
+            AUTO_TAG -> Locale.getDefault()
             else -> Locale.forLanguageTag(tag)
         }
+    }
     val displayName: String = locale?.displayName ?: AUTO_TAG
 
     /**@param ctx [Context] : the context of the app
@@ -38,4 +41,5 @@ data class Language(
         val default by lazy { Language(Locale.getDefault().toLanguageTag()) }
         val auto = Language(AUTO_TAG)
     }
+
 }

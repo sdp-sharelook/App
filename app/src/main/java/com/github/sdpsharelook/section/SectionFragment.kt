@@ -16,11 +16,16 @@ import com.github.sdpsharelook.R
 import com.github.sdpsharelook.databinding.CardSectionBinding
 import com.github.sdpsharelook.databinding.FragmentSectionBinding
 import com.github.sdpsharelook.databinding.PopupBinding
-import com.github.sdpsharelook.storage.RTDBWordListRepository
+import com.github.sdpsharelook.storage.IRepository
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 var edit = false
 
-class SectionFragment : Fragment(), SectionClickListener {
+@AndroidEntryPoint
+class SectionFragment : SectionFragmentLift()
+
+open class SectionFragmentLift : Fragment(), SectionClickListener {
 
     /**
      * This property is only valid between onCreateView and onDestroyView.
@@ -29,7 +34,8 @@ class SectionFragment : Fragment(), SectionClickListener {
     private var _binding: FragmentSectionBinding? = null
     private lateinit var popupBinding: PopupBinding
     private lateinit var cardBinding: CardSectionBinding
-    private var databaseWordList = RTDBWordListRepository()
+    @Inject
+    lateinit var databaseWordList: IRepository<List<String>>
 
     private lateinit var dialog: Dialog
     var mainCountryList = initList()
@@ -46,12 +52,10 @@ class SectionFragment : Fragment(), SectionClickListener {
         //init list of possible languages for the spinner
         initList()
 
-        // set up the popup when cliking on add button
+        // set up the popup when clicking on add button
         dialog = Dialog(requireContext())
         dialog.setContentView(popupBinding.root)
-        dialog.setOnDismissListener {
-            popupBinding.editSectionName.setText("Section name")
-        }
+        dialog.setOnDismissListener { popupBinding.editSectionName.text.clear() }
 
         // set up the spinner
         popupBinding.spinnerCountries.adapter = CountryAdapter(requireContext(), mainCountryList)
@@ -71,9 +75,9 @@ class SectionFragment : Fragment(), SectionClickListener {
         popupBinding.popupAddBtn.setOnClickListener {
             val sectionName = popupBinding.editSectionName.text.toString()
             val countryIndex = popupBinding.spinnerCountries.selectedItemPosition
-            // Popu do 2 different things if it is editing a section or creating one
+            // Popup do 2 different things if it is editing a section or creating one
             if (edit) {
-                cardAdapter.editItem(sectionName, mainCountryList.get(countryIndex).flag)
+                cardAdapter.editItem(sectionName, mainCountryList[countryIndex].flag)
             } else {
                 addSection(
                     Section(
@@ -100,7 +104,7 @@ class SectionFragment : Fragment(), SectionClickListener {
 
     private fun addSection(section: Section) {
         sectionList.add(section)
-        binding.recyclerView.adapter?.notifyDataSetChanged()
+        binding.recyclerView.adapter?.notifyItemInserted(sectionList.lastIndex)
     }
 
     override fun onClick(section: Section) {

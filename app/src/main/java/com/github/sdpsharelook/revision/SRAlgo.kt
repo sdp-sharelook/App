@@ -20,8 +20,9 @@ data class revisionWord(
 
     fun saveToStorage(context: Context, filePath: String = SRDATAFILE) {
 
-        val fcreated = File(context.filesDir, filePath).createNewFile()
-        val newF = File(context.filesDir, filePath).readLines().toMutableList()
+        val file = File(context.filesDir, filePath)
+        file.createNewFile()
+        val newF = file.readLines().toMutableList()
         var found = false
         newF.forEach { str ->
             if (str.startsWith(this.wordId)) {
@@ -29,22 +30,20 @@ data class revisionWord(
                 newF[newF.indexOf(str)] = this.toString()
             }
         }
-        val printer = File(context.filesDir,filePath).bufferedWriter().use { printer ->
+        file.bufferedWriter().use { printer ->
             newF.forEach { str ->
                 printer.write(str + "\n")
             }
             if (!found) {
                 printer.write(this.toString() + "\n")
             }
-            printer.close()
-
         }
 
 
     }
 
     override fun toString(): String {
-        return (this.wordId + "," + this.lastReview + "," + this.nextReview + "," + this.n + "," + this.EF)
+        return "${this.wordId},${this.lastReview},${this.nextReview},${this.n},${this.EF}"
     }
 }
 
@@ -61,7 +60,7 @@ class SRAlgo {
             context: Context,
             filePath: String = SRDATAFILE
         ): List<revisionWord> {
-            val f: File = File(context.filesDir, filePath)
+            val f = File(context.filesDir, filePath)
 
             if (!f.isFile || !f.canRead()) {
                 throw IOException("Could not read file to get revision words")

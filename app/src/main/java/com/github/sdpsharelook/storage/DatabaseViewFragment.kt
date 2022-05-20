@@ -1,22 +1,23 @@
 package com.github.sdpsharelook.storage
 
-import android.location.Location
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.github.sdpsharelook.R
-import com.github.sdpsharelook.Word
 import com.github.sdpsharelook.databinding.FragmentDatabaseViewBinding
-import com.github.sdpsharelook.dbWord
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.onEach
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class DatabaseViewFragment : Fragment() {
+@AndroidEntryPoint
+class DatabaseViewFragment : DatabaseViewFragmentLift()
 
-    private val repository: RTDBWordListRepository = RTDBWordListRepository()
+open class DatabaseViewFragmentLift : Fragment() {
 
     /**
      * This property is only valid between onCreateView and onDestroyView.
@@ -24,19 +25,22 @@ class DatabaseViewFragment : Fragment() {
     private val binding get() = _binding!!
     private var _binding: FragmentDatabaseViewBinding? = null
 
+    @Inject
+    lateinit var repository: IRepository<Any>
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.databaseContents.apply {
-            binding.databaseContents.
             text = context.getString(R.string.default_database_content)
         }
 
-
+        lifecycleScope.launch {
+            collectDBFlow()
+        }
     }
 
-    private suspend fun collectDBFlow() {
-
+    private suspend fun collectDBFlow() = withContext(Dispatchers.IO) {
         repository.flow().collect {
             when {
                 it.isSuccess -> {
@@ -59,12 +63,6 @@ class DatabaseViewFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentDatabaseViewBinding.inflate(layoutInflater)
-        val frag = this
-        Dispatchers.IO.dispatch(Dispatchers.IO){
-            runBlocking {
-                frag.collectDBFlow()
-            }
-        }
         return binding.root
     }
 

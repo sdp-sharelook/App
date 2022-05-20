@@ -5,13 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.github.sdpsharelook.databinding.FragmentSectionDetailBinding
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
-class SectionDetailFragment : Fragment() {
+@AndroidEntryPoint
+class SectionDetailFragment : SectionDetailFragmentLift()
+
+open class SectionDetailFragmentLift : Fragment() {
 
 
     /**
@@ -49,8 +52,8 @@ class SectionDetailFragment : Fragment() {
 
         // If we are adding a word from the translator Activity
         if (sectionWord != null) {
-            CoroutineScope(Dispatchers.IO).launch {
-                //TODO: add word to database
+            lifecycleScope.launch {
+                section?.databaseRepo?.insert(section.sectionRepo, sectionWord.toList())
             }
             addSectionWord(sectionWord)
         }
@@ -63,7 +66,7 @@ class SectionDetailFragment : Fragment() {
         binding.wordList.adapter = SectionWordAdapter(requireContext(), wordList)
     }
 
-    fun addSectionWord(sw: SectionWord) {
+    private fun addSectionWord(sw: SectionWord) {
         wordList.add(sw)
     }
 

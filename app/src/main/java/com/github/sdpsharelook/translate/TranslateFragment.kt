@@ -10,23 +10,26 @@ import androidx.annotation.VisibleForTesting
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.test.espresso.IdlingResource
 import androidx.test.espresso.idling.CountingIdlingResource
 import com.github.sdpsharelook.R
-import com.github.sdpsharelook.databinding.FragmentCameraBinding
-import com.github.sdpsharelook.section.SectionWord
 import com.github.sdpsharelook.databinding.FragmentTranslateBinding
 import com.github.sdpsharelook.language.Language
 import com.github.sdpsharelook.language.LanguageSelectionDialog
+import com.github.sdpsharelook.section.SectionWord
 import com.github.sdpsharelook.speechRecognition.RecognitionListener
-import com.github.sdpsharelook.speechRecognition.SpeechRecognizer
 import com.github.sdpsharelook.textToSpeech.TextToSpeech
 import com.google.mlkit.nl.translate.TranslateLanguage
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class TranslateFragment : Fragment() {
+@AndroidEntryPoint
+class TranslateFragment : TranslateFragmentLift()
+
+open class TranslateFragmentLift : Fragment() {
 
     /**
      * This property is only valid between onCreateView and onDestroyView.
@@ -45,10 +48,12 @@ class TranslateFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         initTranslator()
         initTextToSpeech()
         initSpeechRecognizer()
         setSource(Language.auto)
+
         setTarget(Language("en"), true)
         binding.buttonSourceLang.apply {
             setOnClickListener { selectLanguage(this) }
@@ -56,7 +61,15 @@ class TranslateFragment : Fragment() {
         binding.buttonTargetLang.apply {
             setOnClickListener { selectLanguage(this) }
         }
+
+        binding.captureImageButton.setOnClickListener {
+            captureImage()
+        }
+
         binding.addWordToSectionButton.setOnClickListener { addWordToSection() }
+
+        val args: TranslateFragmentArgs by navArgs()
+        binding.sourceText.setText(args.textDetected)
     }
 
     private fun setSource(language: Language) {
@@ -75,8 +88,8 @@ class TranslateFragment : Fragment() {
 
     private fun selectLanguage(button: Button) {
         val translatorLanguages = when (button) {
-            binding.buttonSourceLang -> Translator.availableLanguages.union(setOf(Language.auto))
-            binding.buttonTargetLang -> Translator.availableLanguages
+            binding.buttonSourceLang -> MLKitTranslator.availableLanguages.union(setOf(Language.auto))
+            binding.buttonTargetLang -> MLKitTranslator.availableLanguages
             else -> setOf()
         }
         CoroutineScope(Dispatchers.Main).launch {
@@ -193,7 +206,7 @@ class TranslateFragment : Fragment() {
             val destLang = targetLanguage
             var coroutineCanceled = false
             if (sourceLang == Language.auto) {
-                val sourceLangTag = Translator.detectLanguage(textToTranslate)
+                val sourceLangTag = MLKitTranslator.detectLanguage(textToTranslate)
                 if (!translatorLanguagesTag.contains(sourceLangTag)) {
                     targetTextString = null
                     binding.targetText.text = getString(R.string.unrecognized_source_language)
@@ -203,7 +216,7 @@ class TranslateFragment : Fragment() {
                 } else sourceLang = Language(sourceLangTag)
             }
             if (!coroutineCanceled) {
-                val t = Translator(sourceLang.tag, destLang.tag)
+                val t = MLKitTranslator(sourceLang.tag, destLang.tag)
                 // println("source language recognized ${sourceLang.tag}")
                 targetTextString = null
                 binding.targetText.text = getString(R.string.translation_running)
@@ -223,6 +236,11 @@ class TranslateFragment : Fragment() {
             )
             findNavController().navigate(action)
         }
+    }
+
+    private fun captureImage() {
+        val action = TranslateFragmentDirections.actionMenuTranslateLinkToMenuCameraLink()
+        findNavController().navigate(action)
     }
 
     override fun onCreateView(

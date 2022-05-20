@@ -20,7 +20,6 @@ check_android_task:
   wait_for_emulator_script: |
     adb wait-for-device
     adb shell input keyevent 82
-    adb shell am broadcast -a android.intent.action.CLOSE_SYSTEM_DIALOGS
   disable_animations_script: |
     adb shell settings put global window_animation_scale 0.0
     adb shell settings put global transition_animation_scale 0.0
@@ -33,7 +32,7 @@ check_android_task:
     ./gradlew check connectedCheck
   report_codeclimate_script: |
     export JACOCO_SOURCE_PATH=app/src/main/java/
-    ./cc-test-reporter format-coverage ./app/build/reports/coverage/androidTest/debug/report.xml --input-type jacoco
+    ./cc-test-reporter format-coverage ./app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml --input-type jacoco
     ./cc-test-reporter upload-coverage
 
   lint_script:

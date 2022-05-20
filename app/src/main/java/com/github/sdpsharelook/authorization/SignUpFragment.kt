@@ -8,20 +8,26 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.github.sdpsharelook.auth
 import com.github.sdpsharelook.databinding.FragmentSignUpBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class SignUpFragment : Fragment() {
+@AndroidEntryPoint
+class SignUpFragment : SignUpFragmentLift()
 
+open class SignUpFragmentLift : Fragment() {
 
     /**
      * This property is only valid between onCreateView and onDestroyView.
      */
     private val binding get() = _binding!!
     private var _binding: FragmentSignUpBinding? = null
+
+    @Inject
+    lateinit var auth: AuthProvider
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -30,8 +36,6 @@ class SignUpFragment : Fragment() {
         emailListener()
         prelimPasswordListener()
         passwordListener()
-        auth = FireAuth()
-
         binding.loginButton.setOnClickListener { checkBeforeSignUp() }
     }
 
@@ -86,9 +90,9 @@ class SignUpFragment : Fragment() {
     }
 
     private fun prelimPasswordListener() {
-        binding.prelimpassword.setOnFocusChangeListener { _, focus ->
+        binding.password.setOnFocusChangeListener { _, focus ->
             if (!focus) {
-                binding.prelimpassword.error = isPrelimPassword()
+                binding.password.error = isPrelimPassword()
                 binding.prelimPasswordBox.helperText = isPrelimPassword()
             }
         }
@@ -100,17 +104,17 @@ class SignUpFragment : Fragment() {
         val oneDigit = "(.*?[0-9].*)".toRegex()
         val specialChar = "(.*?[#?!()@\$ %^&*-].*)".toRegex()
         val minLength8 = ".{8,}".toRegex()
-        return if (binding.prelimpassword.text.toString() == "")
+        return if (binding.password.text.toString() == "")
             "Required"
-        else if (!binding.prelimpassword.text.toString().matches(upperCase))
+        else if (!binding.password.text.toString().matches(upperCase))
             "Must contain an uppercase letter"
-        else if (!binding.prelimpassword.text.toString().matches(lowerCase))
+        else if (!binding.password.text.toString().matches(lowerCase))
             "Must contain a lowercase letter"
-        else if (!binding.prelimpassword.text.toString().matches(oneDigit))
+        else if (!binding.password.text.toString().matches(oneDigit))
             "Must contain at least one digit"
-        else if (!binding.prelimpassword.text.toString().matches(specialChar))
+        else if (!binding.password.text.toString().matches(specialChar))
             "Must contain at least one special character"
-        else if (!binding.prelimpassword.text.toString().matches(minLength8))
+        else if (!binding.password.text.toString().matches(minLength8))
             "Must contain at least 8 characters"
         else
             null
@@ -125,15 +129,9 @@ class SignUpFragment : Fragment() {
         }
     }
 
-    private fun isPasswordValid(): String? {
-        when {
-            binding.password.text.toString() != binding.prelimpassword.text.toString() -> {
-                return "Passwords do not match"
-            }
-            else -> {
-                return null
-            }
-        }
+    private fun isPasswordValid(): String? = when {
+        binding.password.text.toString() != binding.confirmPassword.text.toString() -> "Passwords do not match"
+        else -> null
     }
 
     private fun checkBeforeSignUp() {
@@ -154,7 +152,7 @@ class SignUpFragment : Fragment() {
         binding.firstName.error = isFirstNameValid()
         binding.lastName.error = isLastNameValid()
         binding.email.error = isEmailValid()
-        binding.prelimpassword.error = isPrelimPassword()
+        binding.password.error = isPrelimPassword()
         binding.prelimPasswordBox.helperText = isPrelimPassword()
         binding.passwordBox.error = isPasswordValid()
         binding.passwordBox.helperText = isPasswordValid()

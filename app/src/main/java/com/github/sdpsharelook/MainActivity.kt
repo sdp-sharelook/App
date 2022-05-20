@@ -8,6 +8,8 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -31,8 +33,9 @@ open class MainActivityLift : AppCompatActivity() {
             drawerLayout.openDrawer(GravityCompat.START)
         }
         val navView = findViewById<NavigationView>(R.id.navView)
+        val bottomView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         val navController = supportFragmentManager.findFragmentById(R.id.navHostFragment)!!.findNavController()
-//        val navController = Navigation.findNavController(this, R.id.navHostFragment)
         NavigationUI.setupWithNavController(navView, navController)
+        NavigationUI.setupWithNavController(bottomView, navController)
     }
 }

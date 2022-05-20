@@ -36,7 +36,7 @@ class CameraFragmentTest {
         GrantPermissionRule.grant(
             "android.permission.CAMERA"
         )
-
+/**
     @Test
     fun testReceivesAndPrintsHelloWorld() {
         launchFragmentInHiltContainer<CameraFragment>()
@@ -56,6 +56,6 @@ class CameraFragmentTest {
 
         Espresso.onView(ViewMatchers.withId(R.id.cameraImageView))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-    }
+    }**/
 
 }

@@ -1,17 +1,19 @@
 package com.github.sdpsharelook.authorization
 
-
-import android.os.Bundle
+import androidx.navigation.Navigation
+import androidx.navigation.testing.TestNavHostController
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.sdpsharelook.R
+import com.github.sdpsharelook.authorization.TestUserConstants.NEW_USER_EMAIL
+import com.github.sdpsharelook.authorization.TestUserConstants.NEW_USER_PASS
 import com.github.sdpsharelook.authorization.TestUserConstants.TEST_USER_EMAIL
 import com.github.sdpsharelook.authorization.TestUserConstants.TEST_USER_PASS
-import com.github.sdpsharelook.authorization.TestUserConstants.TEST_USER_PASS2
-import com.github.sdpsharelook.launchFragmentInHiltContainer
+import com.github.sdpsharelook.utils.FragmentScenarioRule
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -25,9 +27,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import javax.inject.Inject
 
-const val NEW_USER_EMAIL = "testuser123@gmail.com"
-const val NEW_USER_PASS = "123456"
-
 @ExperimentalCoroutinesApi
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
@@ -39,10 +38,12 @@ class SignUpTestRobo {
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
 
+    @get:Rule(order = 1)
+    val fragmentScenarioRule = FragmentScenarioRule.launch(SignUpFragment::class)
+
     @Before
     fun init() {
         hiltRule.inject()
-        launchFragmentInHiltContainer<SignUpFragment>(Bundle(), R.style.Theme_Sherlook)
     }
 
     @After
@@ -52,6 +53,12 @@ class SignUpTestRobo {
 
     @Test
     fun `test sign up is displayed`() = runTest {
+        val navController = TestNavHostController(ApplicationProvider.getApplicationContext())
+        fragmentScenarioRule.scenario.onFragment {
+            navController.setGraph(R.navigation.main)
+            navController.setCurrentDestination(R.id.signUpFragment)
+            Navigation.setViewNavController(requireView(), navController)
+        }
         onView(withId(R.id.layout_signup)).check(matches(isDisplayed()))
         onView(withId(R.id.email)).check(matches(isDisplayed()))
         onView(withId(R.id.emailBox)).check(matches(isDisplayed()))
@@ -70,27 +77,50 @@ class SignUpTestRobo {
 
     @Test
     fun `test sign up`() = runTest {
+        val navController = TestNavHostController(ApplicationProvider.getApplicationContext())
+        fragmentScenarioRule.scenario.onFragment {
+            navController.setGraph(R.navigation.main)
+            navController.setCurrentDestination(R.id.signUpFragment)
+            Navigation.setViewNavController(requireView(), navController)
+        }
         onView(withId(R.id.firstName)).perform(replaceText("Jean"), closeSoftKeyboard())
         onView(withId(R.id.lastName)).perform(replaceText("Paul"), closeSoftKeyboard())
 //        onView(withId(R.id.phoneNumber)).perform(replaceText("000 000 00 00"), closeSoftKeyboard())
         onView(withId(R.id.email)).perform(replaceText(TEST_USER_EMAIL), closeSoftKeyboard())
         onView(withId(R.id.password)).perform(replaceText(TEST_USER_PASS), closeSoftKeyboard())
-        onView(withId(R.id.confirmPassword)).perform(replaceText(TEST_USER_PASS), closeSoftKeyboard())
+        onView(withId(R.id.confirmPassword)).perform(
+            replaceText(TEST_USER_PASS),
+            closeSoftKeyboard()
+        )
         onView(allOf(withId(R.id.loginButton), withText("Sign Up !"))).perform(click())
         onView(withId(R.id.email)).perform(replaceText(NEW_USER_EMAIL), closeSoftKeyboard())
-        onView(withId(R.id.password)).perform(replaceText(TEST_USER_PASS2), closeSoftKeyboard())
-        onView(withId(R.id.confirmPassword)).perform(replaceText(TEST_USER_PASS2), closeSoftKeyboard())
+        onView(withId(R.id.password)).perform(replaceText(NEW_USER_PASS), closeSoftKeyboard())
+        onView(withId(R.id.confirmPassword)).perform(
+            replaceText(NEW_USER_PASS),
+            closeSoftKeyboard()
+        )
         onView(allOf(withId(R.id.loginButton), withText("Sign Up !"))).perform(click())
+        assertEquals(R.id.greetingFragment, navController.currentDestination!!.id)
         assertNotNull(auth.currentUser)
         assertEquals(NEW_USER_EMAIL, auth.currentUser!!.email)
     }
 
     @Test
     fun `test sign up no email`() = runTest {
+        val navController = TestNavHostController(ApplicationProvider.getApplicationContext())
+        fragmentScenarioRule.scenario.onFragment {
+            navController.setGraph(R.navigation.main)
+            navController.setCurrentDestination(R.id.signUpFragment)
+            Navigation.setViewNavController(requireView(), navController)
+        }
         onView(withId(R.id.email)).perform(replaceText(" "), closeSoftKeyboard())
-        onView(withId(R.id.confirmPassword)).perform(replaceText(TEST_USER_PASS), closeSoftKeyboard())
+        onView(withId(R.id.confirmPassword)).perform(
+            replaceText(TEST_USER_PASS),
+            closeSoftKeyboard()
+        )
         onView(allOf(withId(R.id.loginButton), withText("Sign Up !"))).perform(click())
         onView(allOf(withId(R.id.loginButton), withText("Sign Up !"))).perform(click())
+        assertEquals(R.id.signUpFragment, navController.currentDestination!!.id)
         assertNull(auth.currentUser)
     }
 

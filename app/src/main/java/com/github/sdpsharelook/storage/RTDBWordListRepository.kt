@@ -5,7 +5,6 @@ import com.github.sdpsharelook.Word
 import com.github.sdpsharelook.authorization.AuthProvider
 import com.google.android.datatransport.cct.internal.LogResponse.fromJson
 import com.google.firebase.database.*
-import com.google.firebase.database.ktx.getValue
 import com.google.gson.Gson
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
@@ -19,7 +18,7 @@ class RTDBWordListRepository @Inject constructor(
     private val auth: AuthProvider
 ) : IRepository<List<@JvmSuppressWildcards Word>> {
 
-    private val reference: DatabaseReference by lazy { firebaseDatabase.reference.child("wordlists") }
+    private val reference: DatabaseReference by lazy { firebaseDatabase.getReference("wordlists") }
 
 
     /**
@@ -69,7 +68,7 @@ class RTDBWordListRepository @Inject constructor(
             }
         }
 
-    fun getUserReference(): DatabaseReference {
+    private fun getUserReference(): DatabaseReference {
         val user = auth.currentUser
         //TODO: handle when user not logged
         if (user != null) {

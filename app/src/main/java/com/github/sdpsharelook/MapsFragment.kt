@@ -29,6 +29,7 @@ class MapsFragment : Fragment(R.layout.fragment_maps) {
     @Inject
     lateinit var wordRepos: RTDBWordListRepository
 
+
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -39,7 +40,9 @@ class MapsFragment : Fragment(R.layout.fragment_maps) {
      * user has installed Google Play services and returned to the app.
      */
     private val callback = OnMapReadyCallback { googleMap ->
+
         var words = listOf<Word>()
+
 
 
         // ===========================================================================================================
@@ -60,6 +63,7 @@ class MapsFragment : Fragment(R.layout.fragment_maps) {
                             "Lat: %1$.5f, Long: %2$.5f",
                             position.latitude,
                             position.longitude
+
                         )
                         val marker = googleMap.addMarker(
                             MarkerOptions()
@@ -72,6 +76,7 @@ class MapsFragment : Fragment(R.layout.fragment_maps) {
                                 )
                                 .snippet(snippet)
                         )
+
                         markerMap[marker] = word
                     }
                 }

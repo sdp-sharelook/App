@@ -8,9 +8,7 @@ import androidx.fragment.app.Fragment
 import java.io.ByteArrayOutputStream
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.LinearLayout
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
@@ -115,6 +113,7 @@ class MapsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        setHasOptionsMenu(true)
         return inflater.inflate(R.layout.fragment_maps, container, false)
     }
 
@@ -186,5 +185,10 @@ class MapsFragment : Fragment() {
     private fun decodeImage(s: String): Bitmap {
         var p = Base64.getDecoder().decode(s)
         return BitmapFactory.decodeByteArray(p, 0, p.size)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.timeline_button, menu)
+        super.onCreateOptionsMenu(menu, inflater)
     }
 }

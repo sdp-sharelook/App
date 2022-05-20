@@ -24,37 +24,27 @@
             android:textSize="24sp"
             android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/editTextTextPersonName6"
+        <TextView
+            android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Name" />
+            android:text="Location"
+            android:textAlignment="center" />
 
-        <EditText
-            android:id="@+id/editTextTextPersonName7"
+        <TextView
+            android:id="@+id/textView3"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Name" />
+            android:layout_height="110dp"
+            android:text="Description"
+            android:textAlignment="center" />
 
-        <EditText
-            android:id="@+id/editTextTextPersonName4"
+        <SeekBar
+            android:id="@+id/seekBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Name" />
-
-        <EditText
-            android:id="@+id/editTextTextPersonName2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Name" />
+            android:max="10"
+            android:tickMark="@drawable/tickmark"
+            />
 
     </LinearLayout>
 

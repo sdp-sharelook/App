@@ -56,7 +56,7 @@ open class SectionDetailFragmentLift : Fragment() {
         // If we are adding a word from the translator Activity
         if (word != null) {
             lifecycleScope.launch {
-                section?.databaseRepo?.insert(section.sectionRepo, word.toList())
+                section?.databaseRepo?.insert(section.sectionRepo, word.toList().map { it!! })
             }
             addSectionWord(word)
         }

@@ -36,8 +36,8 @@ class SelectPictureFragment(
         buttonClearPicture.setOnClickListener { returnUri(null) }
         buttonWeb.setOnClickListener {
             OnlinePictureFragment(
-                word.source,
-                word.sourceLanguage
+                word.source!!,
+                word.sourceLanguage!!
             ).show(parentFragmentManager, null) { returnUri(it.mediumLink) }
         }
     }.root

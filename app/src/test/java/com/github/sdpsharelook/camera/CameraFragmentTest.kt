@@ -18,6 +18,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
+/**
 @ExperimentalCoroutinesApi
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
@@ -37,7 +38,6 @@ class CameraFragmentTest {
             "android.permission.CAMERA"
         )
 
-    /**
     @Test
     fun testReceivesAndPrintsHelloWorld() {
         launchFragmentInHiltContainer<CameraFragment>()
@@ -58,6 +58,7 @@ class CameraFragmentTest {
         Espresso.onView(ViewMatchers.withId(R.id.cameraImageView))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }FAULTY CAMERA TEST WILL NEED TO CHANGE LATER
-    **/
 
 }
+
+ **/

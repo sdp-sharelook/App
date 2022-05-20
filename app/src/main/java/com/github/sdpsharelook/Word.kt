@@ -62,9 +62,11 @@ data class Word(
         listOf(uid, source, sourceLanguage?.tag, target, targetLanguage?.tag)
 }
 
+/*
 fun List<String>.toWord(): Word  {
     val (uid, source, sourcetag, target, targettag) = this
     return Word(uid, source, Language(sourcetag), target, Language(targettag))
 }
+*/
 
 

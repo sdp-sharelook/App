@@ -33,6 +33,7 @@ open class MainActivityLift : AppCompatActivity() {
             drawerLayout.openDrawer(GravityCompat.START)
         }
         val navView = findViewById<NavigationView>(R.id.navView)
+        val bottomView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         val navController = supportFragmentManager.findFragmentById(R.id.navHostFragment)!!.findNavController()
         NavigationUI.setupWithNavController(navView, navController)
         NavigationUI.setupWithNavController(bottomView, navController)

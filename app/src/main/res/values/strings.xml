@@ -144,4 +144,6 @@
     <string name="flag_of_language">flag_of_language</string>
     <string name="edit">edit</string>
     <string name="delete">delete</string>
+    <string name="no_text_detected">No Text</string>
+    <string name="detect_text">Detect</string>
 </resources>

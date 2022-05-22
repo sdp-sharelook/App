@@ -37,14 +37,14 @@ open class SectionFragmentLift : Fragment(), SectionClickListener {
     private lateinit var cardBinding: CardSectionBinding
     @Inject
     lateinit var databaseWordList: IRepository<List<String>>
-    private var word: Word? = null
+    private var word: SectionWord? = null
     private lateinit var dialog: Dialog
     var mainCountryList = initList()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val args: SectionFragmentArgs by navArgs()
-        word = args.word
+        word = args.sectionWord
         popupBinding = PopupBinding.inflate(layoutInflater)
         cardBinding = CardSectionBinding.inflate(layoutInflater)
 

@@ -26,13 +26,13 @@ open class SectionDetailFragmentLift : Fragment() {
     private val binding get() = _binding!!
     private var _binding: FragmentSectionDetailBinding? = null
 
-    private val wordList = mutableListOf<Word>()
+    private val wordList = mutableListOf<SectionWord?>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val args: SectionDetailFragmentArgs by navArgs()
         val section = sectionFromId(args.sectionID)
-        val word = args.word
+        val word = args.sectionWord
 
 //        CoroutineScope(Dispatchers.IO).launch {
 //            section!!.databaseRepo.flow().collect {
@@ -74,7 +74,7 @@ open class SectionDetailFragmentLift : Fragment() {
         }
     }
 
-    private fun addSectionWord(word: Word) {
+    private fun addSectionWord(word: SectionWord?) {
         wordList.add(word)
     }
 

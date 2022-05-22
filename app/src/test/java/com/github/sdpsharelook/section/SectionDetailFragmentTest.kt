@@ -6,8 +6,6 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.sdpsharelook.R
-import com.github.sdpsharelook.Word
-import com.github.sdpsharelook.language.Language
 import com.github.sdpsharelook.storage.IRepository
 import com.github.sdpsharelook.utils.FragmentScenario
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -40,7 +38,7 @@ class SectionDetailFragmentTest {
             "testHelloWorld"
         )
         sectionList.add(0, section)
-        val sectionWord = Word("", "Hola", Language("es"), "Bonjour", Language("fr"))
+        val sectionWord = SectionWord("Hola", "Bonjour", null)
         val fragmentArgs = bundleOf("sectionID" to 0, "sectionWord" to sectionWord)
         FragmentScenario.launch(SectionDetailFragment::class, null, fragmentArgs)
     }

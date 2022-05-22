@@ -9,8 +9,8 @@ import android.widget.TextView
 import com.github.sdpsharelook.R
 import com.github.sdpsharelook.Word
 
-class WordAdapter(context: Context, wordList: List<Word>) :
-    ArrayAdapter<Word>(context, R.layout.wordlist_section, wordList) {
+class WordAdapter(context: Context, wordList: List<SectionWord?>) :
+    ArrayAdapter<SectionWord>(context, R.layout.wordlist_section, wordList) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val word = getItem(position)
@@ -20,8 +20,8 @@ class WordAdapter(context: Context, wordList: List<Word>) :
         val sourceWord = view.findViewById<TextView>(R.id.sourceWord)
         val translatedWord = view.findViewById<TextView>(R.id.translatedWord)
 
-        sourceWord?.text = word?.source
-        translatedWord?.text = word?.target
+        sourceWord?.text = word?.sourceText
+        translatedWord?.text = word?.translatedText
         return view
     }
 }

@@ -14,7 +14,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.test.espresso.IdlingResource
 import androidx.test.espresso.idling.CountingIdlingResource
 import com.github.sdpsharelook.R
-import com.github.sdpsharelook.Word
+import com.github.sdpsharelook.section.SectionWord
 import com.github.sdpsharelook.databinding.FragmentTranslateBinding
 import com.github.sdpsharelook.language.Language
 import com.github.sdpsharelook.language.LanguageSelectionDialog
@@ -42,7 +42,7 @@ open class TranslateFragmentLift : Fragment() {
     //private lateinit var speechRecognizer: SpeechRecognizer
 
     private var targetTextString: String? = null
-    private var word: Word? = null
+    private var word: SectionWord? = null
 
     private var mIdlingResource: CountingIdlingResource? = null
 
@@ -222,11 +222,10 @@ open class TranslateFragmentLift : Fragment() {
                 binding.targetText.text = getString(R.string.translation_running)
 
                 targetTextString = t.translate(textToTranslate)
-                word = Word(
-                    sourceLanguage = sourceLanguage,
-                    targetLanguage = targetLanguage,
-                    source = textToTranslate,
-                    target = targetTextString ?: ""
+                word = SectionWord(
+                    textToTranslate,
+                    targetTextString ?: "",
+                    null
                 )
                 binding.targetText.text = targetTextString
                 mIdlingResource?.decrement()
@@ -244,7 +243,7 @@ open class TranslateFragmentLift : Fragment() {
     }
 
     private fun captureImage() {
-        val action = TranslateFragmentDirections.actionMenuTranslateLinkToMenuCameraLink()
+        val action = TranslateFragmentDirections.actionMenuTranslateLinkToMenuSectionsLink()
         findNavController().navigate(action)
     }
 

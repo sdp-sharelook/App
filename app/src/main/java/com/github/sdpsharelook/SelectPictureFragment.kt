@@ -14,13 +14,14 @@ import com.github.sdpsharelook.camera.Camera
 import com.github.sdpsharelook.databinding.FragmentChoosePictureBinding
 import com.github.sdpsharelook.language.Language
 import com.github.sdpsharelook.onlinePictures.OnlinePictureFragment
+import com.github.sdpsharelook.section.SectionWord
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class SelectPictureFragment(
-    private val word: Word,
+    private val word: SectionWord,
     private val onPictureSelected: (String?) -> Unit = {},
 ) : BottomSheetDialogFragment() {
     private val camera = Camera(this)
@@ -36,8 +37,8 @@ class SelectPictureFragment(
         buttonClearPicture.setOnClickListener { returnUri(null) }
         buttonWeb.setOnClickListener {
             OnlinePictureFragment(
-                word.source!!,
-                word.sourceLanguage!!
+                word.sourceText,
+                Language.auto
             ).show(parentFragmentManager, null) { returnUri(it.mediumLink) }
         }
     }.root

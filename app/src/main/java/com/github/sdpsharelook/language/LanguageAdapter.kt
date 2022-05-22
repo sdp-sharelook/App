@@ -31,24 +31,24 @@ class LanguageAdapter(
 
     override fun getItemId(i: Int): Long = sortedLanguages[i].hashCode().toLong()
 
-    @SuppressLint("ViewHolder")
     override fun getView(i: Int, convertView: View?, parent: ViewGroup?): View =
-        LayoutInflater.from(ctx).inflate(R.layout.language_row, parent, false).apply {
-            val language = sortedLanguages[i]
-            language.flagId(ctx)
-                ?.let { findViewById<ImageView>(R.id.image_view_flag).setImageResource(it) }
+        convertView ?: LayoutInflater.from(ctx).inflate(R.layout.language_row, parent, false)
+            .apply {
+                val language = sortedLanguages[i]
+                language.flagId(ctx)
+                    ?.let { findViewById<ImageView>(R.id.image_view_flag).setImageResource(it) }
 
-            findViewById<TextView>(R.id.text_view_display_name).text = language.displayName
-            findViewById<TextView>(R.id.text_view_tag_name).text = language.tag
-            if (srAvailable.contains(language))
-                findViewById<ImageView>(R.id.image_view_available_sr).visibility =
-                    View.VISIBLE
+                findViewById<TextView>(R.id.text_view_display_name).text = language.displayName
+                findViewById<TextView>(R.id.text_view_tag_name).text = language.tag
+                if (srAvailable.contains(language))
+                    findViewById<ImageView>(R.id.image_view_available_sr).visibility =
+                        View.VISIBLE
 
-            if (ttsAvailable.contains(language))
-                findViewById<ImageView>(R.id.image_view_available_tts).visibility = View.VISIBLE
+                if (ttsAvailable.contains(language))
+                    findViewById<ImageView>(R.id.image_view_available_tts).visibility = View.VISIBLE
 
-            if (translatorAvailable.contains(language))
-                findViewById<ImageView>(R.id.image_view_available_translator).visibility =
-                    View.VISIBLE
-        }
+                if (translatorAvailable.contains(language))
+                    findViewById<ImageView>(R.id.image_view_available_translator).visibility =
+                        View.VISIBLE
+            }
 }

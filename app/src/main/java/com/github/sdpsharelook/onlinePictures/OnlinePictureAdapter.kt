@@ -21,7 +21,7 @@ class OnlinePictureAdapter(
 
     @SuppressLint("ViewHolder")
     override fun getView(i: Int, view: View?, group: ViewGroup?): View =
-        AdapterOnlinepictureBinding.inflate(LayoutInflater.from(ctx)).apply {
+        view ?: AdapterOnlinepictureBinding.inflate(LayoutInflater.from(ctx)).apply {
             val picture = pictures[i]
             imageViewThumbnail.setImageBitmap(picture.thumbnail)
             textViewTitle.setText("")

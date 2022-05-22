@@ -1,14 +1,17 @@
 package com.github.sdpsharelook
 
+import android.app.Dialog
+import android.content.DialogInterface
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.fragment.app.DialogFragment
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.util.*
 
 class ImagePopupFragment : DialogFragment() {
@@ -30,13 +33,14 @@ class ImagePopupFragment : DialogFragment() {
             args.putParcelable(KEY_IMAGE, image)
             val fragment = ImagePopupFragment()
             fragment.arguments = args
+
             return fragment
         }
 
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.image_popup, container, false)
+        return inflater.inflate(R.layout.image_popup_layout, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -45,11 +49,18 @@ class ImagePopupFragment : DialogFragment() {
     }
 
     private fun setupView(view: View) {
-        view.findViewById<ImageView>(R.id.popUpImage).setImageBitmap(arguments?.getParcelable(
+        view.findViewById<ImageView>(R.id.popUpImage2).setImageBitmap(arguments?.getParcelable(
             KEY_IMAGE))
-        view.findViewById<TextView>(R.id.popUpSource).text = arguments?.getString(KEY_SOURCE)
-        view.findViewById<TextView>(R.id.popUpTarget).text = arguments?.getString(KEY_TARGET)
-        view.findViewById<TextView>(R.id.popUpDate).text = Date(arguments?.getLong(KEY_DATE)!!).toString()
-        view.findViewById<Button>(R.id.button).setOnClickListener { dismiss() }
+        view.findViewById<TextView>(R.id.popUpSource2).text = arguments?.getString(KEY_SOURCE)
+        view.findViewById<TextView>(R.id.popUpTarget2).text = arguments?.getString(KEY_TARGET)
+        view.findViewById<TextView>(R.id.popUpDate2).text = Date(arguments?.getLong(KEY_DATE)!!).toString().dropLast(14)
+        view.findViewById<Button>(R.id.button3).setOnClickListener { dismiss() }
     }
+
+//    private fun showBottomSheetDialog() {
+//        val bottomSheetDialog = BottomSheetDialog(requireActivity())
+//        bottomSheetDialog.setContentView(R.layout.image_popup_layout)
+//        bottomSheetDialog.findViewById<TextView>(R.id.popUpSource2).text
+//        bottomSheetDialog.show()
+//    }
 }

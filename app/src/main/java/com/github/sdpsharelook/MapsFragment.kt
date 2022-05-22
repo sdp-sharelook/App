@@ -4,9 +4,14 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Base64.*
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.View
+import android.widget.ImageView
+import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import coil.load
 import com.github.sdpsharelook.storage.IRepository
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -120,12 +125,17 @@ open class MapsFragmentLift : Fragment(R.layout.fragment_maps) {
         map.setOnMarkerClickListener { marker ->
             val word = markerMap[marker]
             BitmapFactory.decodeResource(requireContext().resources, R.drawable.default_user_path)
+            val imageView : ImageView = ImageView(requireContext())
+            if (word != null) {
+                imageView.load(word.picture!!)
+            }
             if (word != null) {
                 ImagePopupFragment.newInstance(
                     word.source.toString(),
                     word.target.toString(),
                     word.savedDate!!,
-                    decodeImage(word.picture!!)
+                    imageView.drawable.toBitmap()
+                    //decodeImage(word.picture!!)
                 ).show(childFragmentManager, ImagePopupFragment.TAG)
 
             }
@@ -147,6 +157,9 @@ open class MapsFragmentLift : Fragment(R.layout.fragment_maps) {
         val p = decode(s, DEFAULT)
         return BitmapFactory.decodeByteArray(p, 0, p.size)
     }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.timeline_button, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
 }
-
-

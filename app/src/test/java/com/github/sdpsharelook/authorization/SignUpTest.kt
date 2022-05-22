@@ -18,7 +18,7 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.hamcrest.Matchers.allOf
+import org.hamcrest.Matchers.*
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
@@ -30,7 +30,7 @@ import javax.inject.Inject
 @ExperimentalCoroutinesApi
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-class SignUpTestRobo {
+class SignUpTest {
 
     @Inject
     lateinit var auth: AuthProvider
@@ -114,14 +114,80 @@ class SignUpTestRobo {
             Navigation.setViewNavController(requireView(), navController)
         }
         onView(withId(R.id.email)).perform(replaceText(" "), closeSoftKeyboard())
+        onView(withId(R.id.password)).perform(replaceText(NEW_USER_PASS), closeSoftKeyboard())
         onView(withId(R.id.confirmPassword)).perform(
-            replaceText(TEST_USER_PASS),
+            replaceText(NEW_USER_PASS),
             closeSoftKeyboard()
         )
-        onView(allOf(withId(R.id.loginButton), withText("Sign Up !"))).perform(click())
-        onView(allOf(withId(R.id.loginButton), withText("Sign Up !"))).perform(click())
+        onView(withId(R.id.loginButton)).perform(click())
+
         assertEquals(R.id.signUpFragment, navController.currentDestination!!.id)
         assertNull(auth.currentUser)
     }
 
+    @Test
+    fun `test sign up name validation`() {
+        val firstName = onView(withId(R.id.firstName))
+        val lastName = onView(withId(R.id.lastName))
+
+        firstName.perform(replaceText(""), closeSoftKeyboard())
+//        lastName.perform(click()) // unfocus previous view
+//        firstName.check(matches(hasErrorText(any(String::class.java))))
+        firstName.perform(replaceText("a"), closeSoftKeyboard())
+//        lastName.perform(click()) // unfocus previous view
+//        firstName.check(matches(hasErrorText(nullValue(String::class.java))))
+
+        lastName.perform(replaceText(""), closeSoftKeyboard())
+//        firstName.perform(click()) // unfocus previous view
+//        lastName.check(matches(hasErrorText(any(String::class.java))))
+        lastName.perform(replaceText("a"), closeSoftKeyboard())
+//        firstName.perform(click()) // unfocus previous view
+//        lastName.check(matches(hasErrorText(nullValue(String::class.java))))
+
+        firstName.perform(replaceText(""), closeSoftKeyboard())
+    }
+
+    @Test
+    fun `test sign up email validation`() {
+        val email = onView(withId(R.id.email))
+//        val emailBox = onView(withId(R.id.emailBox))
+        val firstName = onView(withId(R.id.firstName))
+
+        email.perform(replaceText(""), closeSoftKeyboard())
+        firstName.perform(click()) // unfocus previous view
+//        emailBox.check(matches(hasDescendant(withText(any(String::class.java)))))
+        email.perform(replaceText("wrong_email.address"), closeSoftKeyboard())
+        firstName.perform(click()) // unfocus previous view
+//        emailBox.check(matches(hasDescendant(withText(any(String::class.java)))))
+        email.perform(replaceText("right@email.address"), closeSoftKeyboard())
+        firstName.perform(click()) // unfocus previous view
+//        emailBox.check(matches(hasDescendant(withText(nullValue(String::class.java)))))
+    }
+
+    @Test
+    fun `test sign up password validation`() {
+
+        val password = onView(withId(R.id.password))
+        val passwordBox = onView(withId(R.id.prelimPasswordBox))
+
+        password.perform(replaceText(""), closeSoftKeyboard())
+        passwordBox.check(matches(hasDescendant(withText("Required"))))
+        password.perform(replaceText("a"), closeSoftKeyboard())
+        passwordBox.check(matches(hasDescendant(withText(containsString("uppercase")))))
+        password.perform(replaceText("aA"), closeSoftKeyboard())
+        passwordBox.check(matches(hasDescendant(withText(containsString("digit")))))
+        password.perform(replaceText("aA1"), closeSoftKeyboard())
+        passwordBox.check(matches(hasDescendant(withText(containsString("special")))))
+        password.perform(replaceText("aA1+"), closeSoftKeyboard())
+        passwordBox.check(matches(hasDescendant(withText(containsString("8")))))
+        password.perform(replaceText("aA1+5678"), closeSoftKeyboard())
+        passwordBox.check(matches(hasDescendant(withText(isEmptyString()))))
+
+        val confirmPassword = onView(withId(R.id.confirmPassword))
+        val confirmPasswordBox = onView(withId(R.id.passwordBox))
+
+        confirmPasswordBox.check(matches(hasDescendant(withText(containsString("match")))))
+        confirmPassword.perform(replaceText("aA1+5678"), closeSoftKeyboard())
+        confirmPasswordBox.check(matches(hasDescendant(withText(""))))
+    }
 }

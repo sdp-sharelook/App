@@ -37,5 +37,9 @@ open class MainActivityLift : AppCompatActivity() {
         val navController = supportFragmentManager.findFragmentById(R.id.navHostFragment)!!.findNavController()
         NavigationUI.setupWithNavController(navView, navController)
         NavigationUI.setupWithNavController(bottomView, navController)
+        navView.getHeaderView(0).setOnClickListener {
+            navController.navigate(R.id.moveToLogin)
+            drawerLayout.closeDrawer(GravityCompat.START)
+        }
     }
 }

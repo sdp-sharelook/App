@@ -80,8 +80,8 @@
             android:id="@+id/action_menuLoginLink_to_signUpFragment"
             app:destination="@id/signUpFragment" />
         <action
-            android:id="@+id/action_menuLoginLink_to_greetingFragment"
-            app:destination="@id/greetingFragment" />
+            android:id="@+id/action_menuLoginLink_to_profileInformationFragment"
+            app:destination="@id/profileInformation" />
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
@@ -111,4 +111,9 @@
         android:name="com.github.sdpsharelook.MapsFragment"
         android:label="fragment_maps"
         tools:layout="@layout/fragment_maps" />
+    <fragment
+        android:id="@+id/profileInformation"
+        android:name="com.github.sdpsharelook.authorization.ProfileInformation"
+        android:label="fragment_profile_information"
+        tools:layout="@layout/fragment_profile_information" />
 </navigation>

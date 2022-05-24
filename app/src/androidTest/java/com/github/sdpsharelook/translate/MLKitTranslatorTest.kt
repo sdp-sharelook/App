@@ -21,8 +21,7 @@ class MLKitTranslatorTest {
     @ExperimentalCoroutinesApi
     fun translatorTestWithCoroutines() = runTest {
         //according to google, mlkit can only be tested on androidTest
-        val t = MLKitTranslator(TranslateLanguage.FRENCH, TranslateLanguage.ENGLISH)
-        val translatedText = t.translate("Bonjour.")
+        val translatedText = MLKitTranslator.translate("Bonjour.",TranslateLanguage.FRENCH, TranslateLanguage.ENGLISH)
         assertEquals("Hello.", translatedText)
     }
 }

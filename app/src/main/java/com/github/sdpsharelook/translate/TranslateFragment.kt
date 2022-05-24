@@ -16,6 +16,7 @@ import androidx.test.espresso.idling.CountingIdlingResource
 import com.github.sdpsharelook.R
 import com.github.sdpsharelook.section.SectionWord
 import com.github.sdpsharelook.databinding.FragmentTranslateBinding
+import com.github.sdpsharelook.downloads.MLKitTranslatorDownloader
 import com.github.sdpsharelook.language.Language
 import com.github.sdpsharelook.language.LanguageSelectionDialog
 import com.github.sdpsharelook.speechRecognition.RecognitionListener
@@ -39,10 +40,18 @@ open class TranslateFragmentLift : Fragment() {
     private lateinit var textToSpeech: TextToSpeech
     private lateinit var sourceLanguage: Language
     private lateinit var targetLanguage: Language
-    //private lateinit var speechRecognizer: SpeechRecognizer
+    private lateinit var detectedLanguage: Language
 
-    private var targetTextString: String? = null
-    private var word: SectionWord? = null
+    //private lateinit var speechRecognizer: SpeechRecognizer
+    private lateinit var languageDownloader: MLKitTranslatorDownloader
+    private val sourceText
+        get() = binding.sourceText.text.toString()
+
+    private var targetText: String
+        get() = binding.targetText.text.toString()
+        set(value) {
+            binding.targetText.text = value
+        }
 
     private var mIdlingResource: CountingIdlingResource? = null
 
@@ -68,6 +77,7 @@ open class TranslateFragmentLift : Fragment() {
 
         binding.addWordToSectionButton.setOnClickListener { addWordToSection() }
 
+        languageDownloader = MLKitTranslatorDownloader()
         val args: TranslateFragmentArgs by navArgs()
         binding.sourceText.setText(args.textDetected)
     }
@@ -142,7 +152,7 @@ open class TranslateFragmentLift : Fragment() {
                         .show()
                 else -> {
                     val tempSource = binding.sourceText.text.toString()
-                    binding.sourceText.setText(targetTextString ?: "")
+                    binding.sourceText.setText(targetText ?: "")
                     binding.targetText.text = tempSource
                     val tempLanguage = sourceLanguage
                     setSource(targetLanguage)
@@ -157,7 +167,7 @@ open class TranslateFragmentLift : Fragment() {
     private fun initTextToSpeech() {
         textToSpeech = TextToSpeech(requireContext())
         binding.imageButtonTTS.setOnClickListener {
-            targetTextString?.let { textToSpeech.speak(it) }
+            textToSpeech.speak(targetText)
         }
     }
 
@@ -188,8 +198,8 @@ open class TranslateFragmentLift : Fragment() {
 
     private fun initSpeechRecognizer() {
         binding.imageButtonSR.setOnClickListener {
-            //speechRecognizer.cancel()
-            //speechRecognizer.recognizeSpeech(recognitionListener)
+            // speechRecognizer.cancel()
+            // speechRecognizer.recognizeSpeech(recognitionListener)
         }
     }
 
@@ -200,46 +210,29 @@ open class TranslateFragmentLift : Fragment() {
      */
     private fun updateTranslation(textToTranslate: String) {
         mIdlingResource?.increment()
-
         CoroutineScope(Dispatchers.IO).launch {
-            var sourceLang = sourceLanguage
-            val destLang = targetLanguage
-            var coroutineCanceled = false
-            if (sourceLang == Language.auto) {
-                val sourceLangTag = MLKitTranslator.detectLanguage(textToTranslate)
-                if (!translatorLanguagesTag.contains(sourceLangTag)) {
-                    targetTextString = null
-                    binding.targetText.text = getString(R.string.unrecognized_source_language)
-                    mIdlingResource?.decrement()
-                    // println("source language unrecognized")
-                    coroutineCanceled = true
-                } else sourceLang = Language(sourceLangTag)
-            }
-            if (!coroutineCanceled) {
-                val t = MLKitTranslator(sourceLang.tag, destLang.tag)
-                // println("source language recognized ${sourceLang.tag}")
-                targetTextString = null
-                binding.targetText.text = getString(R.string.translation_running)
-
-                targetTextString = t.translate(textToTranslate)
-                word = SectionWord(
-                    textToTranslate,
-                    targetTextString ?: "",
-                    null
-                )
-                binding.targetText.text = targetTextString
-                mIdlingResource?.decrement()
-            }
+            detectedLanguage =
+                if (sourceLanguage == Language.auto)
+                    Language(MLKitTranslator.detectLanguage(textToTranslate))
+                else sourceLanguage
+            if (detectedLanguage !in MLKitTranslator.availableLanguages ||
+                !languageDownloader.downloadLanguage(detectedLanguage)
+            ) return@launch
+            // println("source language recognized ${sourceLang.tag}")
+            targetText = getString(R.string.translation_running)
+            targetText = MLKitTranslator.translate(textToTranslate, detectedLanguage.tag,
+                targetLanguage.tag)
+            mIdlingResource?.decrement()
         }
     }
 
     private fun addWordToSection() {
-        if (word != null) {
-            val action = TranslateFragmentDirections.actionMenuTranslateLinkToMenuSectionsLink(
-                word!!
-            )
-            findNavController().navigate(action)
-        }
+
+        val action = TranslateFragmentDirections.actionMenuTranslateLinkToMenuSectionsLink(
+            SectionWord(sourceText, targetText ?: "error", null)
+        )
+        findNavController().navigate(action)
+
     }
 
     private fun captureImage() {

@@ -2,21 +2,25 @@ package com.github.sdpsharelook.language
 
 import android.content.Context
 import com.github.sdpsharelook.R
+import com.google.firebase.encoders.annotations.Encodable
+import com.google.firebase.encoders.annotations.Encodable.*
+import com.google.gson.annotations.Expose
+import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import java.util.*
 
 @Serializable
 data class Language(
-    val tag: String
+    val tag: String = "",
 ) {
-    val locale: Locale by lazy {
-        when (tag) {
-            AUTO_TAG -> Locale.getDefault()
-            else -> Locale.forLanguageTag(tag)
-        }
-    }
-    val displayName: String = locale?.displayName ?: AUTO_TAG
 
+    @delegate:Transient
+    val displayName: String by lazy { locale?.displayName ?: AUTO_TAG }
+
+
+    @Transient
+    @Contextual
+    val locale:  Locale? = Locale.forLanguageTag(tag)
     /**@param ctx [Context] : the context of the app
      * return [Int] : the id of the flag or 0 if it doesn't exists
      */
@@ -36,8 +40,11 @@ data class Language(
             else -> flagId
         }
     }
+
     companion object {
         const val AUTO_TAG: String = "auto"
+
+        @delegate:Transient
         val default by lazy { Language(Locale.getDefault().toLanguageTag()) }
         val auto = Language(AUTO_TAG)
     }

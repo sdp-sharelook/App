@@ -1,6 +1,7 @@
 package com.github.sdpsharelook.section
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,12 +11,18 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.github.sdpsharelook.Word
 import com.github.sdpsharelook.databinding.FragmentSectionDetailBinding
+import com.github.sdpsharelook.storage.RTDBWordListRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SectionDetailFragment : Fragment() {
 
+    @Inject
+    lateinit var wordRTDB : RTDBWordListRepository
 
     /**
      * This property is only valid between onCreateView and onDestroyView.
@@ -23,43 +30,50 @@ class SectionDetailFragment : Fragment() {
     private val binding get() = _binding!!
     private var _binding: FragmentSectionDetailBinding? = null
 
-    private val wordList = mutableListOf<Word>()
+    private var wordList = mutableListOf<Word>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val args: SectionDetailFragmentArgs by navArgs()
-        val section = sectionFromId(args.sectionID)
-        val sectionWord = args.sectionWord
+        var section:Section? = null
+        if(args.section!= null){
+
+            section = Json.decodeFromString<Section>(args.section!!)
+        }
 
         /**set the section detail**/
+        Log.e("SECTION", section.toString())
         if (section != null) {
             binding.sectionTitle.text = section.title
             binding.sectionFlag.setImageResource(section.flag)
         }
 
-        binding.wordList.adapter = SectionWordAdapter(requireContext(), wordList)
 
 
 
+        lifecycleScope.launch{
+            if (section != null) {
+                collectListFlow(section)
+            }
+        }
 
         /**Check if we are adding a word from the translator Fragment**/
-        lifecycleScope.launch {
-            if (sectionWord != null) {
-                section?.databaseRepo?.insert(section.id, sectionWord)
-            }
-            collectListFlow(section!!)
-        }
+
 
     }
 
     private suspend fun collectListFlow(section: Section) {
-        section.databaseRepo.flow(section.id).collect{
+        Log.e("", "PSODHSÖLIHGÖOL")
+        wordRTDB.flow(section.id).collect{
             when {
                 it.isSuccess -> {
-                    val word = it.getOrNull() as Word
-                    addSectionWord(word)
+                    wordList = it.getOrDefault(emptyList()) as MutableList<Word>
+
+                    binding.wordList.adapter = SectionWordAdapter(requireContext(), wordList)
+                    Log.e("WORD ",wordList.toString())
                 }
                 it.isFailure -> {
+                    Log.e("WORD ",wordList.toString())
                     it.exceptionOrNull()?.printStackTrace()
                 }
             }
@@ -67,18 +81,8 @@ class SectionDetailFragment : Fragment() {
         }
     }
 
-    private fun addSectionWord(sw: Word) {
-        wordList.add(sw)
-    }
 
-    private fun sectionFromId(sectionID: Int): Section? {
-        for (section in sectionList) {
-            if (sectionID == section.sectionSize) {
-                return section
-            }
-        }
-        return null
-    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

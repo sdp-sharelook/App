@@ -1,25 +1,24 @@
 package com.github.sdpsharelook.section
 
-import com.github.sdpsharelook.storage.IRepository
-import com.github.sdpsharelook.storage.RTDBWordListRepository
+import androidx.annotation.Keep
+import com.google.firebase.database.IgnoreExtraProperties
 import kotlinx.serialization.Serializable
 import java.util.*
-
-var sectionList = mutableListOf<Section>()
-
-
+@IgnoreExtraProperties
 @Serializable
-class Section(
-    var title: String,
-    var flag: Int,
-    val databaseRepo: RTDBWordListRepository,
-    val sectionRepo: String,
-    val sectionSize: Int = sectionList.size,
-    val id : String = UUID.randomUUID().toString()
-){
-
-    override fun equals(other: Any?): Boolean {
-        var section = other as Section
-        return sectionRepo == section.sectionRepo
+data class Section(
+    var title: String ="",
+    var flag: Int=0,
+    var sectionRepo: String="",
+    val id : String= ""
+) {
+    fun toMap(): Map<String, Any?> {
+        return mapOf(
+            "title" to title,
+            "flag" to flag,
+            "sectionRepo" to sectionRepo,
+            "id" to id
+        )
     }
+    constructor(id:String) : this("",0,"", id)
 }

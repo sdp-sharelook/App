@@ -21,10 +21,18 @@ import com.github.sdpsharelook.databinding.FragmentSectionBinding
 import com.github.sdpsharelook.databinding.PopupBinding
 import com.github.sdpsharelook.storage.RTDBWordListRepository
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import java.util.*
 import javax.inject.Inject
 
 var edit = false
+
+var sectionList: MutableList<Section> = mutableListOf()
 
 @AndroidEntryPoint
 class SectionFragment : Fragment(), SectionClickListener {
@@ -48,7 +56,9 @@ class SectionFragment : Fragment(), SectionClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val args: SectionFragmentArgs by navArgs()
-        sectionWord = args.sectionWord
+        if(args.sectionWord != null){
+            sectionWord= args.sectionWord?.let { Json.decodeFromString<Word>(it) }
+        }
         popupBinding = PopupBinding.inflate(layoutInflater)
         cardBinding = CardSectionBinding.inflate(layoutInflater)
 
@@ -65,14 +75,12 @@ class SectionFragment : Fragment(), SectionClickListener {
 
         // set up the recyclerView
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        val cardAdapter = CardAdapter(sectionList, this, dialog)
+        val cardAdapter = CardAdapter(this, dialog, databaseWordList)
         binding.recyclerView.adapter = cardAdapter
 
-        //TODO
-//        /**Load all the Sections from the database**/
-//        lifecycleScope.launch {
-//            collectSectionFlow()
-//        }
+        GlobalScope.launch(Dispatchers.IO) {
+            collectSectionFlow()
+        }
 
         binding.addingBtn.setOnClickListener {
             dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -86,41 +94,54 @@ class SectionFragment : Fragment(), SectionClickListener {
             val newSection = Section(
                 sectionName,
                 mainCountryList[countryIndex].flag,
-                databaseWordList,
+                UUID.randomUUID().toString(),
                 sectionName + countryIndex
             )
 
             // Popu do 2 different things if it is editing a section or creating one
             if (edit) {
                 cardAdapter.editItem(sectionName, mainCountryList.get(countryIndex).flag)
-            } else if(addSection(newSection)){
+            } else if (addSection(newSection)) {
                 // TODO
                 //lifecycleScope.launch {
                 //    databaseWordList.insertSection(newSection)
                 //}
-                Toast.makeText(requireContext(), "Section: $sectionName saved", Toast.LENGTH_SHORT).show()
-            }else{
+                Toast.makeText(requireContext(), "Section: $sectionName saved", Toast.LENGTH_SHORT)
+                    .show()
+            } else {
                 // if the section already exist
-                Toast.makeText(requireContext(), "$sectionName already exist", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "$sectionName already exist", Toast.LENGTH_SHORT)
+                    .show()
             }
             dialog.dismiss()
         }
     }
 
     private suspend fun collectSectionFlow() {
-        Log.e("","Collecting section flow")
-        databaseWordList.flow().collect{
+        Log.e("", "Collecting sectioonons flow")
+        databaseWordList.flowSection().collect {
             when {
                 it.isSuccess -> {
-                    val section = it.getOrNull() as Section
-                    addSection(section)
+                    sectionList = it.getOrDefault(emptyList()) as MutableList<Section>
+                    Log.e("", sectionList.toString())
+                    Log.e("sectionsize", sectionList.size.toString())
                 }
                 it.isFailure -> {
+                    Log.e("error", it.exceptionOrNull().toString())
                     it.exceptionOrNull()?.printStackTrace()
                 }
             }
-            binding.recyclerView.adapter?.notifyDataSetChanged()
+            activity?.runOnUiThread(Runnable() {
+                run() {
+                    updateData()
+                }
+
+            })
         }
+    }
+
+    private fun updateData() {
+        binding.recyclerView.adapter?.notifyDataSetChanged()
     }
 
     private fun initList(): List<CountryItem> {
@@ -130,12 +151,16 @@ class SectionFragment : Fragment(), SectionClickListener {
         return list
     }
 
-    private fun addSection(section: Section): Boolean {
+    fun addSection(section: Section): Boolean {
         // if the section already exist do not add it
-        return if(sectionList.contains(section)){
+        return if (sectionList.contains(section)) {
             false
-        }else{
+        } else {
             sectionList.add(section)
+            lifecycleScope.launch {
+                databaseWordList.insertSection(section)
+            }
+
             binding.recyclerView.adapter?.notifyItemInserted(sectionList.lastIndex)
             true
         }
@@ -143,9 +168,21 @@ class SectionFragment : Fragment(), SectionClickListener {
 
     override fun onClick(section: Section) {
         val action = SectionFragmentDirections.actionMenuSectionsLinkToSectionDetailFragment(
-            section.sectionSize!!, sectionWord
+            Json.encodeToString(section)
         )
+
+
+
+        Log.e("CLICKED ", sectionWord.toString())
+        GlobalScope.launch(Dispatchers.IO) {
+            if (sectionWord != null) {
+                Log.e("INSERTING INTO sdsasasdsd ", sectionWord.toString())
+                databaseWordList.insertList(section.id, listOf(sectionWord) as List<Word>)
+            }
+        }
+
         findNavController().navigate(action)
+
     }
 
     override fun onCreateView(
@@ -155,6 +192,7 @@ class SectionFragment : Fragment(), SectionClickListener {
         _binding = FragmentSectionBinding.inflate(layoutInflater)
         return binding.root
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

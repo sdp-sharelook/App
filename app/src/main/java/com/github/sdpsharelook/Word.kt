@@ -1,25 +1,29 @@
 package com.github.sdpsharelook
 
-import android.graphics.Bitmap
-import android.location.Location
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.github.sdpsharelook.language.Language
 import com.google.firebase.database.IgnoreExtraProperties
+import com.google.gson.annotations.Expose
+import kotlinx.datetime.Instant
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.modules.SerializersModule
 import java.util.*
 
 @IgnoreExtraProperties
+@Serializable
 data class Word(
     val uid: String = "",
     val source: String? = "",
     val sourceLanguage: Language? = Language.auto,
     val target: String? = "",
     val targetLanguage: Language? = Language.auto,
-    @Expose(serialize = true, deserialize = true)
-    var location: LatLng? = null,
-    val savedDate: Date? = null,
+    var location: Position? = null,
+    val savedDate: Instant? = null,
     val picture: String? = null,
     val isFavourite: Boolean? = false,
 ) {
-    constructor(uid: String) : this(uid, "", null, null, null, null, null, "", false)
+
 
     // fun synonyms(): Set<Word> = TODO("not implemented yet")
     // ...
@@ -38,6 +42,8 @@ data class Word(
 
     @RequiresApi(Build.VERSION_CODES.O)
     companion object {
+        val serializersModule: SerializersModule = SerializersModule {
+        }
         val testWord by lazy {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 Word(
@@ -46,8 +52,8 @@ data class Word(
                     Language("French"),
                     "test",
                     Language("English"),
-                    LatLng(46.0, 6.0),
-                    Date.from(Instant.ofEpochMilli(1000000000)),
+                    Position(46.0, 6.0),
+                    Instant.fromEpochMilliseconds(100000000000),
                     "gs://billinguee.appspot.com/Pepe_rare-2469629177",
                     true
                 )
@@ -58,12 +64,19 @@ data class Word(
                     Language("French"),
                     "test",
                     Language("English"),
-                    LatLng(46.0, 6.0),
+                    Position(46.0, 6.0),
                     null,
                     "gs://billinguee.appspot.com/Pepe_rare-2469629177",
                     true
+
                 )
+
             }
         }
     }
+
+
 }
+
+@Serializable
+data class Position(val latitude: Double, val longitude: Double)

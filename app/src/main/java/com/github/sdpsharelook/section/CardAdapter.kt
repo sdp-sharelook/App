@@ -6,20 +6,24 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.github.sdpsharelook.databinding.CardSectionBinding
+import com.github.sdpsharelook.storage.RTDBWordListRepository
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class CardAdapter(
-    private val sections: List<Section>,
+class CardAdapter constructor(
     private val clickListener: SectionClickListener,
-    private val dialog: Dialog
+    private val dialog: Dialog,
+    private val wordRTDB : RTDBWordListRepository
 )
     : RecyclerView.Adapter<CardViewHolder>()
 
 {
     private var editPosition = 0
     private lateinit var binding: CardSectionBinding
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolder {
         val from = LayoutInflater.from(parent.context)
@@ -38,13 +42,12 @@ class CardAdapter(
             dialog.show()
         }
 
-        holder.bindBook(sections[position])
+        holder.bindBook(sectionList[position])
     }
 
     fun editItem(name: String, flag: Int) {
-        val section = sectionList[editPosition]
-        section.title = name
-        section.flag = flag
+        val oldSection = sectionList[editPosition]
+        sectionList[editPosition] = Section(name,  flag, oldSection.sectionRepo, oldSection.id)
         edit = false
         notifyItemChanged(editPosition)
     }
@@ -54,11 +57,11 @@ class CardAdapter(
         Log.d("INDEX", index.toString())
         sectionList.removeAt(index)
         CoroutineScope(Dispatchers.IO).launch{
-            section.databaseRepo.delete(section.id)
+            wordRTDB.delete(section.id!!)
         }
         notifyItemRemoved(viewHolder.adapterPosition)
         notifyDataSetChanged()
     }
 
-    override fun getItemCount(): Int = sections.size
+    override fun getItemCount(): Int = sectionList.size
 }

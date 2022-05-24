@@ -21,7 +21,7 @@ abstract class StorageBindsModule {
 
     @Singleton
     @Binds
-    abstract fun bindWordListRepo(r: RTDBWordListRepository): IRepository<Word>
+    abstract fun bindWordListRepo(r: RTDBWordListRepository): IRepository<List<Word>>
 
     @Singleton
     @Binds

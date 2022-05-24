@@ -1,6 +1,7 @@
 package com.github.sdpsharelook.translate
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +18,6 @@ import com.github.sdpsharelook.Word
 import com.github.sdpsharelook.databinding.FragmentTranslateBinding
 import com.github.sdpsharelook.language.Language
 import com.github.sdpsharelook.language.LanguageSelectionDialog
-import com.github.sdpsharelook.section.SectionWord
 import com.github.sdpsharelook.speechRecognition.RecognitionListener
 import com.github.sdpsharelook.textToSpeech.TextToSpeech
 import com.google.mlkit.nl.translate.TranslateLanguage
@@ -25,6 +25,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import java.util.*
 
 @AndroidEntryPoint
@@ -188,6 +190,9 @@ class TranslateFragment : Fragment() {
      * @param textToTranslate [String] | The text to translate.
      */
     private fun updateTranslation(textToTranslate: String) {
+        if (binding == null) {
+            return
+        }
         mIdlingResource?.increment()
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -211,11 +216,13 @@ class TranslateFragment : Fragment() {
                 binding.targetText.text = getString(R.string.translation_running)
 
                 targetTextString = t.translate(textToTranslate)
-                sectionWord = Word(uid = UUID.randomUUID().toString() ,
+                sectionWord = Word(
+                    uid = UUID.randomUUID().toString(),
                     source = textToTranslate,
                     sourceLanguage = sourceLanguage,
                     target = targetTextString ?: "ERROR",
-                    targetLanguage = targetLanguage )
+                    targetLanguage = targetLanguage
+                )
                 binding.targetText.text = targetTextString
                 mIdlingResource?.decrement()
             }
@@ -223,12 +230,13 @@ class TranslateFragment : Fragment() {
     }
 
     private fun addWordToSection() {
-        if (sectionWord != null) {
-            val action = TranslateFragmentDirections.actionMenuTranslateLinkToMenuSectionsLink(
-                sectionWord!!
-            )
-            findNavController().navigate(action)
-        }
+        Log.e("sdection word", Json.encodeToString(sectionWord).toString())
+        if (sectionWord == null) return
+
+        val action = TranslateFragmentDirections.actionMenuTranslateLinkToMenuSectionsLink(
+            Json.encodeToString(sectionWord)
+        )
+        findNavController().navigate(action)
     }
 
     override fun onCreateView(

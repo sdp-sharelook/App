@@ -42,7 +42,6 @@ class SectionDetailFragment : Fragment() {
         }
 
         /**set the section detail**/
-        Log.e("SECTION", section.toString())
         if (section != null) {
             binding.sectionTitle.text = section.title
             binding.sectionFlag.setImageResource(section.flag)
@@ -63,17 +62,14 @@ class SectionDetailFragment : Fragment() {
     }
 
     private suspend fun collectListFlow(section: Section) {
-        Log.e("", "PSODHSÖLIHGÖOL")
         wordRTDB.flow(section.id).collect{
             when {
                 it.isSuccess -> {
                     wordList = it.getOrDefault(emptyList()) as MutableList<Word>
 
                     binding.wordList.adapter = SectionWordAdapter(requireContext(), wordList)
-                    Log.e("WORD ",wordList.toString())
                 }
                 it.isFailure -> {
-                    Log.e("WORD ",wordList.toString())
                     it.exceptionOrNull()?.printStackTrace()
                 }
             }

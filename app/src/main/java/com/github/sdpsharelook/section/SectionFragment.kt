@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -56,8 +55,8 @@ class SectionFragment : Fragment(), SectionClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val args: SectionFragmentArgs by navArgs()
-        if(args.sectionWord != null){
-            sectionWord= args.sectionWord?.let { Json.decodeFromString<Word>(it) }
+        if (args.sectionWord != null) {
+            sectionWord = args.sectionWord?.let { Json.decodeFromString<Word>(it) }
         }
         popupBinding = PopupBinding.inflate(layoutInflater)
         cardBinding = CardSectionBinding.inflate(layoutInflater)
@@ -118,16 +117,12 @@ class SectionFragment : Fragment(), SectionClickListener {
     }
 
     private suspend fun collectSectionFlow() {
-        Log.e("", "Collecting sectioonons flow")
         databaseWordList.flowSection().collect {
             when {
                 it.isSuccess -> {
                     sectionList = it.getOrDefault(emptyList()) as MutableList<Section>
-                    Log.e("", sectionList.toString())
-                    Log.e("sectionsize", sectionList.size.toString())
                 }
                 it.isFailure -> {
-                    Log.e("error", it.exceptionOrNull().toString())
                     it.exceptionOrNull()?.printStackTrace()
                 }
             }
@@ -173,10 +168,8 @@ class SectionFragment : Fragment(), SectionClickListener {
 
 
 
-        Log.e("CLICKED ", sectionWord.toString())
         GlobalScope.launch(Dispatchers.IO) {
             if (sectionWord != null) {
-                Log.e("INSERTING INTO sdsasasdsd ", sectionWord.toString())
                 databaseWordList.insertList(section.id, listOf(sectionWord) as List<Word>)
             }
         }

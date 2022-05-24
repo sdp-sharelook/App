@@ -140,7 +140,6 @@ class RTDBWordListRepository @Inject constructor(
                 }
 
             }
-            Log.e("",getSectionReference("SectionList").toString())
             getSectionReference("SectionList").addChildEventListener(fireListener)
             awaitClose {
                 getSectionReference("SectionList").removeEventListener(fireListener)

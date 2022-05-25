@@ -24,7 +24,7 @@ class SpeechRecognizer(
     private val context: Context,
     private val listener: RecognitionListener,
 ) {
-    private val permissionManager = PermissionManager(Manifest.permission.RECORD_AUDIO, caller)
+    // private val permissionManager = PermissionManager(Manifest.permission.RECORD_AUDIO, caller)
 
     /** Start the speech recognition
      * @param listener: the listener for callback when the result is ready
@@ -32,10 +32,10 @@ class SpeechRecognizer(
     fun recognizeSpeech() {
         val intent = createIntent()
         val googleListener = createGoogleRecognitionListener(listener)
-        permissionManager.grantPermission(context) {
-            speechRecognizer.setRecognitionListener(googleListener)
-            speechRecognizer.startListening(intent)
-        }
+        // permissionManager.grantPermission(context) {
+        speechRecognizer.setRecognitionListener(googleListener)
+        speechRecognizer.startListening(intent)
+        // }
     }
 
     /** Cancel the speech recognition (must call it before starting a new one)

@@ -65,13 +65,30 @@ open class SectionDetailFragmentLift : Fragment() {
             binding.sectionTitle.text = section.title
             binding.sectionFlag.setImageResource(section.flag)
         }
+        binding.wordList.isLongClickable = true
 
         binding.wordList.adapter = WordAdapter(requireContext(), wordList)
-        binding.wordList.setOnItemClickListener { _, _, _, _ ->
-            SelectPictureFragment(word!!) {
+
+        binding.wordList.setOnItemLongClickListener { _, _, pos, _ ->
+            lifecycleScope.launch{
+                removeWord(pos, section!!)
+            }
+            true
+        }
+
+        binding.wordList.setOnItemClickListener { _, _, index, _ ->
+            val w = wordList[index]
+            SelectPictureFragment(w!!) {
+                //TODO w.picture = it
                 Toast.makeText(requireContext(), it ?: "picture deleted", Toast.LENGTH_SHORT).show()
             }.show(parentFragmentManager, null)
         }
+    }
+
+    private suspend fun removeWord(pos: Int, section: Section) {
+        wordList.removeAt(pos)
+//        TODO
+//        section.databaseRepo.delete(wordList[pos]!!.sourceText)
     }
 
     private fun addSectionWord(word: SectionWord?) {

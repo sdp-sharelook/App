@@ -22,7 +22,8 @@ class MLKitTranslatorDownloader(
     }
 
     suspend fun deleteLanguage(language: Language): Boolean =
-        if (language !in (downloadedLanguages() ?: listOf())) false
+        if (language == Language("en")) false
+        else if (language !in (downloadedLanguages() ?: listOf())) false
         else suspendCoroutine { continuation ->
             val model = TranslateRemoteModel.Builder(language.tag).build()
             modelManager.deleteDownloadedModel(model)

@@ -7,22 +7,6 @@
     tools:context=".downloads.DownloadLanguagesFragment"
     android:orientation="vertical"
     android:layout_margin="10dp">
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/search_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:endIconMode="clear_text"
-        android:padding="5dp">
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/search"
-            android:background="@drawable/popupbackground">
-
-        </com.google.android.material.textfield.TextInputEditText>
-    </com.google.android.material.textfield.TextInputLayout>
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">

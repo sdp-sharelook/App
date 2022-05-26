@@ -2,6 +2,8 @@ package com.github.sdpsharelook.section
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.widget.Button
+import android.widget.ImageButton
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.sdpsharelook.databinding.CardSectionBinding
 import com.github.sdpsharelook.storage.IRepository
@@ -14,6 +16,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.kotlin.mock
 import org.robolectric.RuntimeEnvironment
+import com.github.sdpsharelook.R
 
 @ExperimentalCoroutinesApi
 @HiltAndroidTest
@@ -36,19 +39,23 @@ class CardAdapterTest {
     @Test
     fun itemCount() {
         adapter = CardAdapter(listOf(section, section, section) as MutableList<Section>, mock(), mock())
-        assert(adapter.getItemCount().equals(3))
+        assert(adapter.itemCount == 3)
     }
 
     @Test
-    fun onBindViewHolder_setsTextAndClickEventForCandyView() {
+    fun onBindViewHolder() {
         val inflater = RuntimeEnvironment.application.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        adapter = CardAdapter(listOf(section, section, section) as MutableList<Section>, mock(), mock())
+        adapter = CardAdapter(mutableListOf(section, section, section), mock(), mock())
         val cardBinding = CardSectionBinding.inflate(inflater)
         holder = CardViewHolder(cardBinding, mock())
-
         adapter.onBindViewHolder(holder, 1)
-
         assert(cardBinding.sectionTitle.text == "test")
+        holder.onEditClick
+        holder.onDeletClick
+        holder.itemView.findViewById<ImageButton>(R.id.editButton).performClick()
+        assert(edit)
+        holder.itemView.findViewById<ImageButton>(R.id.deleteButton).performClick()
+        assert(adapter.itemCount == 2)
     }
 
 

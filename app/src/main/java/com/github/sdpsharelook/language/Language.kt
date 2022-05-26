@@ -2,11 +2,12 @@ package com.github.sdpsharelook.language
 
 import android.content.Context
 import com.github.sdpsharelook.R
+import java.io.Serializable
 import java.util.*
 
 data class Language(
-    val tag: String
-) {
+    val tag: String,
+) : Serializable {
     val locale: Locale? =
         when (tag) {
             AUTO_TAG -> null
@@ -33,6 +34,7 @@ data class Language(
             else -> flagId
         }
     }
+
     companion object {
         const val AUTO_TAG: String = "auto"
         val default by lazy { Language(Locale.getDefault().toLanguageTag()) }

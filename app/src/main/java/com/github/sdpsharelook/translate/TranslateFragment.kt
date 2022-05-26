@@ -112,7 +112,7 @@ open class TranslateFragmentLift : Fragment() {
     private fun putLanguagesInSpinners() {
         CoroutineScope(Dispatchers.IO).launch {
             availableLanguages =
-                MLKitTranslatorDownloader().downloadedLanguages() ?: listOf(Language("en"))
+                MLKitTranslatorDownloader.downloadedLanguages() ?: listOf(Language("en"))
             withContext(Dispatchers.Main) {
                 initTranslator()
                 binding.apply {

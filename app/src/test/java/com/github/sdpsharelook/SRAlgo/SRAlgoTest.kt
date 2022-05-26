@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.sdpsharelook.revision.SRAlgo
-import com.github.sdpsharelook.revision.revisionWord
+import com.github.sdpsharelook.revision.RevisionWord
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -22,9 +22,9 @@ class SRAlgoTest {
     val hiltRule = HiltAndroidRule(this)
 
     val TEST_SR_FILE = "test_sr_file.csv"
-    val TEST_WORDS = listOf<revisionWord>(
-        revisionWord("id0"),
-        revisionWord("id1", 12312L, 6.0, 3), revisionWord("id2")
+    val TEST_WORDS = listOf<RevisionWord>(
+        RevisionWord("id0"),
+        RevisionWord("id1", 12312L, 6.0, 3), RevisionWord("id2")
     )
 
     @Before

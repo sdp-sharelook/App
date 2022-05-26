@@ -10,7 +10,9 @@ import com.google.mlkit.nl.translate.TranslateRemoteModel
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-object MLKitTranslatorDownloader {
+class MLKitTranslatorDownloader(
+    var requireWifi: Boolean = true,
+) {
     private val modelManager = RemoteModelManager.getInstance()
 
     suspend fun downloadedLanguages(): List<Language>? = suspendCoroutine { continuation ->
@@ -33,7 +35,7 @@ object MLKitTranslatorDownloader {
                 }
         }
 
-    suspend fun downloadLanguage(language: Language, requireWifi: Boolean = false): Boolean =
+    suspend fun downloadLanguage(language: Language): Boolean =
         downloadedLanguages()?.let { downloadedLanguages ->
             if (language !in MLKitTranslator.availableLanguages) false
             else if (language in downloadedLanguages) true

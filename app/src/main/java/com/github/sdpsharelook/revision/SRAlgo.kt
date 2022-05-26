@@ -3,8 +3,10 @@ package com.github.sdpsharelook.revision
 import android.content.Context
 import java.io.File
 import java.io.IOException
+import kotlin.math.max
+import kotlin.math.min
 
-val SRDATAFILE = "srdatafile.csv"
+const val SRDATAFILE = "srdatafile.csv"
 
 data class revisionWord(
     val wordId: String,
@@ -52,8 +54,8 @@ class SRAlgo {
 
     companion object {
 
-        val MIN_EF = 1.3
-        val MAX_EF = 2.5
+        const val MIN_EF = 1.3
+        const val MAX_EF = 2.5
 
         @JvmStatic
         fun loadRevWordsFromLocal(
@@ -93,7 +95,7 @@ class SRAlgo {
             //else calc new EF
             val EF = word.EF
             val newF = EF + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02))
-            word.EF = Math.min(Math.max(newF, MIN_EF), MAX_EF)
+            word.EF = min(max(newF, MIN_EF), MAX_EF)
             word.nextReview = when (word.n) {
                 0 -> 0.0
                 1 -> 1.0

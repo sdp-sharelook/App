@@ -114,4 +114,18 @@
         android:name="com.github.sdpsharelook.MapsFragment"
         android:label="fragment_maps"
         tools:layout="@layout/fragment_maps" />
+    <fragment
+        android:id="@+id/launchQuizFragment"
+        android:name="com.github.sdpsharelook.revision.LaunchQuizFragment"
+        android:label="fragment_launch_quiz"
+        tools:layout="@layout/fragment_launch_quiz" >
+        <action
+            android:id="@+id/action_launchQuizFragment_to_revisionQuizFragment"
+            app:destination="@id/revisionQuizFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/revisionQuizFragment"
+        android:name="com.github.sdpsharelook.revision.RevisionQuizFragment"
+        android:label="fragment_revision_quiz"
+        tools:layout="@layout/fragment_revision_quiz" />
 </navigation>

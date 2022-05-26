@@ -9,7 +9,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -29,8 +28,10 @@ class RevisionQuizViewModel @Inject constructor(
         }
     }
 
-    private var wordsToQuiz: Queue<RevisionWord> = LinkedList(RevisionWord.read(app.applicationContext))
-    var current: RevisionWord = wordsToQuiz.remove()
+    private var wordsToQuiz: List<RevisionWord> = RevisionWord.read(app.applicationContext)
+    private var indexIntoQuiz = -1
+    private var quizLength = -1
+    var current: RevisionWord = wordsToQuiz.first()
     private var launched: Boolean = false
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
@@ -38,11 +39,18 @@ class RevisionQuizViewModel @Inject constructor(
     fun onEvent(event: QuizEvent) {
         when (event) {
             is QuizEvent.Continue -> {
-                TODO()
+                assert(launched)
+                sendUiEvent(UiEvent.ShowAnswer)
             }
             is QuizEvent.ClickEffortButton -> {
                 SRAlgo.calcNextReviewTime(current, event.quality)
                 nextWord()
+                sendUiEvent(UiEvent.NewWord(TODO()))
+            }
+            is QuizEvent.StartQuiz -> {
+                launched = true
+                quizLength = event.length
+                indexIntoQuiz = 0
                 sendUiEvent(UiEvent.Navigate(Routes.QUIZ))
             }
         }
@@ -54,6 +62,6 @@ class RevisionQuizViewModel @Inject constructor(
 
     private fun nextWord() {
         current.saveToStorage(app.applicationContext)
-        current = wordsToQuiz.remove()
+        current = wordsToQuiz[++indexIntoQuiz]
     }
 }

@@ -2,5 +2,5 @@ package com.github.sdpsharelook.revision
 
 sealed class QuizEvent {
     object Continue: QuizEvent()
-    data class ClickEffortButton(val ef: Int): QuizEvent()
+    data class ClickEffortButton(val quality: Int): QuizEvent()
 }

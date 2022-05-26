@@ -1,10 +1,6 @@
 package com.github.sdpsharelook.translate
 
-import android.content.Context
-import com.github.sdpsharelook.downloads.MLKitTranslatorDownloader
 import com.github.sdpsharelook.language.Language
-import com.google.android.gms.tasks.Task
-import com.google.mlkit.common.model.DownloadConditions
 import com.google.mlkit.nl.languageid.LanguageIdentification
 import com.google.mlkit.nl.translate.TranslateLanguage
 import com.google.mlkit.nl.translate.Translation

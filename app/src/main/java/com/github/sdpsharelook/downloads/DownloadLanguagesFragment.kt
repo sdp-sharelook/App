@@ -18,7 +18,7 @@ import kotlinx.coroutines.withContext
 
 
 class DownloadLanguagesFragment : Fragment() {
-    private val downloader = MLKitTranslatorDownloader()
+    private val downloader = MLKitTranslatorDownloader
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,

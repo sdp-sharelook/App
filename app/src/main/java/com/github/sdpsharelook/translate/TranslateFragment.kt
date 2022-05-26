@@ -62,7 +62,7 @@ open class TranslateFragmentLift : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         putLanguagesInSpinners()
-        initTranslator()
+
         initTextToSpeech()
 
 
@@ -83,6 +83,7 @@ open class TranslateFragmentLift : Fragment() {
             id: Long,
         ) {
             // speechRecognizer.language = availableLanguages[position]
+            updateTranslation()
         }
 
         override fun onNothingSelected(p0: AdapterView<*>?) { /* do nothing */
@@ -95,6 +96,7 @@ open class TranslateFragmentLift : Fragment() {
             position: Int,
             id: Long,
         ) {
+            updateTranslation()
             textToSpeech.language = availableLanguages[position]
         }
 
@@ -112,6 +114,7 @@ open class TranslateFragmentLift : Fragment() {
             availableLanguages =
                 MLKitTranslatorDownloader().downloadedLanguages() ?: listOf(Language("en"))
             withContext(Dispatchers.Main) {
+                initTranslator()
                 binding.apply {
                     spinnerSourceLang.adapter =
                         LanguageAdapter(requireContext(),
@@ -122,15 +125,14 @@ open class TranslateFragmentLift : Fragment() {
                     spinnerTargetLang.setOnItemSelectedListener(onTargetLanguageSelected)
                 }
             }
+
         }
-
-
     }
 
 
     private fun initTranslator() {
         binding.sourceText.addTextChangedListener { afterTextChanged ->
-            updateTranslation(afterTextChanged.toString())
+            updateTranslation()
         }
 
         binding.buttonSwitchLang.setOnClickListener {
@@ -153,7 +155,7 @@ open class TranslateFragmentLift : Fragment() {
                     binding.spinnerTargetLang.setSelection(srcSelection - 1)
                     binding.spinnerSourceLang.setSelection(dstSelection + 1)
                     if (binding.sourceText.text!!.isNotEmpty())
-                        updateTranslation(binding.sourceText.text.toString())
+                        updateTranslation()
                 }
             }
         }
@@ -202,12 +204,12 @@ open class TranslateFragmentLift : Fragment() {
     /** Call to update the text to translate and translate it.
      * @param textToTranslate [String] | The text to translate.
      */
-    private fun updateTranslation(textToTranslate: String) {
+    private fun updateTranslation() {
         mIdlingResource?.increment()
         CoroutineScope(Dispatchers.IO).launch {
             val detectedLanguage =
                 if (sourceLanguage == Language.auto && sourceText.length > 2)
-                    Language(MLKitTranslator.detectLanguage(textToTranslate))
+                    Language(MLKitTranslator.detectLanguage(sourceText))
                 else sourceLanguage
 
             if (detectedLanguage !in MLKitTranslator.availableLanguages) {
@@ -222,7 +224,7 @@ open class TranslateFragmentLift : Fragment() {
                 return@launch
             }
             targetText = getString(R.string.translation_running)
-            targetText = MLKitTranslator.translate(textToTranslate, detectedLanguage.tag,
+            targetText = MLKitTranslator.translate(sourceText, detectedLanguage.tag,
                 targetLanguage.tag)
             mIdlingResource?.decrement()
         }

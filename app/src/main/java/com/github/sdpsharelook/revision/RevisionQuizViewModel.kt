@@ -31,7 +31,14 @@ class RevisionQuizViewModel @Inject constructor(
     private var wordsToQuiz: List<RevisionWord> = RevisionWord.read(app.applicationContext)
     private var indexIntoQuiz = -1
     private var quizLength = -1
-    var current: RevisionWord = wordsToQuiz.first()
+    private var _current: RevisionWord = wordsToQuiz.first()
+    private val current: Word
+    get() = getWordFromRevision(_current)
+
+    private fun getWordFromRevision(revisionWord: RevisionWord): Word {
+        TODO("Not yet implemented")
+    }
+
     private var launched: Boolean = false
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
@@ -43,7 +50,7 @@ class RevisionQuizViewModel @Inject constructor(
                 sendUiEvent(UiEvent.ShowAnswer)
             }
             is QuizEvent.ClickEffortButton -> {
-                SRAlgo.calcNextReviewTime(current, event.quality)
+                SRAlgo.calcNextReviewTime(_current, event.quality)
                 nextWord()
                 sendUiEvent(UiEvent.NewWord(TODO()))
             }
@@ -61,7 +68,7 @@ class RevisionQuizViewModel @Inject constructor(
     }
 
     private fun nextWord() {
-        current.saveToStorage(app.applicationContext)
-        current = wordsToQuiz[++indexIntoQuiz]
+        _current.saveToStorage(app.applicationContext)
+        _current = wordsToQuiz[++indexIntoQuiz]
     }
 }

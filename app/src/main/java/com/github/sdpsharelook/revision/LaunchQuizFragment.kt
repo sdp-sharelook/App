@@ -8,9 +8,11 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.github.sdpsharelook.R
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class LaunchQuizFragment : LaunchQuizFragmentLift()
@@ -18,8 +20,10 @@ class LaunchQuizFragment : LaunchQuizFragmentLift()
 open class LaunchQuizFragmentLift : Fragment() {
     private val viewModel: RevisionQuizViewModel by viewModels()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_launch_quiz, container, false)
     }
@@ -33,6 +37,9 @@ open class LaunchQuizFragmentLift : Fragment() {
             val action =
                 LaunchQuizFragmentDirections.actionLaunchQuizFragmentToRevisionQuizFragment()
             findNavController().navigate(action)
+        }
+        lifecycleScope.launch {
+            viewModel.uiEvent.apply { TODO() }
         }
     }
 

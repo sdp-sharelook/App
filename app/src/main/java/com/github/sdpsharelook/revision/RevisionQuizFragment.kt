@@ -8,9 +8,11 @@ import android.widget.Button
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.github.sdpsharelook.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class RevisionQuizFragment : RevisionQuizFragmentLift()
@@ -31,7 +33,9 @@ open class RevisionQuizFragmentLift : Fragment() {
                 view.isFocusable = false
                 viewModel.onEvent(QuizEvent.Continue)
             }
-
+        lifecycleScope.launch {
+            viewModel.uiEvent.apply { TODO() }
+        }
     }
 
     private fun handleHelpToggle(view: View) {

@@ -3,16 +3,24 @@ package com.github.sdpsharelook.translate
 import android.widget.EditText
 import android.widget.ListView
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.onData
+import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.IdlingResource
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.sdpsharelook.R
+import com.github.sdpsharelook.language.Language
+import com.github.sdpsharelook.language.MatchersTest
 import com.github.sdpsharelook.utils.FragmentScenarioRule
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
@@ -43,140 +51,84 @@ class TranslateFragmentTest {
         }
     }
 
+    private fun selectSourceLanguage(language: Language) {
+        onView(withId(R.id.spinner_source_lang)).perform(click())
+        onData(MatchersTest.isEquals(language)).perform(click())
+    }
+
+    private fun selectTargetLanguage(language: Language) {
+        onView(withId(R.id.spinner_target_lang)).perform(click())
+        onData(MatchersTest.isEquals(language)).perform(click())
+    }
+
     @Test
-    fun empty() {
+    fun `test translate hello from auto to english`() = runTest {
+        selectSourceLanguage(Language.auto)
+        selectTargetLanguage(Language("en"))
+        onView(withId(R.id.sourceText)).perform(replaceText("Hello"))
+        onView(withId(R.id.targetText)).check(matches(withText("Hello")))
     }
 
-    private fun selectSourceLanguage(srcLang: String) {
-        /*Espresso.onView(ViewMatchers.withId(R.id.spinner_source_lang)).perform(ViewActions.click())
-        val dialog = ShadowDialog.getLatestDialog()
-        Assert.assertTrue(dialog.isShowing)
-
-        val et = dialog.findViewById<EditText>(R.id.edit_text_search_language)
-        et.setText(srcLang)
-        val lv = dialog.findViewById<ListView>(R.id.list_view_languages)
-        lv.performItemClick(null, 0, 0)
-
-        ShadowLooper.runUiThreadTasks()
-        Assert.assertFalse(dialog.isShowing)*/
+    @Test
+    fun `translate too short string from auto`() = runTest {
+        selectSourceLanguage(Language.auto)
+        selectTargetLanguage(Language("en"))
+        onView(withId(R.id.sourceText)).perform(replaceText("a"))
+        onView(withId(R.id.targetText)).check(matches(withText("Source language unrecognized.")))
     }
 
-    private fun selectTargetLanguage(targetLang: String) {
-     /*   Espresso.onView(ViewMatchers.withId(R.id.spinner_target_lang)).perform(ViewActions.click())
-        val dialog = ShadowDialog.getLatestDialog()
-        Assert.assertTrue(dialog.isShowing)
-
-        val et = dialog.findViewById<EditText>(R.id.edit_text_search_language)
-        et.setText(targetLang)
-        val lv = dialog.findViewById<ListView>(R.id.list_view_languages)
-        lv.performItemClick(null, 0, 0)
-
-        ShadowLooper.runUiThreadTasks()
-        Assert.assertFalse(dialog.isShowing)*/
+    @Test
+    fun `translate meaningless string from auto`() = runTest {
+        selectSourceLanguage(Language.auto)
+        selectTargetLanguage(Language("en"))
+        onView(withId(R.id.sourceText)).perform(replaceText("didnndoeld"))
+        onView(withId(R.id.targetText)).check(matches(withText("Source language unrecognized.")))
     }
-//
-//    @Test
-//    fun example() {
-//        selectSourceLanguage("français")
-//    }
-//
-//    @Test
-//    @ExperimentalCoroutinesApi
-//    fun testTranslateActivity() = runTest {
-//        // simple translate
-//        selectSourceLanguage("fr")
-//        selectTargetLanguage("en")
-//        onView(withId(R.id.sourceText))
-//            .perform(typeText("Bonjour."), closeSoftKeyboard())
-//
-//        onView(withId(R.id.targetText)).check(matches(withText("Hello.")))
-//        // switch button change
-//        onView(withId(R.id.buttonSwitchLang)).perform(click())
-//
-//        // change target lang
-//        selectTargetLanguage("it")
-//        onView(withId(R.id.targetText)).check(matches(withText("Ciao.")))
-//    }
-//
-//    @Test
-//    @ExperimentalCoroutinesApi
-//    fun testTextToSpeechButton() = runTest {
-//        // speak
-//        onView(withId(R.id.imageButtonTTS)).perform(click())
-//        delay(2000)
-//    }
-//
-////    @Test
-////    @ExperimentalCoroutinesApi
-////    fun testSpeechRecognitionButton() = runTest {
-////        // listen
-////        onView(withId(R.id.imageButtonSR)).perform(click())
-////        getInstrumentation().waitForIdleSync()
-////        delay(2000)
-////
-////        val context = getInstrumentation().context
-////        PermissionChecker.checkCallingOrSelfPermission(
-////            context,
-////            android.Manifest.permission.RECORD_AUDIO
-////        )
-////        PermissionRequester().apply {
-////            addPermissions(android.Manifest.permission.RECORD_AUDIO)
-////            requestPermissions()
-////        }
-////        // onView(withId(R.id.sourceText)).check(matches(withText("...")))
-////        // onView(withId(R.id.sourceText)).check(matches(not(isEnabled())))
-////        delay(1000)
-////    }
-//
-//    @Test
-//    fun testSwitchSourceOrTargetLanguageMustRunTranslation() {
-//        selectSourceLanguage("fr")
-//        selectTargetLanguage("en")
-//        onView(withId(R.id.sourceText))
-//            .perform(typeText("Ciao."), closeSoftKeyboard())
-//        selectSourceLanguage("it")
-//        onView(withId(R.id.targetText)).check(matches(withText("Hello.")))
-//        selectTargetLanguage("fr")
-//        onView(withId(R.id.targetText)).check(matches(withText("Bonjour.")))
-//    }
-//
-//    @Test
-//    fun testAutoDetectShouldCorrectlyDetectSourceLanguage() {
-//        selectSourceLanguage("auto")
-//        selectTargetLanguage("en")
-//        onView(withId(R.id.sourceText))
-//            .perform(typeText("Bonjour."), closeSoftKeyboard())
-//        onView(withId(R.id.targetText)).check(matches(withText("Hello.")))
-//    }
-//
-//    @Test
-//    fun testSwitchButtonMustSwitchLanguagesAndRunTranslation() {
-//        selectSourceLanguage("fr")
-//        selectTargetLanguage("en")
-//        onView(withId(R.id.sourceText)).perform(clearText())
-//            .perform(typeText("Hello."), closeSoftKeyboard())
-//        onView(withId(R.id.buttonSwitchLang)).perform(click())
-//        onView(withId(R.id.buttonSourceLang)).check(matches(withText(Language("en").displayName)))
-//        onView(withId(R.id.buttonTargetLang)).check(matches(withText(Language("fr").displayName)))
-//        onView(withId(R.id.targetText)).check(matches(withText("Bonjour.")))
-//    }
-//
-//    @After
-//    fun unregisterIdlingResource() {
-//        if (mIdlingResource != null) {
-//            IdlingRegistry.getInstance().unregister(mIdlingResource)
-//        }
-//    }
-//
-////    companion object {
-////        @JvmStatic
-////        @BeforeClass
-////        fun dismissANRSystemDialog() {
-////            val device = UiDevice.getInstance(getInstrumentation())
-////            val waitButton = device.findObject(UiSelector().textContains("wait"))
-////            if (waitButton.exists()) {
-////                waitButton.click()
-////            }
-////        }
-////    }
+
+    @Test
+    fun `translate string in missing language from auto`() = runTest {
+        selectSourceLanguage(Language.auto)
+        selectTargetLanguage(Language("en"))
+        onView(withId(R.id.sourceText)).perform(replaceText("Mama mia !"))
+        onView(withId(R.id.targetText)).check(matches(withText("You need to download this language : it")))
+    }
+
+    @Test
+    fun `test switch button from auto`() = runTest {
+        selectSourceLanguage(Language.auto)
+        selectTargetLanguage(Language("en"))
+        onView(withId(R.id.sourceText)).perform(replaceText("Mama mia !"))
+        onView(withId(R.id.targetText)).check(matches(withText("hello")))
+        onView(withId(R.id.buttonSwitchLang)).perform(click())
+        // assert toast ?
+    }
+
+    @Test
+    fun `test switch button from not auto`() = runTest {
+        selectSourceLanguage(Language("en"))
+        selectTargetLanguage(Language("en"))
+        onView(withId(R.id.sourceText)).perform(replaceText("Hello"))
+        onView(withId(R.id.buttonSwitchLang)).perform(click())
+        // assert not toast ?
+    }
+
+    @Test
+    fun `test text to speech`() = runTest {
+        onView(withId(R.id.imageButtonTTS)).perform(click())
+        // nothing to assert
+    }
+
+    @Test
+    fun `test speech recognition`() = runTest {
+        onView(withId(R.id.imageButtonSR)).perform(click())
+        // permission feature was disabled for now in SpeechRecognizer due to a crash
+        /* PermissionChecker.checkCallingOrSelfPermission(
+            context,
+            android.Manifest.permission.RECORD_AUDIO
+        )
+        PermissionRequester().apply {
+            addPermissions(android.Manifest.permission.RECORD_AUDIO)
+            requestPermissions()
+        } */
+    }
 }

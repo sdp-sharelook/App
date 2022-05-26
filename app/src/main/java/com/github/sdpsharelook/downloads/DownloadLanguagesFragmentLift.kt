@@ -10,14 +10,19 @@ import com.github.sdpsharelook.R
 import com.github.sdpsharelook.databinding.FragmentDownloadLanguagesBinding
 import com.github.sdpsharelook.databinding.LayoutLanguageDownloaderBinding
 import com.github.sdpsharelook.language.Language
+import com.github.sdpsharelook.section.SectionFragmentLift
 import com.github.sdpsharelook.translate.MLKitTranslator
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-class DownloadLanguagesFragment : Fragment() {
+@AndroidEntryPoint
+class DownloadLanguagesFragment : DownloadLanguagesFragmentLift()
+
+open class DownloadLanguagesFragmentLift : Fragment() {
     private val downloader = MLKitTranslatorDownloader
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

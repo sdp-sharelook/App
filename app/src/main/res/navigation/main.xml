@@ -6,6 +6,8 @@
     app:startDestination="@id/menuTranslateLink">
     <action android:id="@+id/moveToLogin"
         app:destination="@id/menuLoginLink"/>
+    <action android:id="@+id/moveToProfile"
+        app:destination="@id/profileInformation"/>
     <fragment
         android:id="@+id/menuTranslateLink"
         android:name="com.github.sdpsharelook.translate.TranslateFragment"

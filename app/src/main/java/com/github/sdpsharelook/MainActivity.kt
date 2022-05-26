@@ -9,9 +9,11 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
+import com.github.sdpsharelook.authorization.AuthProvider
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 const val EXTRA_MESSAGE = "com.github.sdpsharelook.NAME"
 
@@ -20,10 +22,14 @@ class MainActivity : MainActivityLift()
 
 open class MainActivityLift : AppCompatActivity() {
 
+    @Inject
+    lateinit var auth: AuthProvider
+
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        auth.signOut()
         setDrawerListener()
     }
 
@@ -38,7 +44,11 @@ open class MainActivityLift : AppCompatActivity() {
         NavigationUI.setupWithNavController(navView, navController)
         NavigationUI.setupWithNavController(bottomView, navController)
         navView.getHeaderView(0).setOnClickListener {
-            navController.navigate(R.id.moveToLogin)
+            if (auth.currentUser == null || auth.currentUser!!.isAnonymous)
+                navController.navigate(R.id.moveToLogin)
+            else
+                navController.navigate(R.id.moveToProfile)
+
             drawerLayout.closeDrawer(GravityCompat.START)
         }
     }

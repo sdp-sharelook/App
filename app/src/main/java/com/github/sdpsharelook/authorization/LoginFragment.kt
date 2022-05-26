@@ -38,7 +38,7 @@ open class LoginFragmentLift : Fragment() {
         val email = binding.email.text.toString()
         val password = binding.password.text.toString()
 
-        //if (auth.currentUser != null) moveToProfileFragment()
+        if (auth.currentUser != null) moveToProfileFragment()
 
         lifecycleScope.launch {
             val user = auth.signInWithEmailAndPassword(email, password)

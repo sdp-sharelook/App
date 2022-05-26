@@ -11,7 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class CardAdapter(
-    private val sections: List<Section>,
+    private val sections: MutableList<Section>,
     private val clickListener: SectionClickListener,
     private val dialog: Dialog
 )
@@ -42,7 +42,7 @@ class CardAdapter(
     }
 
     fun editItem(name: String, flag: Int) {
-        val section = sectionList[editPosition]
+        val section = sections[editPosition]
         section.title = name
         section.flag = flag
         edit = false
@@ -50,9 +50,9 @@ class CardAdapter(
     }
 
     fun removeItem(viewHolder: RecyclerView.ViewHolder, index: Int) {
-        val section = sectionList[index]
+        val section = sections[index]
         Log.d("INDEX", index.toString())
-        sectionList.removeAt(index)
+        sections.removeAt(index)
         CoroutineScope(Dispatchers.IO).launch{
             section.databaseRepo.delete(section.sectionRepo)
         }

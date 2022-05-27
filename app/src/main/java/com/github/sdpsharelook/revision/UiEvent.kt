@@ -9,6 +9,7 @@ sealed class UiEvent {
         val action: String? = null
     ): UiEvent()
     object ShowAnswer : UiEvent()
+    object UpdateBadge : UiEvent()
 }
 
 object Routes {

@@ -69,7 +69,9 @@ class SRAlgo {
             filePath: String = SRDATAFILE
         ): List<RevisionWord> {
             val f = File(context.filesDir, filePath)
-
+            if (f.createNewFile()) {
+                return emptyList()
+            }
             if (!f.isFile || !f.canRead()) {
                 throw IOException("Could not read file to get revision words")
             }

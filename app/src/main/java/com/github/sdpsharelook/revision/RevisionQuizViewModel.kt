@@ -17,6 +17,7 @@ class RevisionQuizViewModel @Inject constructor(
     private val app: Application
 ) : AndroidViewModel(app) {
     init {
+        sendUiEvent(UiEvent.UpdateBadge)
         viewModelScope.launch {
             repo.flow().collect { result ->
                 result.onSuccess { list ->
@@ -24,20 +25,26 @@ class RevisionQuizViewModel @Inject constructor(
                         wordsToQuiz += RevisionWord(it.uid, System.currentTimeMillis())
                     }
                 }
+                sendUiEvent(UiEvent.UpdateBadge)
             }
         }
     }
 
     private var wordsToQuiz: MutableList<RevisionWord> =
-        SRAlgo.loadRevWordsFromLocal(app.applicationContext).toMutableList()
+        SRAlgo.loadRevWordsFromLocal(app.applicationContext)
+            .plus(RevisionWord("1"))
+            .plus(RevisionWord("2"))
+            .toMutableList()
     private var indexIntoQuiz = -1
     private var quizLength = -1
-    private var _current: RevisionWord = wordsToQuiz.first()
+    private var _current: RevisionWord = wordsToQuiz.firstOrNull()?: RevisionWord("")
     set(value) {
         current = getWordFromRevision(value)
         field = value
     }
     lateinit var current: Word
+    val size
+    get() = wordsToQuiz.size
 
     private fun getWordFromRevision(revisionWord: RevisionWord): Word {
         TODO("Not yet implemented")
@@ -59,12 +66,19 @@ class RevisionQuizViewModel @Inject constructor(
                 sendUiEvent(UiEvent.NewWord)
             }
             is QuizEvent.StartQuiz -> {
+                if (event.length > wordsToQuiz.size) {
+                    sendUiEvent(UiEvent.ShowSnackbar(
+                        "Not enough words (${wordsToQuiz.size})"
+                    ))
+                    return
+                }
                 launched = true
                 quizLength = event.length
                 indexIntoQuiz = 0
                 _current = wordsToQuiz[indexIntoQuiz]
                 sendUiEvent(UiEvent.Navigate(Routes.QUIZ))
             }
+            QuizEvent.Ping -> sendUiEvent(UiEvent.UpdateBadge)
         }
     }
 

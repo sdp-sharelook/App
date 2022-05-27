@@ -36,8 +36,7 @@ open class TranslateFragmentLift : Fragment() {
     /**
      * This property is only valid between onCreateView and onDestroyView.
      */
-    private val binding get() = _binding!!
-    private var _binding: FragmentTranslateBinding? = null
+    private lateinit var binding: FragmentTranslateBinding
     private lateinit var textToSpeech: TextToSpeech
     private val sourceLanguage: Language
         get() = binding.spinnerSourceLang.selectedItem as Language? ?: Language.auto
@@ -121,8 +120,8 @@ open class TranslateFragmentLift : Fragment() {
                             (listOf(Language.auto) + availableLanguages))
                     spinnerTargetLang.adapter =
                         LanguageAdapter(requireContext(), availableLanguages)
-                    spinnerSourceLang.setOnItemSelectedListener(onSourceLanguageSelected)
-                    spinnerTargetLang.setOnItemSelectedListener(onTargetLanguageSelected)
+                    spinnerSourceLang.onItemSelectedListener = onSourceLanguageSelected
+                    spinnerTargetLang.onItemSelectedListener = onTargetLanguageSelected
                 }
             }
 
@@ -131,9 +130,7 @@ open class TranslateFragmentLift : Fragment() {
 
 
     private fun initTranslator() {
-        binding.sourceText.addTextChangedListener { afterTextChanged ->
-            updateTranslation()
-        }
+        binding.sourceText.addTextChangedListener { updateTranslation() }
 
         binding.buttonSwitchLang.setOnClickListener {
             when (sourceLanguage) {
@@ -146,9 +143,8 @@ open class TranslateFragmentLift : Fragment() {
                         .show()
                 else -> {
                     val tempSource = binding.sourceText.text.toString()
-                    binding.sourceText.setText(targetText ?: "")
+                    binding.sourceText.setText(targetText)
                     binding.targetText.text = tempSource
-                    val tempLanguage = sourceLanguage
                     val srcSelection = binding.spinnerSourceLang.selectedItemPosition
                     val dstSelection = binding.spinnerTargetLang.selectedItemPosition
                     // -1 and +1 are to realign with language.auto
@@ -202,7 +198,6 @@ open class TranslateFragmentLift : Fragment() {
     }
 
     /** Call to update the text to translate and translate it.
-     * @param textToTranslate [String] | The text to translate.
      */
     private fun updateTranslation() {
         mIdlingResource?.increment()
@@ -233,7 +228,7 @@ open class TranslateFragmentLift : Fragment() {
     private fun addWordToSection() {
 
         val action = TranslateFragmentDirections.actionMenuTranslateLinkToMenuSectionsLink(
-            SectionWord(sourceText, targetText ?: "error", null)
+            SectionWord(sourceText, targetText, null)
         )
         findNavController().navigate(action)
 
@@ -248,13 +243,8 @@ open class TranslateFragmentLift : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentTranslateBinding.inflate(layoutInflater)
+        binding = FragmentTranslateBinding.inflate(layoutInflater)
         return binding.root
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     /**

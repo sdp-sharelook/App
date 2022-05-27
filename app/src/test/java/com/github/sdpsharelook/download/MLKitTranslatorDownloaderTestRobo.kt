@@ -1,9 +1,6 @@
 package com.github.sdpsharelook.download
 
-import android.content.Context
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.work.testing.WorkManagerTestInitHelper
 import com.github.sdpsharelook.downloads.MLKitTranslatorDownloader
 import com.github.sdpsharelook.language.Language
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -12,22 +9,12 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import org.junit.runner.RunWith
 
-private var initialized = false
-
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
 class MLKitTranslatorDownloaderTestRobo {
     private val NULL_LIST_MESSAGE =
         "MLKitTranslatorDownloader.downloadedLanguages() returned null"
 
-    init {
-        if (!initialized) {
-            val ctx: Context = ApplicationProvider.getApplicationContext()
-            WorkManagerTestInitHelper.initializeTestWorkManager(ctx)
-            com.google.mlkit.common.MlKit.initialize(ctx)
-            initialized = true
-        }
-    }
 
     @Test
     @ExperimentalCoroutinesApi

@@ -9,6 +9,6 @@ plugins:
     config:
       languages:
         kotlin:
-          mass_threshold: 20
+          mass_threshold: 120
         java:
-          mass_threshold: 20
+          mass_threshold: 120

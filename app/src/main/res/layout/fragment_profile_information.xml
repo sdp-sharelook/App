@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".authorization.ProfileInformation"
+    android:padding="20dp">
+
+    <RelativeLayout
+        android:id="@+id/profilePicture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.CornerSize50"
+            app:srcCompat="@drawable/default_user_path"
+            android:scaleType="centerCrop"
+            />
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:contentDescription="@string/edit"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@android:drawable/ic_menu_edit" />
+
+    </RelativeLayout>
+    <View
+        android:id="@+id/viewSupporter"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        app:layout_constraintBottom_toBottomOf="@id/profilePicture"
+        app:layout_constraintEnd_toEndOf="@id/profilePicture"
+        app:layout_constraintStart_toStartOf="@id/profilePicture"
+        app:layout_constraintTop_toTopOf="@id/profilePicture"/>
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="@string/no_user"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/viewSupporter"
+        app:layout_constraintStart_toEndOf="@id/profilePicture"/>
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="@string/testuser_gmail_com"
+        android:textColor="@color/md_theme_light_secondary"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/viewSupporter"
+        app:layout_constraintStart_toEndOf="@id/profilePicture"/>
+
+    <RelativeLayout
+        android:id="@+id/statistics"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/profilePicture"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@color/browser_actions_bg_grey"
+        android:layout_marginTop="20dp">
+
+        <TextView
+            android:id="@+id/statisticsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/statistics"
+            android:textSize="24sp"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/numberOfWordsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:text="Number of words : 0"
+            android:layout_below="@id/statisticsTitle"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/numberOfSectionsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:text="Number of sections : 0"
+            android:layout_below="@id/numberOfWordsTitle"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/numberOfPhotosTakenTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:text="Number of photos taken : 0"
+            android:layout_below="@id/numberOfSectionsTitle"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/settings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/statistics"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@color/browser_actions_bg_grey"
+        android:layout_marginTop="20dp">
+
+        <TextView
+            android:id="@+id/settingsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings"
+            android:textSize="24sp"
+            android:textColor="@color/black"/>
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:text="@string/mute_notifications"
+            android:textSize="16sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/settingsTitle"/>
+
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

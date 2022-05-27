@@ -4,6 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     app:startDestination="@id/menuTranslateLink">
+    <action android:id="@+id/moveToLogin"
+        app:destination="@id/menuLoginLink"/>
+    <action android:id="@+id/moveToProfile"
+        app:destination="@id/profileInformation"/>
     <fragment
         android:id="@+id/menuTranslateLink"
         android:name="com.github.sdpsharelook.translate.TranslateFragment"
@@ -83,8 +87,8 @@
             android:id="@+id/action_menuLoginLink_to_signUpFragment"
             app:destination="@id/signUpFragment" />
         <action
-            android:id="@+id/action_menuLoginLink_to_greetingFragment"
-            app:destination="@id/greetingFragment" />
+            android:id="@+id/action_menuLoginLink_to_profileInformationFragment"
+            app:destination="@id/profileInformation" />
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
@@ -114,6 +118,11 @@
         android:name="com.github.sdpsharelook.MapsFragment"
         android:label="fragment_maps"
         tools:layout="@layout/fragment_maps" />
+    <fragment
+        android:id="@+id/profileInformation"
+        android:name="com.github.sdpsharelook.authorization.ProfileInformation"
+        android:label="fragment_profile_information"
+        tools:layout="@layout/fragment_profile_information" />
     <fragment
         android:id="@+id/launchQuizFragment"
         android:name="com.github.sdpsharelook.revision.LaunchQuizFragment"

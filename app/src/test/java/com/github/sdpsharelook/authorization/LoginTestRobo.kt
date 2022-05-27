@@ -58,7 +58,7 @@ class LoginTestRobo {
         onView(withId(R.id.email)).perform(typeText(TEST_USER_EMAIL))
         onView(withId(R.id.password)).perform(typeText(TEST_USER_PASS))
         onView(withId(R.id.loginButton)).perform(click())
-        assertEquals(R.id.greetingFragment, navController.currentDestination!!.id)
+        assertEquals(R.id.profileInformation, navController.currentDestination!!.id)
         assert(auth.currentUser!!.email == TEST_USER_EMAIL)
     }
 

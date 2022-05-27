@@ -13,6 +13,7 @@ import com.github.sdpsharelook.storage.IRepository
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.*
@@ -41,7 +42,8 @@ open class HistoryFragmentLift : Fragment() {
             wordRepos.flow().collect { words ->
                 wordList = words.getOrDefault(emptyList<Word>()) as List<Word>
                 wordList.sortedBy { x -> x.savedDate!! }
-                val timeNow = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant())
+                val timeNow = Date.from(Instant.now())
+
                 val rightWord : Date
                 for (word in wordList!!) {
                     if (word.location != null) {

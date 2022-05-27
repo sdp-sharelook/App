@@ -1,7 +1,7 @@
 package com.github.sdpsharelook.authorization
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.github.sdpsharelook.di.AuthModule
+import com.github.sdpsharelook.di.MLKitModule
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
@@ -22,7 +22,7 @@ import org.junit.runner.RunWith
 import org.mockito.kotlin.*
 import javax.inject.Inject
 
-@UninstallModules(AuthModule::class)
+@UninstallModules(MLKitModule::class)
 @ExperimentalCoroutinesApi
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)

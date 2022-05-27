@@ -17,13 +17,16 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
 class DownloadLanguagesFragment : DownloadLanguagesFragmentLift()
 
 open class DownloadLanguagesFragmentLift : Fragment() {
-    private val downloader = MLKitTranslatorDownloader
+    @Inject
+    public lateinit var downloader: TranslatorDownloader
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,

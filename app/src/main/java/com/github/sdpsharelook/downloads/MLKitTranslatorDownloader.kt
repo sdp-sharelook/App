@@ -2,24 +2,22 @@ package com.github.sdpsharelook.downloads
 
 import com.github.sdpsharelook.language.Language
 import com.github.sdpsharelook.translate.MLKitTranslator
-import com.google.android.gms.tasks.OnFailureListener
-import com.google.android.gms.tasks.OnSuccessListener
 import com.google.mlkit.common.model.DownloadConditions
 import com.google.mlkit.common.model.RemoteModelManager
 import com.google.mlkit.nl.translate.TranslateRemoteModel
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-object MLKitTranslatorDownloader {
+object MLKitTranslatorDownloader : TranslatorDownloader {
     private val modelManager = RemoteModelManager.getInstance()
 
-    suspend fun downloadedLanguages(): List<Language>? = suspendCoroutine { continuation ->
+    override suspend fun downloadedLanguages(): List<Language>? = suspendCoroutine { continuation ->
         modelManager.getDownloadedModels(TranslateRemoteModel::class.java)
-            .addOnSuccessListener { models -> continuation.resume(models.map { Language(it.language) }) }
+            .addOnSuccessListener { models -> continuation.resume(models.map { Language(it.language) }.sortedBy { it.displayName }) }
             .addOnFailureListener { continuation.resume(null) }
     }
 
-    suspend fun deleteLanguage(language: Language): Boolean =
+    override suspend fun deleteLanguage(language: Language): Boolean =
         if (language == Language("en")) false
         else if (language !in (downloadedLanguages() ?: listOf())) false
         else suspendCoroutine { continuation ->
@@ -33,7 +31,7 @@ object MLKitTranslatorDownloader {
                 }
         }
 
-    suspend fun downloadLanguage(language: Language, requireWifi: Boolean = false): Boolean =
+    override suspend fun downloadLanguage(language: Language, requireWifi: Boolean): Boolean =
         downloadedLanguages()?.let { downloadedLanguages ->
             if (language !in MLKitTranslator.availableLanguages) false
             else if (language in downloadedLanguages) true

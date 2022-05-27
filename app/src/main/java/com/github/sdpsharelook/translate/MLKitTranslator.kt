@@ -12,16 +12,16 @@ import kotlinx.coroutines.tasks.await
  * @param src : String defined in TranslateLanguage class | source language
  * @param dst : String defined in TranslateLanguage class | destination language
  */
-object MLKitTranslator {
+object MLKitTranslator : TranslationProvider {
 
-    suspend fun detectLanguage(text: String): String =
+    override suspend fun detectLanguage(text: String): String =
         LanguageIdentification.getClient().identifyLanguage(text).await()
 
     /** Translate the text from src language to dst language using coroutines
      * @param text : String | Text in src language to translate in dst language
      * @return translationResult : String
      */
-    suspend fun translate(text: String, src: String, dst: String): String {
+    override suspend fun translate(text: String, src: String, dst: String): String {
         val options = TranslatorOptions.Builder()
             .setSourceLanguage(src)
             .setTargetLanguage(dst)
@@ -30,7 +30,7 @@ object MLKitTranslator {
         return translator.translate(text).await()
     }
 
-    val availableLanguages: Set<Language> =
+    override val availableLanguages: Set<Language> =
         TranslateLanguage.getAllLanguages().map {
             Language(it)
         }.toSet()

@@ -38,7 +38,7 @@ open class LoginFragmentLift : Fragment() {
         val email = binding.email.text.toString()
         val password = binding.password.text.toString()
 
-        if (auth.currentUser != null) greet(auth.currentUser?.displayName)
+        if (auth.currentUser != null) moveToProfileFragment()
 
         lifecycleScope.launch {
             val user = auth.signInWithEmailAndPassword(email, password)
@@ -46,7 +46,7 @@ open class LoginFragmentLift : Fragment() {
                 requireActivity().runOnUiThread {
                     Toast.makeText(requireContext(), "Logged in !", Toast.LENGTH_SHORT).show()
                 }
-                greet(user.getOrThrow().displayName)
+                moveToProfileFragment()
             } else {
                 requireActivity().runOnUiThread {
                     Toast.makeText(
@@ -59,10 +59,10 @@ open class LoginFragmentLift : Fragment() {
         }
     }
 
-    private fun greet(name: String?) {
-        val tName =
-            if (name.isNullOrBlank() || auth.currentUser!!.isAnonymous) "anonymous" else name
-        val action = LoginFragmentDirections.actionMenuLoginLinkToGreetingFragment(tName)
+    private fun moveToProfileFragment() {
+        //val tName =
+        //    if (name.isNullOrBlank() || auth.currentUser!!.isAnonymous) "anonymous" else name
+        val action = LoginFragmentDirections.actionMenuLoginLinkToProfileInformationFragment()
         findNavController().navigate(action)
     }
 

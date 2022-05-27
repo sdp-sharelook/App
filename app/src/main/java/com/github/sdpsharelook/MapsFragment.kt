@@ -45,11 +45,6 @@ open class MapsFragmentLift : Fragment(R.layout.fragment_maps) {
      * user has installed Google Play services and returned to the app.
      */
     private val callback = OnMapReadyCallback { googleMap ->
-
-
-        // ===========================================================================================================
-        // TODO: Fill words with real list of words in the database
-        // TODO: Check why Picture is a String and not a Bitmap in Word
         lifecycleScope.launch {
             wordRepos.flow().collect { words ->
                 val wordList = words.getOrDefault(emptyList<Word>())

@@ -144,4 +144,6 @@
     <string name="flag_of_language">flag_of_language</string>
     <string name="edit">edit</string>
     <string name="delete">delete</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -36,4 +36,9 @@
         android:icon="@android:drawable/ic_menu_save"
         android:title="Map"
         />
+    <item
+        android:id="@+id/historyFragment"
+        android:icon="@android:drawable/ic_menu_save"
+        android:title="History"
+        />
 </menu>

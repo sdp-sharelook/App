@@ -1,4 +1,4 @@
-package com.github.sdpsharelook
+package com.github.sdpsharelook.utils
 
 import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint

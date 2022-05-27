@@ -33,8 +33,6 @@ class TextDetectionFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.detectButton.isEnabled = false
-
         binding.detectButton.setOnClickListener{
 
             recognizer.process(inputImage)

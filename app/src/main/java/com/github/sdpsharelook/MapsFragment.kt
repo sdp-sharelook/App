@@ -2,12 +2,18 @@ package com.github.sdpsharelook
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.location.Location
 import android.os.Bundle
 import android.util.Base64.*
 import android.view.View
+import android.widget.ImageView
+import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import coil.load
+import com.github.sdpsharelook.language.Language
 import com.github.sdpsharelook.storage.RTDBWordListRepository
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -16,6 +22,9 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toJavaInstant
+import kotlinx.datetime.toLocalDateTime
 import java.io.ByteArrayOutputStream
 import java.util.*
 import javax.inject.Inject
@@ -119,13 +128,20 @@ class MapsFragment : Fragment(R.layout.fragment_maps) {
         map.setOnMarkerClickListener { marker ->
             val word = markerMap[marker]
             BitmapFactory.decodeResource(requireContext().resources, R.drawable.default_user_path)
+            val imageView : ImageView = ImageView(requireContext())
             if (word != null) {
-                ImagePopupFragment.newInstance(
-                    word.source.toString(),
-                    word.target.toString(),
-                    word.savedDate!!,
-                    decodeImage(word.picture!!)
-                ).show(childFragmentManager, ImagePopupFragment.TAG)
+                imageView.load(word.picture!!)
+            }
+            if (word != null) {
+                word.savedDate?.let {
+                    ImagePopupFragment.newInstance(
+                        word.source.toString(),
+                        word.target.toString(),
+                        it,
+                        imageView.drawable.toBitmap()
+                        //decodeImage(word.picture!!)
+                    ).show(childFragmentManager, ImagePopupFragment.TAG)
+                }
 
             }
             marker.showInfoWindow()

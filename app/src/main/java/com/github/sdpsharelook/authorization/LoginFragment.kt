@@ -14,7 +14,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class LoginFragment : Fragment() {
+class LoginFragment : LoginFragmentLift()
+
+open class LoginFragmentLift : Fragment() {
 
     /**
      * This property is only valid between onCreateView and onDestroyView.
@@ -36,7 +38,7 @@ class LoginFragment : Fragment() {
         val email = binding.email.text.toString()
         val password = binding.password.text.toString()
 
-        if (auth.currentUser != null) greet(auth.currentUser?.displayName)
+        if (auth.currentUser != null) moveToProfileFragment()
 
         lifecycleScope.launch {
             val user = auth.signInWithEmailAndPassword(email, password)
@@ -44,7 +46,7 @@ class LoginFragment : Fragment() {
                 requireActivity().runOnUiThread {
                     Toast.makeText(requireContext(), "Logged in !", Toast.LENGTH_SHORT).show()
                 }
-                greet(user.getOrThrow().displayName)
+                moveToProfileFragment()
             } else {
                 requireActivity().runOnUiThread {
                     Toast.makeText(
@@ -57,10 +59,10 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private fun greet(name: String?) {
-        val tName =
-            if (name.isNullOrBlank() || auth.currentUser!!.isAnonymous) "anonymous" else name
-        val action = LoginFragmentDirections.actionMenuLoginLinkToGreetingFragment(tName)
+    private fun moveToProfileFragment() {
+        //val tName =
+        //    if (name.isNullOrBlank() || auth.currentUser!!.isAnonymous) "anonymous" else name
+        val action = LoginFragmentDirections.actionMenuLoginLinkToProfileInformationFragment()
         findNavController().navigate(action)
     }
 

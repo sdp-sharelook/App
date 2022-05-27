@@ -4,6 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     app:startDestination="@id/menuTranslateLink">
+    <action android:id="@+id/moveToLogin"
+        app:destination="@id/menuLoginLink"/>
+    <action android:id="@+id/moveToProfile"
+        app:destination="@id/profileInformation"/>
     <fragment
         android:id="@+id/menuTranslateLink"
         android:name="com.github.sdpsharelook.translate.TranslateFragment"
@@ -16,7 +20,19 @@
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/action_menuTranslateLink_to_menuCameraLink"
+            app:destination="@id/menuCameraLink" />
+        <argument
+            android:name="textDetected"
+            app:argType="string"
+            android:defaultValue="Nothing Detected" />
     </fragment>
+    <fragment
+        android:id="@+id/downloadFragment"
+        android:name="com.github.sdpsharelook.downloads.DownloadLanguagesFragment"
+        tools:layout="@layout/fragment_download_languages"
+        android:label="fragment_downloader" />
     <fragment
         android:id="@+id/menuSectionsLink"
         android:name="com.github.sdpsharelook.section.SectionFragment"
@@ -50,7 +66,15 @@
         android:id="@+id/menuCameraLink"
         android:name="com.github.sdpsharelook.camera.CameraFragment"
         android:label="fragment_camera"
-        tools:layout="@layout/fragment_camera" />
+        tools:layout="@layout/fragment_camera" >
+        <action
+            android:id="@+id/action_menuCameraLink_to_menuTranslateLink2"
+            app:destination="@id/menuTranslateLink"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@animator/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
     <fragment
         android:id="@+id/menuLoginLink"
         android:name="com.github.sdpsharelook.authorization.LoginFragment"
@@ -60,8 +84,8 @@
             android:id="@+id/action_menuLoginLink_to_signUpFragment"
             app:destination="@id/signUpFragment" />
         <action
-            android:id="@+id/action_menuLoginLink_to_greetingFragment"
-            app:destination="@id/greetingFragment" />
+            android:id="@+id/action_menuLoginLink_to_profileInformationFragment"
+            app:destination="@id/profileInformation" />
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
@@ -91,4 +115,9 @@
         android:name="com.github.sdpsharelook.MapsFragment"
         android:label="fragment_maps"
         tools:layout="@layout/fragment_maps" />
+    <fragment
+        android:id="@+id/profileInformation"
+        android:name="com.github.sdpsharelook.authorization.ProfileInformation"
+        android:label="fragment_profile_information"
+        tools:layout="@layout/fragment_profile_information" />
 </navigation>

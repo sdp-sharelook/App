@@ -1,4 +1,4 @@
-package com.github.sdpsharelook
+package com.github.sdpsharelook.utils
 
 import android.content.ComponentName
 import android.content.Intent
@@ -14,6 +14,7 @@ import androidx.test.espresso.core.internal.deps.guava.base.Preconditions
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.robolectric.shadows.ShadowDialog
 
+@Deprecated(message = "Use FragmentScenarioRule instead")
 @ExperimentalCoroutinesApi
 inline fun <reified T : Fragment> launchFragmentInHiltContainer(
     fragmentArgs: Bundle? = null,

@@ -1,24 +1,16 @@
 package com.github.sdpsharelook.storage
 
-import android.util.Log
 import com.github.sdpsharelook.Word
 import com.github.sdpsharelook.authorization.AuthProvider
 import com.github.sdpsharelook.section.Section
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import com.google.gson.TypeAdapter
-import com.google.gson.stream.JsonReader
-import com.google.gson.stream.JsonWriter
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import java.util.*
 import javax.inject.Inject
 
@@ -89,7 +81,7 @@ class RTDBWordListRepository @Inject constructor(
      * @param name identifier of entity
      * @param entity Entity List of words
      */
-    suspend fun insertList(name: String, entity: List<Word>) {
+    override suspend fun insertList(name: String, entity: List<Word>) {
         for (word in entity) {
            getSectionReference(name).child(word.uid).setValue(Gson().toJson(word))
         }
@@ -102,11 +94,11 @@ class RTDBWordListRepository @Inject constructor(
      * @param name identifier of entity
      * @param entity Entity Section
      */
-    suspend fun insertSection(entity: Section) {
-        getSectionReference("SectionList").child(entity.id!!).setValue(Gson().toJson(entity).toString())
+    override suspend fun insertSection(entity: Section) {
+        getSectionReference("SectionList").child(entity.id).setValue(Gson().toJson(entity).toString())
     }
 
-    fun flowSection(): Flow<Result<List<Section>?>> =
+    override fun flowSection(): Flow<Result<List<Section>?>> =
         callbackFlow {
 
             val fireListener = object : ChildEventListener {

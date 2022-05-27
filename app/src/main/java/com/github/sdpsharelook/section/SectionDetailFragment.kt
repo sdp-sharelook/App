@@ -1,32 +1,27 @@
 package com.github.sdpsharelook.section
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.BaseAdapter
-import androidx.core.view.doOnAttach
-import androidx.core.view.isNotEmpty
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.github.sdpsharelook.Word
 import com.github.sdpsharelook.databinding.FragmentSectionDetailBinding
-import com.github.sdpsharelook.storage.RTDBWordListRepository
+import com.github.sdpsharelook.storage.IRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import okhttp3.internal.notify
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class SectionDetailFragment : Fragment() {
 
     @Inject
-    lateinit var wordRTDB : RTDBWordListRepository
+    lateinit var wordRTDB : IRepository<List<Word>>
 
     /**
      * This property is only valid between onCreateView and onDestroyView.

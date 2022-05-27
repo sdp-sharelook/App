@@ -2,7 +2,6 @@ package com.github.sdpsharelook
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.location.Location
 import android.os.Bundle
 import android.util.Base64.*
 import android.view.View
@@ -11,9 +10,7 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import coil.load
-import com.github.sdpsharelook.language.Language
-import com.github.sdpsharelook.storage.RTDBWordListRepository
-import com.google.android.gms.maps.CameraUpdateFactory
+import com.github.sdpsharelook.storage.IRepository
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
@@ -22,9 +19,6 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toJavaInstant
-import kotlinx.datetime.toLocalDateTime
 import java.io.ByteArrayOutputStream
 import java.util.*
 import javax.inject.Inject
@@ -35,7 +29,7 @@ class MapsFragment : Fragment(R.layout.fragment_maps) {
     private var markerMap: HashMap<Marker?, Word> = HashMap<Marker?, Word>()
 
     @Inject
-    lateinit var wordRepos: RTDBWordListRepository
+    lateinit var wordRepos: IRepository<List<Word>>
 
     /**
      * Manipulates the map once available.

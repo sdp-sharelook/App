@@ -18,10 +18,9 @@ import com.github.sdpsharelook.Word
 import com.github.sdpsharelook.databinding.CardSectionBinding
 import com.github.sdpsharelook.databinding.FragmentSectionBinding
 import com.github.sdpsharelook.databinding.PopupBinding
-import com.github.sdpsharelook.storage.RTDBWordListRepository
+import com.github.sdpsharelook.storage.IRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -45,7 +44,7 @@ class SectionFragment : Fragment(), SectionClickListener {
     private lateinit var cardBinding: CardSectionBinding
 
     @Inject
-    lateinit var databaseWordList: RTDBWordListRepository
+    lateinit var databaseWordList: IRepository<List<Word>>
 
     private lateinit var dialog: Dialog
     var mainCountryList = initList()
@@ -77,7 +76,7 @@ class SectionFragment : Fragment(), SectionClickListener {
         val cardAdapter = CardAdapter(this, dialog, databaseWordList)
         binding.recyclerView.adapter = cardAdapter
 
-        GlobalScope.launch(Dispatchers.IO) {
+        lifecycleScope.launch(Dispatchers.IO) {
             collectSectionFlow()
         }
 
@@ -168,9 +167,9 @@ class SectionFragment : Fragment(), SectionClickListener {
 
 
 
-        GlobalScope.launch(Dispatchers.IO) {
-            if (sectionWord != null) {
-                databaseWordList.insertList(section.id, listOf(sectionWord) as List<Word>)
+        lifecycleScope.launch(Dispatchers.IO) {
+            sectionWord?.let {
+                databaseWordList.insertList(section.id, listOf(it))
             }
         }
 

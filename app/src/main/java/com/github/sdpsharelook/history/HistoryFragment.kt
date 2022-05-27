@@ -73,18 +73,21 @@ open class HistoryFragmentLift : Fragment() {
 
     @SuppressLint("SetTextI18n")
     private fun updateViews(i: Int) {
+        val text : String
         when(i) {
-            0 -> { requireView().findViewById<TextView>(R.id.recapDescription).text = "Last Week" }
-            1 -> { requireView().findViewById<TextView>(R.id.recapDescription).text = "Last Month"}
-            2 -> { requireView().findViewById<TextView>(R.id.recapDescription).text = "Last Year"}
+            0 -> { text = "Last Week" }
+            1 -> { text = "Last Month"}
+            2 -> { text = "Last Year"}
+            else -> {text = "Last Week"}
         }
+        requireView().findViewById<TextView>(R.id.recapDescription).text = text
+
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_history, container, false)
     }
 }

@@ -13,9 +13,9 @@ import java.util.*
 data class Word(
     val uid: String = "",
     val source: String? = "",
-    val sourceLanguage: Language? = Language.auto,
+    val sourceLanguage: String? = "",
     val target: String? = "",
-    val targetLanguage: Language? = Language.auto,
+    val targetLanguage: String? = "",
     @Expose(serialize = true, deserialize = true)
     var location: LatLng? = null,
     val savedDate: Date? = null,
@@ -45,9 +45,9 @@ data class Word(
             Word(
                 "testinguidneveractuallyusethis",
                 "test",
-                Language("French"),
+                "French",
                 "test",
-                Language("English"),
+                "English",
                 LatLng(46.0, 6.0),
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) Date.from(
                     Instant.ofEpochMilli(1000000000)
@@ -57,5 +57,16 @@ data class Word(
             )
         }
     }
+
+    fun toList(): List<String?> =
+        listOf(uid, source, sourceLanguage, target, targetLanguage)
 }
+
+/*
+fun List<String>.toWord(): Word  {
+    val (uid, source, sourcetag, target, targettag) = this
+    return Word(uid, source, Language(sourcetag), target, Language(targettag))
+}
+*/
+
 

@@ -52,12 +52,13 @@
                 android:src="@drawable/ic_camera" />
         </RelativeLayout>
 
+
         <TableRow
             android:layout_height="wrap_content"
             android:gravity="center_vertical">
 
-            <Button
-                android:id="@+id/buttonSourceLang"
+            <Spinner
+                android:id="@+id/spinner_source_lang"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -65,12 +66,10 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
                 android:layout_weight="1"
-                android:backgroundTint="@color/white"
-                android:drawableEnd="@drawable/ic_spinner_arrow"
                 android:minHeight="48dp"
                 android:text="@string/source_language"
                 android:textAlignment="center"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"/>
 
             <ImageButton
                 android:id="@+id/buttonSwitchLang"
@@ -79,8 +78,8 @@
                 android:contentDescription="@string/switch_languages"
                 android:src="@drawable/ic_switch_languages" />
 
-            <Button
-                android:id="@+id/buttonTargetLang"
+            <Spinner
+                android:id="@+id/spinner_target_lang"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -88,10 +87,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
                 android:layout_weight="1"
-                android:backgroundTint="@color/white"
-                android:drawableLeft="@drawable/ic_spinner_arrow"
                 android:minHeight="48dp"
-                android:text="@string/target_language"
                 android:textAlignment="center"
                 android:textColor="@color/black" />
         </TableRow>

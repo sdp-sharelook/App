@@ -1,5 +1,7 @@
 package com.github.sdpsharelook.translate
 
+import android.content.Context
+import com.github.sdpsharelook.downloads.MLKitTranslatorDownloader
 import com.github.sdpsharelook.language.Language
 import com.google.android.gms.tasks.Task
 import com.google.mlkit.common.model.DownloadConditions
@@ -14,41 +16,26 @@ import kotlinx.coroutines.tasks.await
  * @param src : String defined in TranslateLanguage class | source language
  * @param dst : String defined in TranslateLanguage class | destination language
  */
-class MLKitTranslator(src: String, dst: String) {
+object MLKitTranslator {
 
-    private var translator: Translator
-
-    init {
-        val options = TranslatorOptions.Builder()
-            .setSourceLanguage(src)
-            .setTargetLanguage(dst)
-            .build()
-        translator = Translation.getClient(options)
-    }
-
-    private fun downloadModelIfNeeded(): Task<Void> {
-        val conditions = DownloadConditions.Builder()
-            .requireWifi()
-            .build()
-        return translator.downloadModelIfNeeded(conditions)
-    }
+    suspend fun detectLanguage(text: String): String =
+        LanguageIdentification.getClient().identifyLanguage(text).await()
 
     /** Translate the text from src language to dst language using coroutines
      * @param text : String | Text in src language to translate in dst language
      * @return translationResult : String
      */
-    suspend fun translate(text: String): String {
-        downloadModelIfNeeded().await()
+    suspend fun translate(text: String, src: String, dst: String): String {
+        val options = TranslatorOptions.Builder()
+            .setSourceLanguage(src)
+            .setTargetLanguage(dst)
+            .build()
+        val translator: Translator = Translation.getClient(options)
         return translator.translate(text).await()
     }
 
-    companion object {
-        suspend fun detectLanguage(text: String) : String =
-            LanguageIdentification.getClient().identifyLanguage(text).await()
-
-        val availableLanguages: Set<Language> =
-            TranslateLanguage.getAllLanguages().map {
-                Language(it)
-            }.toSet()
-    }
+    val availableLanguages: Set<Language> =
+        TranslateLanguage.getAllLanguages().map {
+            Language(it)
+        }.toSet()
 }

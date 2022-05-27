@@ -1,24 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="10dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    app:behavior_hideable="false"
+    app:behavior_peekHeight="40dp"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <ProgressBar
         android:id="@+id/progress_bar_api_request"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:indeterminateTint="@color/white" />
+        android:layout_margin="10dp"
+        android:indeterminateTint="@color/md_theme_light_primary" />
 
     <LinearLayout
         android:id="@+id/linear_layout_pictures"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="20dp"
-        android:background="@drawable/bg_rounded"
+        android:background="@color/transparent"
         android:orientation="vertical"
         android:visibility="gone">
 
@@ -45,7 +47,7 @@
         android:layout_height="match_parent"
         android:text="@string/no_result_found"
         android:textAlignment="center"
-        android:textColor="@color/white"
+        android:textColor="@color/md_theme_light_primary"
         android:textSize="20sp"
         android:visibility="gone">
 

@@ -25,6 +25,11 @@
             android:defaultValue="Nothing Detected" />
     </fragment>
     <fragment
+        android:id="@+id/downloadFragment"
+        android:name="com.github.sdpsharelook.downloads.DownloadLanguagesFragment"
+        tools:layout="@layout/fragment_download_languages"
+        android:label="fragment_downloader" />
+    <fragment
         android:id="@+id/menuSectionsLink"
         android:name="com.github.sdpsharelook.section.SectionFragment"
         android:label="fragment_section"

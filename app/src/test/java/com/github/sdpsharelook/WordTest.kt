@@ -11,6 +11,7 @@ class WordTest {
         val map = Word.testWord.toMap()
         assert(map.containsValue(uid))
         assert(map.containsValue(source))
+        println(map)
         assert(map.containsValue(sourceLanguage))
         assert(map.containsValue(target))
         assert(map.containsValue(targetLanguage))
@@ -25,9 +26,9 @@ class WordTest {
         val (_uid, _source, _sourceLanguage, _target, _targetLanguage, _location, _savedDate, _picture, _isFavourite) = Word.testWord
         val word = DBWord(
             _source!!,
-            _sourceLanguage!!.tag,
+            _sourceLanguage!!,
             _target!!,
-            _targetLanguage!!.tag,
+            _targetLanguage!!,
             _location.toString(),
             _savedDate.toString(),
             _picture!!,
@@ -80,9 +81,9 @@ class WordTest {
         val (_uid, _source, _sourceLanguage, _target, _targetLanguage, _location, _savedDate, _picture, _isFavourite) = Word.testWord
         val word = DBWord(
             _source!!,
-            _sourceLanguage!!.tag,
+            _sourceLanguage!!,
             _target!!,
-            _targetLanguage!!.tag,
+            _targetLanguage!!,
             _location.toString(),
             _savedDate.toString(),
             _picture!!,

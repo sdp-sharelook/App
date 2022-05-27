@@ -1,12 +1,11 @@
 package com.github.sdpsharelook.di
 
-import com.github.sdpsharelook.authorization.AuthProvider
-import com.github.sdpsharelook.authorization.FireAuth
 import com.github.sdpsharelook.downloads.MLKitTranslatorDownloader
 import com.github.sdpsharelook.downloads.TranslatorDownloader
 import com.github.sdpsharelook.translate.MLKitTranslator
 import com.github.sdpsharelook.translate.TranslationProvider
-import com.google.firebase.auth.FirebaseAuth
+import com.google.mlkit.nl.languageid.LanguageIdentification
+import com.google.mlkit.nl.languageid.LanguageIdentifier
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -31,9 +30,5 @@ abstract class TranslationModule {
 object MLKitModule {
     @Singleton
     @Provides
-    fun provideMlKitTranslatorDownloader(): MLKitTranslatorDownloader = MLKitTranslatorDownloader
-
-    @Singleton
-    @Provides
-    fun provideMlKitTranslator(): MLKitTranslator = MLKitTranslator
+    fun provideLanguageIdentifier(): LanguageIdentifier = LanguageIdentification.getClient()
 }

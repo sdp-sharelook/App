@@ -1,61 +1,32 @@
 package com.github.sdpsharelook.translate
 
-import android.widget.EditText
-import android.widget.ListView
-import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.IdlingResource
-import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.sdpsharelook.R
-import com.github.sdpsharelook.di.MLKitModule
-import com.github.sdpsharelook.di.TranslationModule
-import com.github.sdpsharelook.downloads.TranslatorDownloader
 import com.github.sdpsharelook.language.Language
 import com.github.sdpsharelook.language.MatchersTest
 import com.github.sdpsharelook.utils.FragmentScenarioRule
-import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import dagger.hilt.android.testing.UninstallModules
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.robolectric.shadows.ShadowDialog
-import org.robolectric.shadows.ShadowLooper
 
 @ExperimentalCoroutinesApi
 @HiltAndroidTest
-@UninstallModules(MLKitModule::class, TranslationModule::class)
 @RunWith(AndroidJUnit4::class)
 class TranslateFragmentTest {
-
-    @BindValue
-    val downloader: TranslatorDownloader = object : TranslatorDownloader {
-        override suspend fun downloadedLanguages(): List<Language>? {
-            return listOf()
-        }
-
-        override suspend fun deleteLanguage(language: Language): Boolean {
-            return false
-        }
-
-        override suspend fun downloadLanguage(language: Language, requireWifi: Boolean): Boolean {
-            return false
-        }
-    }
-
-
     private var mIdlingResource: IdlingResource? = null
 
     @get:Rule(order = 0)

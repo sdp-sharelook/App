@@ -15,7 +15,7 @@ import androidx.test.espresso.IdlingResource
 import androidx.test.espresso.idling.CountingIdlingResource
 import com.github.sdpsharelook.R
 import com.github.sdpsharelook.databinding.FragmentTranslateBinding
-import com.github.sdpsharelook.downloads.MLKitTranslatorDownloader
+import com.github.sdpsharelook.downloads.TranslatorDownloader
 import com.github.sdpsharelook.language.Language
 import com.github.sdpsharelook.language.LanguageAdapter
 import com.github.sdpsharelook.section.SectionWord
@@ -27,11 +27,17 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class TranslateFragment : TranslateFragmentLift()
 
 open class TranslateFragmentLift : Fragment() {
+
+    @Inject
+    lateinit var translator: TranslationProvider
+    @Inject
+    lateinit var translatorDownloader: TranslatorDownloader
 
     /**
      * This property is only valid between onCreateView and onDestroyView.
@@ -111,7 +117,7 @@ open class TranslateFragmentLift : Fragment() {
     private fun putLanguagesInSpinners() {
         CoroutineScope(Dispatchers.IO).launch {
             availableLanguages =
-                MLKitTranslatorDownloader.downloadedLanguages() ?: listOf(Language("en"))
+                translatorDownloader.downloadedLanguages() ?: listOf(Language("en"))
             withContext(Dispatchers.Main) {
                 initTranslator()
                 binding.apply {
@@ -204,10 +210,10 @@ open class TranslateFragmentLift : Fragment() {
         CoroutineScope(Dispatchers.IO).launch {
             val detectedLanguage =
                 if (sourceLanguage == Language.auto && sourceText.length > 2)
-                    Language(MLKitTranslator.detectLanguage(sourceText))
+                    Language(translator.detectLanguage(sourceText))
                 else sourceLanguage
 
-            if (detectedLanguage !in MLKitTranslator.availableLanguages) {
+            if (detectedLanguage !in translator.availableLanguages) {
                 targetText = getString(R.string.unrecognized_source_language)
                 return@launch
             }
@@ -219,7 +225,7 @@ open class TranslateFragmentLift : Fragment() {
                 return@launch
             }
             targetText = getString(R.string.translation_running)
-            targetText = MLKitTranslator.translate(sourceText, detectedLanguage.tag,
+            targetText = translator.translate(sourceText, detectedLanguage.tag,
                 targetLanguage.tag)
             mIdlingResource?.decrement()
         }

@@ -3,11 +3,14 @@ package com.github.sdpsharelook.download
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.sdpsharelook.downloads.MLKitTranslatorDownloader
 import com.github.sdpsharelook.language.Language
+import com.github.sdpsharelook.translate.MLKitTranslator
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
@@ -16,12 +19,22 @@ class MLKitTranslatorDownloaderTestRobo {
         "MLKitTranslatorDownloader.downloadedLanguages() returned null"
 
 
+    @Inject
+    lateinit var translator: MLKitTranslator
+    lateinit var translatorDownloader: MLKitTranslatorDownloader
+
+
+    @Before
+    fun setUp() {
+        translatorDownloader = MLKitTranslatorDownloader(translator)
+    }
+
     @Test
     @ExperimentalCoroutinesApi
     fun `test english always in downloaded languages`() = runTest {
         advanceUntilIdle()
         val english = Language("en")
-        MLKitTranslatorDownloader.downloadedLanguages()?.let {
+        translatorDownloader.downloadedLanguages()?.let {
             assert(english in it) { "$english language should always be in downloaded languages" }
         } ?: assert(false) { NULL_LIST_MESSAGE }
     }
@@ -31,8 +44,8 @@ class MLKitTranslatorDownloaderTestRobo {
     fun `test downloading a language`() = runTest {
         advanceUntilIdle()
         val language = Language("it")
-        MLKitTranslatorDownloader.downloadLanguage(language)
-        MLKitTranslatorDownloader.downloadedLanguages()?.let {
+        translatorDownloader.downloadLanguage(language)
+        translatorDownloader.downloadedLanguages()?.let {
             assert(language in it) { "$language should be in downloaded languages after downloading it" }
         } ?: assert(false) { NULL_LIST_MESSAGE }
     }
@@ -41,7 +54,7 @@ class MLKitTranslatorDownloaderTestRobo {
     @ExperimentalCoroutinesApi
     fun `test downloading a non-existent language`() = runTest {
         advanceUntilIdle()
-        assert(!MLKitTranslatorDownloader.downloadLanguage(Language("hello"))) {
+        assert(!translatorDownloader.downloadLanguage(Language("hello"))) {
             "downloading a non-existent language should return false"
         }
     }
@@ -51,12 +64,12 @@ class MLKitTranslatorDownloaderTestRobo {
     fun `test downloading then deleting a language`() = runTest {
         advanceUntilIdle()
         val language = Language("it")
-        assert(MLKitTranslatorDownloader.downloadLanguage(language)) { "downloading $language should work" }
-        MLKitTranslatorDownloader.downloadedLanguages()?.let {
+        assert(translatorDownloader.downloadLanguage(language)) { "downloading $language should work" }
+        translatorDownloader.downloadedLanguages()?.let {
             assert(language in it) { "$language should be in downloaded languages after downloading it" }
         } ?: assert(false) { NULL_LIST_MESSAGE }
-        assert(MLKitTranslatorDownloader.deleteLanguage(language)) { "deleting $language should work after downloading it" }
-        MLKitTranslatorDownloader.downloadedLanguages()?.let {
+        assert(translatorDownloader.deleteLanguage(language)) { "deleting $language should work after downloading it" }
+        translatorDownloader.downloadedLanguages()?.let {
             assert(language !in it) { "$language should not be in downloaded languages after removing it" }
         } ?: assert(false) { NULL_LIST_MESSAGE }
     }
@@ -66,7 +79,7 @@ class MLKitTranslatorDownloaderTestRobo {
     fun `test deleting a not downloaded language`() = runTest {
         advanceUntilIdle()
         val language = Language("hr")
-        assert(!MLKitTranslatorDownloader.deleteLanguage(language)) {
+        assert(!translatorDownloader.deleteLanguage(language)) {
             "deleting $language should work after downloading it"
         }
     }

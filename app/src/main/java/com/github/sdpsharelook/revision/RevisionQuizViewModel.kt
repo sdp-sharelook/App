@@ -28,12 +28,16 @@ class RevisionQuizViewModel @Inject constructor(
         }
     }
 
-    private var wordsToQuiz: List<RevisionWord> = RevisionWord.read(app.applicationContext)
+    private var wordsToQuiz: MutableList<RevisionWord> =
+        SRAlgo.loadRevWordsFromLocal(app.applicationContext).toMutableList()
     private var indexIntoQuiz = -1
     private var quizLength = -1
     private var _current: RevisionWord = wordsToQuiz.first()
-    private val current: Word
-    get() = getWordFromRevision(_current)
+    set(value) {
+        current = getWordFromRevision(value)
+        field = value
+    }
+    lateinit var current: Word
 
     private fun getWordFromRevision(revisionWord: RevisionWord): Word {
         TODO("Not yet implemented")
@@ -52,12 +56,13 @@ class RevisionQuizViewModel @Inject constructor(
             is QuizEvent.ClickEffortButton -> {
                 SRAlgo.calcNextReviewTime(_current, event.quality)
                 nextWord()
-                sendUiEvent(UiEvent.NewWord(TODO()))
+                sendUiEvent(UiEvent.NewWord)
             }
             is QuizEvent.StartQuiz -> {
                 launched = true
                 quizLength = event.length
                 indexIntoQuiz = 0
+                _current = wordsToQuiz[indexIntoQuiz]
                 sendUiEvent(UiEvent.Navigate(Routes.QUIZ))
             }
         }

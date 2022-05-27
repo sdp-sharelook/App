@@ -24,27 +24,6 @@ data class RevisionWord(
     var EF: Double = SRAlgo.MAX_EF,
 ) {
 
-    companion object {
-        fun read(context: Context, filePath: String = SRDATAFILE): List<RevisionWord> {
-            val file = File(context.filesDir, filePath)
-            assert(file.exists())
-            return file.readLines().map {
-                decodeFromString(serializer(),it)
-            }
-        }
-
-        fun write(context: Context, words: List<RevisionWord>, filePath: String = SRDATAFILE) {
-            val file = File(context.filesDir, filePath)
-            file.createNewFile()
-            file.bufferedWriter().use { printer ->
-                words.forEach {
-                    printer.write(encodeToString(serializer(),it)+"\n")
-                }
-            }
-        }
-
-    }
-
     fun saveToStorage(context: Context, filePath: String = SRDATAFILE) {
 
         val file = File(context.filesDir, filePath)
@@ -96,17 +75,9 @@ class SRAlgo {
             }
             f.useLines { lines ->
                 return lines.map {
-                    val elements = it.split(",")
-                    RevisionWord(
-                        elements[0],
-                        elements[1].toLong(),
-                        elements[2].toDouble(),
-                        elements[3].toInt(),
-                        elements[4].toDouble()
-                    )
+                    decodeFromString(RevisionWord.serializer(),it)
                 }.toList()
             }
-
         }
 
         @JvmStatic

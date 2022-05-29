@@ -106,7 +106,7 @@ class RTDBWordListRepositoryTest {
     @Test
     fun `insert three words`() = runTest {
         val word = Word("test")
-        repo.insert(entity = listOf(word, word, word))
+        repo.insertList("test", listOf(word, word, word))
         verify(reference, times(3)).setValue(any())
     }
 }

@@ -149,12 +149,22 @@ tasks.withType(Test) {
 }
 
 task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'createDebugCoverageReport']) {
+    group = 'Reporting'
+    description = 'Generate Jacoco coverage reports after running tests.'
     reports {
         xml.required = true
         html.required = true
     }
 
     def fileFilter = [
+            // data binding
+            'android/databinding/**/*.class',
+            '**/android/databinding/*Binding.class',
+            '**/android/databinding/*',
+            '**/androidx/databinding/*',
+            '**/databinding/*',
+            '**/BR.*',
+            // android
             '**/R.class',
             '**/R$*.class',
             '**/BuildConfig.*',

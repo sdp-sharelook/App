@@ -33,7 +33,8 @@ var edit = false
 var sectionList: MutableList<Section> = mutableListOf()
 
 @AndroidEntryPoint
-class SectionFragment : Fragment(), SectionClickListener {
+class SectionFragment : SectionFragmentLift()
+open class SectionFragmentLift : Fragment(), SectionClickListener {
 
     /**
      * This property is only valid between onCreateView and onDestroyView.

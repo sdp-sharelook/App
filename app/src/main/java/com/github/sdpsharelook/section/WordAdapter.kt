@@ -22,12 +22,6 @@ class WordAdapter(context: Context, wordList: List<Word?>) :
         val sourceWord = view.findViewById<TextView>(R.id.sourceWord)
         val translatedWord = view.findViewById<TextView>(R.id.translatedWord)
 
-        if (word != null) {
-            Log.e("Source word", word.source!!)
-        }
-        if (word != null) {
-            Log.e("Source word", word.source!!)
-        }
         sourceWord?.text = word?.source
         translatedWord?.text = word?.target
         return view

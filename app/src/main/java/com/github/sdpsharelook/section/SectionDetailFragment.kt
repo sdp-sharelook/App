@@ -18,7 +18,8 @@ import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SectionDetailFragment : Fragment() {
+class SectionDetailFragment : SectionDetailFragmentLift()
+open class SectionDetailFragmentLift : Fragment() {
 
     @Inject
     lateinit var wordRTDB : IRepository<List<Word>>

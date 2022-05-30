@@ -86,24 +86,27 @@ class RevisionQuizViewModel @Inject constructor(
                     sendUiEvent(UiEvent.ShowSnackbar("Congratulations"))
                 }
             }
-            is QuizEvent.StartQuiz -> {
-                if (event.length > quizPairs.size) {
-                    sendUiEvent(
-                        UiEvent.ShowSnackbar(
-                            "Not enough words (${orphanRevisions.size})"
-                        )
-                    )
-                    return
-                }
-                launched = true
-                quizLength = event.length
-                quizIterator = quizPairs.values.take(quizLength).iterator()
-                nextWord()
-                sendUiEvent(UiEvent.Navigate(Routes.QUIZ))
-            }
+            is QuizEvent.StartQuiz -> startQuiz(event)
             QuizEvent.Ping -> sendUiEvent(UiEvent.UpdateBadge)
         }
     }
+
+    private fun startQuiz(event: QuizEvent.StartQuiz) {
+        if (event.length > quizPairs.size) {
+            sendUiEvent(
+                UiEvent.ShowSnackbar(
+                    "Not enough words (${orphanRevisions.size})"
+                )
+            )
+            return
+        }
+        launched = true
+        quizLength = event.length
+        quizIterator = quizPairs.values.take(quizLength).iterator()
+        nextWord()
+        sendUiEvent(UiEvent.Navigate(Routes.QUIZ))
+    }
+
 
     private fun sendUiEvent(event: UiEvent) {
         viewModelScope.launch { _uiEvent.send(event) }

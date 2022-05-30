@@ -43,19 +43,23 @@ open class LaunchQuizFragmentLift : Fragment() {
             }
         }
         lifecycleScope.launch {
-            viewModel.uiEvent.collect {
-                when (it) {
-                    is UiEvent.Navigate -> when (it.route) {
-                        Routes.QUIZ -> {
-                            val action =
-                                LaunchQuizFragmentDirections.actionLaunchQuizFragmentToRevisionQuizFragment()
-                            withContext(Dispatchers.Main) { findNavController().navigate(action) }
-                        }
+            collectViewModelEvent(view)
+        }
+    }
+
+    private suspend fun collectViewModelEvent(view: View) {
+        viewModel.uiEvent.collect {
+            when (it) {
+                is UiEvent.Navigate -> when (it.route) {
+                    Routes.QUIZ -> {
+                        val action =
+                            LaunchQuizFragmentDirections.actionLaunchQuizFragmentToRevisionQuizFragment()
+                        withContext(Dispatchers.Main) { findNavController().navigate(action) }
                     }
-                    is UiEvent.ShowSnackbar ->
-                        Snackbar.make(view,it.message,Snackbar.LENGTH_SHORT).show()
-                    else -> Unit
                 }
+                is UiEvent.ShowSnackbar ->
+                    Snackbar.make(view, it.message, Snackbar.LENGTH_SHORT).show()
+                else -> Unit
             }
         }
     }

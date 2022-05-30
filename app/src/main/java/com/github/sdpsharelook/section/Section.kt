@@ -1,18 +1,24 @@
 package com.github.sdpsharelook.section
 
-import com.github.sdpsharelook.Word
-import androidx.annotation.DrawableRes
-import com.github.sdpsharelook.storage.IRepository
-
-var sectionList = mutableListOf<Section>()
-
-val SECTION_ID = "sectionExtra"
-
-class Section(
-    var title: String,
-    @DrawableRes
-    var flag: Int,
-    val databaseRepo: IRepository<List<String>>,
-    val sectionRepo: String,
-    val id: Int = sectionList.size
-)
+import androidx.annotation.Keep
+import com.google.firebase.database.IgnoreExtraProperties
+import kotlinx.serialization.Serializable
+import java.util.*
+@IgnoreExtraProperties
+@Serializable
+data class Section(
+    var title: String ="",
+    var flag: Int=0,
+    var sectionRepo: String="",
+    val id : String= ""
+) {
+    fun toMap(): Map<String, Any?> {
+        return mapOf(
+            "title" to title,
+            "flag" to flag,
+            "sectionRepo" to sectionRepo,
+            "id" to id
+        )
+    }
+    constructor(id:String) : this("",0,"", id)
+}

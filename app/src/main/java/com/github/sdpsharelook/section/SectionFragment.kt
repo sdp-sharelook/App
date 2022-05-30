@@ -172,6 +172,7 @@ open class SectionFragmentLift : Fragment(), SectionClickListener {
             sectionWord?.let {
                 databaseWordList.insertList(section.id, listOf(it))
             }
+            sectionWord = null
         }
 
         findNavController().navigate(action)

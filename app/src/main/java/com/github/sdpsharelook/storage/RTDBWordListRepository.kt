@@ -122,7 +122,8 @@ class RTDBWordListRepository @Inject constructor(
 
                 override fun onChildRemoved(snapshot: DataSnapshot) {
                     var section = Gson().fromJson(snapshot.value.toString(), Section::class.java)
-                    trySendBlocking(Result.success(listOf(section)))
+                    sectionList.remove(section)
+                    trySendBlocking(Result.success(sectionList))
                 }
 
                 override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
@@ -162,6 +163,10 @@ class RTDBWordListRepository @Inject constructor(
      */
     override suspend fun delete(name: String) {
         getSectionReference(name).removeValue().await()
+    }
+
+    override suspend fun deleteSection(entity: Section) {
+        getSectionReference("SectionList").child(entity.id).removeValue().await()
     }
 
     /**

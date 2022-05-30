@@ -34,12 +34,12 @@ open class SectionDetailFragmentLift : Fragment() {
 
     private var wordList = mutableListOf<Word>()
 
-    private var section: Section? = null
+    private lateinit var section: Section
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val args: SectionDetailFragmentArgs by navArgs()
-        var section:Section? = null
+
         if(args.section!= null){
             section = Json.decodeFromString<Section>(args.section!!)
         }
@@ -92,6 +92,7 @@ open class SectionDetailFragmentLift : Fragment() {
 
     private suspend fun removeWord(pos: Int, section: Section) {
         wordList.removeAt(pos)
+//        wordRTDB.delete(section.id, wordList[pos])
 //        TODO
 //        section.databaseRepo.delete(wordList[pos]!!.sourceText)
     }

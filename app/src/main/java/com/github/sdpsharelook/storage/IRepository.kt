@@ -74,4 +74,13 @@ interface IRepository<T> {
      * @param entity Entity Section
      */
     suspend fun insertSection(entity: Section) = Unit
+
+    /**
+     * Create permanent repository entry
+     *
+     * @param name identifier of entity
+     * @param entity Entity Section
+     */
+    suspend fun deleteSection(entity: Section) = Unit
+
 }

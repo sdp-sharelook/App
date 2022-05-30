@@ -65,21 +65,25 @@ class RevisionQuizViewModel @Inject constructor(
                 nextWord()
                 sendUiEvent(UiEvent.NewWord)
             }
-            is QuizEvent.StartQuiz -> {
-                if (event.length > wordsToQuiz.size) {
-                    sendUiEvent(UiEvent.ShowSnackbar(
-                        "Not enough words (${wordsToQuiz.size})"
-                    ))
-                    return
-                }
-                launched = true
-                quizLength = event.length
-                indexIntoQuiz = 0
-                _current = wordsToQuiz[indexIntoQuiz]
-                sendUiEvent(UiEvent.Navigate(Routes.QUIZ))
-            }
+            is QuizEvent.StartQuiz -> startQuiz(event)
             QuizEvent.Ping -> sendUiEvent(UiEvent.UpdateBadge)
         }
+    }
+
+    private fun startQuiz(event: QuizEvent.StartQuiz) {
+        if (event.length > wordsToQuiz.size) {
+            sendUiEvent(
+                UiEvent.ShowSnackbar(
+                    "Not enough words (${wordsToQuiz.size})"
+                )
+            )
+            return
+        }
+        launched = true
+        quizLength = event.length
+        indexIntoQuiz = 0
+        _current = wordsToQuiz[indexIntoQuiz]
+        sendUiEvent(UiEvent.Navigate(Routes.QUIZ))
     }
 
     private fun sendUiEvent(event: UiEvent) {

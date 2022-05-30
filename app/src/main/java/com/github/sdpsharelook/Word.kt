@@ -3,26 +3,27 @@ package com.github.sdpsharelook
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.github.sdpsharelook.language.Language
-import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.database.IgnoreExtraProperties
 import com.google.gson.annotations.Expose
-import java.time.Instant
+import kotlinx.datetime.Instant
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.modules.SerializersModule
 import java.util.*
 
 @IgnoreExtraProperties
+@Serializable
 data class Word(
     val uid: String = "",
     val source: String? = "",
-    val sourceLanguage: String? = "",
+    val sourceLanguage: Language? = Language.auto,
     val target: String? = "",
-    val targetLanguage: String? = "",
-    @Expose(serialize = true, deserialize = true)
-    var location: LatLng? = null,
-    val savedDate: Date? = null,
+    val targetLanguage: Language? = Language.auto,
+    var location: Position? = null,
+    val savedDate: Instant? = null,
     val picture: String? = null,
     val isFavourite: Boolean? = false,
 ) {
-    constructor(uid: String) : this(uid, "", null, null, null, null, null, "", false)
+
 
     // fun synonyms(): Set<Word> = TODO("not implemented yet")
     // ...
@@ -41,32 +42,41 @@ data class Word(
 
     @RequiresApi(Build.VERSION_CODES.O)
     companion object {
+        val serializersModule: SerializersModule = SerializersModule {
+        }
         val testWord by lazy {
-            Word(
-                "testinguidneveractuallyusethis",
-                "test",
-                "French",
-                "test",
-                "English",
-                LatLng(46.0, 6.0),
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) Date.from(
-                    Instant.ofEpochMilli(1000000000)
-                ) else null,
-                "gs://billinguee.appspot.com/Pepe_rare-2469629177",
-                true
-            )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                Word(
+                    "testinguidneveractuallyusethis",
+                    "test",
+                    Language("French"),
+                    "test",
+                    Language("English"),
+                    Position(46.0, 6.0),
+                    Instant.fromEpochMilliseconds(100000000000),
+                    "gs://billinguee.appspot.com/Pepe_rare-2469629177",
+                    true
+                )
+            } else {
+                Word(
+                    "testinguidneveractuallyusethis",
+                    "test",
+                    Language("French"),
+                    "test",
+                    Language("English"),
+                    Position(46.0, 6.0),
+                    null,
+                    "gs://billinguee.appspot.com/Pepe_rare-2469629177",
+                    true
+
+                )
+
+            }
         }
     }
 
-    fun toList(): List<String?> =
-        listOf(uid, source, sourceLanguage, target, targetLanguage)
+
 }
 
-/*
-fun List<String>.toWord(): Word  {
-    val (uid, source, sourcetag, target, targettag) = this
-    return Word(uid, source, Language(sourcetag), target, Language(targettag))
-}
-*/
-
-
+@Serializable
+data class Position(val latitude: Double, val longitude: Double)

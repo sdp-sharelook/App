@@ -1,6 +1,7 @@
 package com.github.sdpsharelook.translate
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,11 +15,11 @@ import androidx.navigation.fragment.navArgs
 import androidx.test.espresso.IdlingResource
 import androidx.test.espresso.idling.CountingIdlingResource
 import com.github.sdpsharelook.R
+import com.github.sdpsharelook.Word
 import com.github.sdpsharelook.databinding.FragmentTranslateBinding
 import com.github.sdpsharelook.downloads.MLKitTranslatorDownloader
 import com.github.sdpsharelook.language.Language
 import com.github.sdpsharelook.language.LanguageAdapter
-import com.github.sdpsharelook.section.SectionWord
 import com.github.sdpsharelook.speechRecognition.RecognitionListener
 import com.github.sdpsharelook.speechRecognition.SpeechRecognizer
 import com.github.sdpsharelook.textToSpeech.TextToSpeech
@@ -27,6 +28,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import java.util.*
 
 @AndroidEntryPoint
 class TranslateFragment : TranslateFragmentLift()
@@ -232,8 +236,12 @@ open class TranslateFragmentLift : Fragment() {
 
     private fun addWordToSection() {
 
+        if(sourceText.isNullOrEmpty() || targetText.isNullOrEmpty()){
+            Log.e("TRANSLATE", "TRYING TO TRANSLATE WORD WITHOUT SOURCE AND/OR TARGET TEXT")
+            return
+        }
         val action = TranslateFragmentDirections.actionMenuTranslateLinkToMenuSectionsLink(
-            SectionWord(sourceText, targetText ?: "error", null)
+            Json.encodeToString(Word(uid = UUID.randomUUID().toString(),source= sourceText.toString(), target = targetText.toString()))
         )
         findNavController().navigate(action)
 

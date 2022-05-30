@@ -26,7 +26,7 @@ class CardViewHolder(
 
     fun bindBook(section: Section){
         cardCellBinding.sectionTitle.text = section.title
-        cardCellBinding.sectionFlag.setImageResource(section.flag)
+        cardCellBinding.sectionFlag.setImageResource(section.flag!!.toInt())
 
         cardCellBinding.cardView.setOnClickListener{
             clickListener.onClick(section)

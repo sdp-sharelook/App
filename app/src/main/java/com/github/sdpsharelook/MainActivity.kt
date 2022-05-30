@@ -14,6 +14,7 @@ import com.github.sdpsharelook.authorization.AuthProvider
 import com.github.sdpsharelook.revision.QuizEvent
 import com.github.sdpsharelook.revision.RevisionQuizViewModel
 import com.github.sdpsharelook.revision.UiEvent
+import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
@@ -55,27 +56,31 @@ open class MainActivityLift : AppCompatActivity() {
                 navController.navigate(R.id.moveToLogin)
             else
                 navController.navigate(R.id.moveToProfile)
-
             drawerLayout.closeDrawer(GravityCompat.START)
         }
         bottomView.setOnClickListener { quizViewModel.onEvent(QuizEvent.Ping) }
         val badge = bottomView.getOrCreateBadge(R.id.launchQuizFragment)
         lifecycleScope.launch {
-            quizViewModel.uiEvent.collect {
-                when(it) {
-                    is UiEvent.ShowSnackbar ->
-                        supportFragmentManager.findFragmentById(R.id.navHostFragment)?.view?.let { view ->
-                            Snackbar.make(
-                                view,it.message,Snackbar.LENGTH_SHORT).show()
+            collectQuizViewModelEvents(badge)
+        }
+    }
+
+    private suspend fun collectQuizViewModelEvents(badge: BadgeDrawable) {
+        quizViewModel.uiEvent.collect {
+            when (it) {
+                is UiEvent.ShowSnackbar ->
+                    supportFragmentManager.findFragmentById(R.id.navHostFragment)?.view?.let { view ->
+                        Snackbar.make(
+                            view, it.message, Snackbar.LENGTH_SHORT
+                        ).show()
+                    }
+                is UiEvent.UpdateBadge ->
+                    if (quizViewModel.size == 0)
+                        badge.apply {
+                            isVisible = true
+                            number = quizViewModel.size
                         }
-                    is UiEvent.UpdateBadge ->
-                        if (quizViewModel.size == 0)
-                            badge.apply {
-                                isVisible = true
-                                number = quizViewModel.size
-                            }
-                    else -> {}
-                }
+                else -> {}
             }
         }
     }

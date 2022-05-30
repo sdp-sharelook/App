@@ -1,6 +1,8 @@
 package com.github.sdpsharelook.section
 
 import android.content.Context
+import android.net.wifi.WifiManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,8 +11,8 @@ import android.widget.TextView
 import com.github.sdpsharelook.R
 import com.github.sdpsharelook.Word
 
-class WordAdapter(context: Context, wordList: List<SectionWord?>) :
-    ArrayAdapter<SectionWord>(context, R.layout.wordlist_section, wordList) {
+class WordAdapter(context: Context, wordList: List<Word?>) :
+    ArrayAdapter<Word>(context, R.layout.wordlist_section, wordList) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val word = getItem(position)
@@ -20,8 +22,8 @@ class WordAdapter(context: Context, wordList: List<SectionWord?>) :
         val sourceWord = view.findViewById<TextView>(R.id.sourceWord)
         val translatedWord = view.findViewById<TextView>(R.id.translatedWord)
 
-        sourceWord?.text = word?.sourceText
-        translatedWord?.text = word?.translatedText
+        sourceWord?.text = word?.source
+        translatedWord?.text = word?.target
         return view
     }
 }

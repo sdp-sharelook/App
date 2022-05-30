@@ -31,19 +31,33 @@ open class RevisionQuizFragmentLift : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.findViewById<FloatingActionButton>(R.id.helpToggleButton)
-            .setOnClickListener {
-                handleHelpToggle(view)
-            }
-        view.findViewById<ConstraintLayout>(R.id.quizLayout)
-            .setOnClickListener {
-                view.isClickable = false
-                view.isFocusable = false
-                viewModel.onEvent(QuizEvent.Continue)
-            }
-        lifecycleScope.launch {
-            viewModel.uiEvent.apply { TODO() }
+        buttonIds.keys.forEach {
+            view.findViewById<Button>(it).visibility = View.INVISIBLE
         }
+        val helpToggle = view.findViewById<FloatingActionButton>(R.id.helpToggleButton)
+        val layout = view.findViewById<ConstraintLayout>(R.id.quizLayout)
+        val b = true
+        setClickableView(layout, b)
+        helpToggle.hide()
+        helpToggle.setOnClickListener { handleHelpToggle(view) }
+        layout.setOnClickListener {
+            helpToggle.show()
+            setClickableView(it, false)
+            viewModel.onEvent(QuizEvent.Continue)
+        }
+        lifecycleScope.launch {
+            viewModel.uiEvent.apply {
+                // TODO: handle viewmodel events
+            }
+        }
+    }
+
+    private fun setClickableView(
+        view: View,
+        clickable: Boolean
+    ) {
+        view.isClickable = clickable
+        view.isFocusable = clickable
     }
 
     private fun handleHelpToggle(view: View) {

@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.github.sdpsharelook.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -31,9 +32,7 @@ open class RevisionQuizFragmentLift : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        buttonIds.keys.forEach {
-            view.findViewById<Button>(it).visibility = View.INVISIBLE
-        }
+        setButtonsVisibility(view,View.INVISIBLE)
         val helpToggle = view.findViewById<FloatingActionButton>(R.id.helpToggleButton)
         val layout = view.findViewById<ConstraintLayout>(R.id.quizLayout)
         val b = true
@@ -46,9 +45,38 @@ open class RevisionQuizFragmentLift : Fragment() {
             viewModel.onEvent(QuizEvent.Continue)
         }
         lifecycleScope.launch {
-            viewModel.uiEvent.apply {
-                // TODO: handle viewmodel events
+            collectViewModelEvents(helpToggle, view)
+        }
+    }
+
+    private suspend fun collectViewModelEvents(
+        helpToggle: FloatingActionButton,
+        view: View
+    ) = viewModel.uiEvent.collect { event ->
+        when (event) {
+            is UiEvent.Navigate -> when (event.route) {
+                Routes.QUIZ_RESULTS -> TODO("Implement Quiz Results Fragment")
             }
+            is UiEvent.NewWord -> {
+                helpToggle.hide()
+                setButtonsVisibility(view, View.INVISIBLE)
+            }
+            is UiEvent.ShowAnswer -> {
+                helpToggle.show()
+                setButtonsVisibility(view, View.VISIBLE)
+            }
+            is UiEvent.ShowSnackbar -> Snackbar.make(
+                view,
+                event.message,
+                Snackbar.LENGTH_SHORT
+            ).show()
+            else -> {}
+        }
+    }
+
+    private fun setButtonsVisibility(view: View, visibility: Int) {
+        buttonIds.keys.forEach {
+            view.findViewById<Button>(it).visibility = visibility
         }
     }
 

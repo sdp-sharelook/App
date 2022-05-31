@@ -4,16 +4,20 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.sdpsharelook.Word
+import com.github.sdpsharelook.revision.SnackbarShowers.LAUNCH_QUIZ
 import com.github.sdpsharelook.revision.UiEvent.Navigate
+import com.github.sdpsharelook.section.Section
 import com.github.sdpsharelook.storage.IRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+@FlowPreview
 @HiltViewModel
 class RevisionQuizViewModel @Inject constructor(
     private val repo: IRepository<List<Word>>,
@@ -29,37 +33,47 @@ class RevisionQuizViewModel @Inject constructor(
     private var quizLength = -1
     private var _current: Pair<RevisionWord, Word>? = null
     private val _uiEvent = Channel<UiEvent>()
+    private val sectionIds: MutableSet<String> = mutableSetOf()
 
     val uiEvent = _uiEvent.receiveAsFlow().shareIn(viewModelScope, SharingStarted.Lazily)
     val current: Word get() = _current?.second ?: Word()
     val size: Int
-        get() = if (launched) quizLength else orphanRevisions.size
+        get() = if (launched) quizLength else quizPairs.size
 
     init {
         sendUiEvent(UiEvent.UpdateBadge)
         viewModelScope.launch { collectWordsFromFlow(getWordFlow()) }
     }
 
-    private fun getWordFlow(): Flow<List<Word>?> {
-        repo.flowSection().onEach { TODO() }
-        val flow = repo.flow()
-        return flow.map { it.getOrNull() }
-    }
+    private fun getWordFlow(): Flow<List<Word>?> = repo.flowSection()
+        .filter { it.isSuccess }
+        .map { it.getOrThrow() }
+        .filterNotNull()
+        .flatMapMerge { list: List<Section> ->
+            list.filter { it.id !in sectionIds }
+                .onEach { sectionIds.add(it.id) }
+                .map { repo.flow(it.id) }.merge()
+        }
+        .filter { it.isSuccess }
+        .map { it.getOrThrow() }
 
     private suspend fun collectWordsFromFlow(wordFlow: Flow<List<Word>?>) =
         withContext(Dispatchers.Default) {
-            wordFlow.collect { list ->
-                list?.onEach {
-                    val revisionWord = orphanRevisions.remove(it.uid)
-                    if (revisionWord != null) {
-                        quizPairs[it.uid] = Pair(revisionWord, it)
-                    } else {
-                        quizPairs[it.uid] =
-                            Pair(RevisionWord(it.uid, System.currentTimeMillis()), it)
-                    }
-                    sendUiEvent(UiEvent.UpdateBadge)
+            wordFlow
+                .filterNotNull()
+                .collect { list: List<Word> ->
+                    list.filter { it.uid !in quizPairs }
+                        .onEach {
+                            val revisionWord = orphanRevisions.remove(it.uid)
+                            if (revisionWord != null) {
+                                quizPairs[it.uid] = revisionWord to it
+                            } else {
+                                quizPairs[it.uid] =
+                                    RevisionWord(it.uid, System.currentTimeMillis()) to it
+                            }
+                            sendUiEvent(UiEvent.UpdateBadge)
+                        }
                 }
-            }
         }
 
     fun onEvent(event: QuizEvent) {
@@ -69,14 +83,16 @@ class RevisionQuizViewModel @Inject constructor(
                 sendUiEvent(UiEvent.ShowAnswer)
             }
             is QuizEvent.ClickEffortButton -> {
-                _current!!.first.n += 1
-                SRAlgo.calcNextReviewTime(_current!!.first, event.quality)
-                _current!!.first.saveToStorage(app.applicationContext)
+                _current?.let {
+                    it.first.n += 1
+                    SRAlgo.calcNextReviewTime(it.first, event.quality)
+                    it.first.saveToStorage(app.applicationContext)
+                }
                 if (nextWord()) {
                     sendUiEvent(UiEvent.NewWord)
                 } else {
                     sendUiEvent(Navigate(Routes.QUIZ_RESULTS))
-                    sendUiEvent(UiEvent.ShowSnackbar("Congratulations"))
+                    sendUiEvent(UiEvent.ShowSnackbar(LAUNCH_QUIZ, "Congratulations"))
                 }
             }
             is QuizEvent.StartQuiz -> startQuiz(event.length)
@@ -93,7 +109,17 @@ class RevisionQuizViewModel @Inject constructor(
         if (length > quizPairs.size) {
             sendUiEvent(
                 UiEvent.ShowSnackbar(
-                    "Not enough words (${orphanRevisions.size})"
+                    LAUNCH_QUIZ,
+                    "Not enough words (${quizPairs.size})"
+                )
+            )
+            return
+        }
+        if (length == 0) {
+            sendUiEvent(
+                UiEvent.ShowSnackbar(
+                    LAUNCH_QUIZ,
+                    "Can't start empty quiz (${quizPairs.size} words available)"
                 )
             )
             return
@@ -119,6 +145,7 @@ class RevisionQuizViewModel @Inject constructor(
             quizIterator!!.let {
                 if (!it.hasNext()) return@let false
                 _current = quizIterator!!.next()
+                quizLength -= 1
                 true
             }
 }

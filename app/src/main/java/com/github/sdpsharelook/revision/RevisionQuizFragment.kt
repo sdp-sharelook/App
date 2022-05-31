@@ -16,17 +16,21 @@ import androidx.navigation.fragment.findNavController
 import com.github.sdpsharelook.R
 import com.github.sdpsharelook.revision.QuizEvent.ClickEffortButton
 import com.github.sdpsharelook.revision.QuizEvent.Continue
+import com.github.sdpsharelook.revision.SnackbarShowers.QUIZ
 import com.github.sdpsharelook.revision.UiEvent.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+@FlowPreview
 @AndroidEntryPoint
 class RevisionQuizFragment : RevisionQuizFragmentLift()
 
+@FlowPreview
 open class RevisionQuizFragmentLift : Fragment() {
     private val viewModel: RevisionQuizViewModel by activityViewModels()
     private var showingHelp = false
@@ -88,11 +92,8 @@ open class RevisionQuizFragmentLift : Fragment() {
                         withContext(Dispatchers.Main) { findNavController().navigate(action) }
                     }
                 }
-                is ShowSnackbar -> Snackbar.make(
-                    view,
-                    event.message,
-                    Snackbar.LENGTH_SHORT
-                ).show()
+                is ShowSnackbar -> if (event.who == QUIZ)
+                    Snackbar.make(view, event.message, Snackbar.LENGTH_SHORT).show()
                 else -> {}
             }
         }

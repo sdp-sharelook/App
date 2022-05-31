@@ -1,9 +1,8 @@
 package com.github.sdpsharelook
 
 import com.github.sdpsharelook.di.StorageBindsModule
+import com.github.sdpsharelook.section.Section
 import com.github.sdpsharelook.storage.IRepository
-import com.github.sdpsharelook.storage.RTDBWordListRepository
-import com.github.sdpsharelook.storage.RTDBWordListRepositoryTest
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.components.SingletonComponent
@@ -11,7 +10,6 @@ import dagger.hilt.testing.TestInstallIn
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import javax.inject.Singleton
-import kotlin.coroutines.cancellation.CancellationException
 
 @Module
 @TestInstallIn(
@@ -47,11 +45,25 @@ class FakeStorageModuleUnitTests {
     @Singleton
     fun wordListRepo(): IRepository<List<Word>> = object : IRepository<List<Word>> {
         override fun flow(name: String): Flow<Result<List<Word>?>> =
-            flowOf(Result.failure(CancellationException("test")))
+            flowOf(
+                Result.success(
+                    listOf(
+                        Word(source = "test", target = "test")
+                    )
+                )
+            )
         override suspend fun insert(name: String, entity: List<Word>) = Unit
         override suspend fun read(name: String): List<Word>? = null
         override suspend fun update(name: String, entity: List<Word>) = Unit
         override suspend fun delete(name: String) = Unit
+        override fun flowSection(): Flow<Result<List<Section>?>> =
+            flowOf(
+                Result.success(
+                    listOf(
+                        Section("Test")
+                    )
+                )
+            )
     }
 
 }

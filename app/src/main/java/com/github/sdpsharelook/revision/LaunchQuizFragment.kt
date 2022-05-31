@@ -8,19 +8,22 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.github.sdpsharelook.R
+import com.github.sdpsharelook.revision.SnackbarShowers.LAUNCH_QUIZ
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+@FlowPreview
 @AndroidEntryPoint
 class LaunchQuizFragment : LaunchQuizFragmentLift()
 
+@FlowPreview
 open class LaunchQuizFragmentLift : Fragment() {
     private val viewModel: RevisionQuizViewModel by activityViewModels()
 
@@ -64,7 +67,7 @@ open class LaunchQuizFragmentLift : Fragment() {
                         withContext(Dispatchers.Main) { findNavController().navigate(action) }
                     }
                 }
-                is UiEvent.ShowSnackbar ->
+                is UiEvent.ShowSnackbar -> if (event.who == LAUNCH_QUIZ)
                     Snackbar.make(view, event.message, Snackbar.LENGTH_SHORT).show()
                 else -> Unit
             }

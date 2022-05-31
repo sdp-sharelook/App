@@ -1,5 +1,8 @@
 package com.github.sdpsharelook.revision
 
+import androidx.navigation.Navigation
+import androidx.navigation.testing.TestNavHostController
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -14,8 +17,11 @@ import com.github.sdpsharelook.utils.FragmentScenarioRule
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.hamcrest.CoreMatchers.not
+import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -41,10 +47,11 @@ class RevisionQuizFragmentTest {
     }
 
     @Test
-    fun `test buttons`() = runTest {
+    fun `test visibilities`() = runTest {
         val answerButton = onView(withId(R.id.answerQualityButton0))
+        val layout = onView(withId(R.id.quizLayout))
         answerButton.check(matches(withEffectiveVisibility(INVISIBLE)))
-        onView(withId(R.id.quizLayout)).perform(click())
+        layout.perform(click())
         answerButton.check(matches(withEffectiveVisibility(VISIBLE)))
 
         answerButton.check(matches(withText("")))
@@ -52,8 +59,24 @@ class RevisionQuizFragmentTest {
         answerButton.check(matches(withText(not(""))))
         onView(withId(R.id.helpToggleButton)).perform(click())
         answerButton.check(matches(withText("")))
+    }
 
-        answerButton.perform(click())
+    @Test
+    fun `test navigation`() = runTest {
+        val navController = TestNavHostController(ApplicationProvider.getApplicationContext())
+        fragmentScenarioRule.scenario.onFragment {
+            navController.setGraph(R.navigation.main)
+            navController.setCurrentDestination(R.id.revisionQuizFragment)
+            Navigation.setViewNavController(requireView(), navController)
+        }
+        val layout = onView(withId(R.id.quizLayout))
+        val answerButton = onView(withId(R.id.answerQualityButton0))
+
+        assertEquals(R.id.revisionQuizFragment, navController.currentDestination!!.id)
         answerButton.check(matches(withEffectiveVisibility(INVISIBLE)))
+        layout.perform(click())
+        answerButton.check(matches(withEffectiveVisibility(VISIBLE)))
+        answerButton.perform(click())
+        assertEquals(R.id.launchQuizFragment, navController.currentDestination!!.id)
     }
 }

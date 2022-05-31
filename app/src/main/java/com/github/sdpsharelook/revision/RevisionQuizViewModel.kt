@@ -36,8 +36,6 @@ class RevisionQuizViewModel @Inject constructor(
 
     private var wordsToQuiz: MutableList<RevisionWord> =
         SRAlgo.loadRevWordsFromLocal(app.applicationContext)
-            .plus(RevisionWord("1"))
-            .plus(RevisionWord("2"))
             .toMutableList()
     private var indexIntoQuiz = -1
     private var quizLength = -1
@@ -69,6 +67,7 @@ class RevisionQuizViewModel @Inject constructor(
             is QuizEvent.ClickEffortButton -> {
                 _currentRevision.n += 1
                 SRAlgo.calcNextReviewTime(_currentRevision, event.quality)
+                _currentRevision.saveToStorage(app.applicationContext)
                 sendUiEvent(nextWord())
             }
             is QuizEvent.StartQuiz -> startQuiz(event)
@@ -87,9 +86,8 @@ class RevisionQuizViewModel @Inject constructor(
             return
         }
         quizLength = event.length
-        indexIntoQuiz = 0
-        _currentRevision = wordsToQuiz[indexIntoQuiz]
         sendUiEvent(Navigate(Routes.QUIZ))
+        nextWord()
     }
 
     private fun sendUiEvent(event: UiEvent) {
@@ -97,7 +95,6 @@ class RevisionQuizViewModel @Inject constructor(
     }
 
     private fun nextWord(): UiEvent {
-        _currentRevision.saveToStorage(app.applicationContext)
         indexIntoQuiz += 1
         return if (indexIntoQuiz < size) {
             _currentRevision = wordsToQuiz[indexIntoQuiz]

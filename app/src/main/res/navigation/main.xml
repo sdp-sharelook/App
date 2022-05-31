@@ -133,5 +133,9 @@
         android:id="@+id/revisionQuizFragment"
         android:name="com.github.sdpsharelook.revision.RevisionQuizFragment"
         android:label="fragment_revision_quiz"
-        tools:layout="@layout/fragment_revision_quiz" />
+        tools:layout="@layout/fragment_revision_quiz" >
+        <action
+            android:id="@+id/action_revisionQuizFragment_to_launchQuizFragment"
+            app:destination="@id/launchQuizFragment" />
+    </fragment>
 </navigation>

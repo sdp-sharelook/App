@@ -12,14 +12,16 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.github.sdpsharelook.R
 import com.github.sdpsharelook.revision.QuizEvent.ClickEffortButton
 import com.github.sdpsharelook.revision.QuizEvent.Continue
-import com.github.sdpsharelook.revision.UiEvent.NewWord
-import com.github.sdpsharelook.revision.UiEvent.ShowAnswer
+import com.github.sdpsharelook.revision.UiEvent.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class RevisionQuizFragment : RevisionQuizFragmentLift()
@@ -59,9 +61,9 @@ open class RevisionQuizFragmentLift : Fragment() {
 
         hide()
         viewModel.onEvent(QuizEvent.Started)
-        viewModel.current.observe(viewLifecycleOwner) {
-            wordView.text = it.source
-            answerView.text = it.target
+        viewModel.current.apply {
+            wordView.text = source
+            answerView.text = target
         }
         helpToggle.setOnClickListener { handleHelpToggle() }
         setClickableView(layout, true)
@@ -74,6 +76,13 @@ open class RevisionQuizFragmentLift : Fragment() {
             when (event) {
                 is ShowAnswer -> revealAnswer()
                 is NewWord -> hideAnswer()
+                is Navigate -> when (event.route) {
+                    Routes.QUIZ_LAUNCH -> {
+                        val action =
+                            RevisionQuizFragmentDirections.actionRevisionQuizFragmentToLaunchQuizFragment()
+                        withContext(Dispatchers.Main) { findNavController().navigate(action) }
+                    }
+                }
                 else -> {}
             }
         }

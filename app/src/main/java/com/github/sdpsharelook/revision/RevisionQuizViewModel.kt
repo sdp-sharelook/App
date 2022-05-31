@@ -2,10 +2,10 @@ package com.github.sdpsharelook.revision
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.github.sdpsharelook.Word
+import com.github.sdpsharelook.revision.UiEvent.Navigate
+import com.github.sdpsharelook.revision.UiEvent.NewWord
 import com.github.sdpsharelook.storage.IRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -43,11 +43,11 @@ class RevisionQuizViewModel @Inject constructor(
     private var quizLength = -1
     private var _currentRevision: RevisionWord = wordsToQuiz.firstOrNull() ?: RevisionWord("")
         set(value) {
-            _current.postValue(getWordFromRevision(value))
+            _current = getWordFromRevision(value)
             field = value
         }
-    private val _current: MutableLiveData<Word> = MutableLiveData()
-    val current: LiveData<Word> = _current
+    private lateinit var _current: Word
+    val current: Word get() = _current
     val size
         get() = wordsToQuiz.size
 
@@ -69,8 +69,7 @@ class RevisionQuizViewModel @Inject constructor(
             is QuizEvent.ClickEffortButton -> {
                 _currentRevision.n += 1
                 SRAlgo.calcNextReviewTime(_currentRevision, event.quality)
-                nextWord()
-                sendUiEvent(UiEvent.NewWord)
+                sendUiEvent(nextWord())
             }
             is QuizEvent.StartQuiz -> startQuiz(event)
             QuizEvent.Ping -> sendUiEvent(UiEvent.UpdateBadge)
@@ -90,15 +89,22 @@ class RevisionQuizViewModel @Inject constructor(
         quizLength = event.length
         indexIntoQuiz = 0
         _currentRevision = wordsToQuiz[indexIntoQuiz]
-        sendUiEvent(UiEvent.Navigate(Routes.QUIZ))
+        sendUiEvent(Navigate(Routes.QUIZ))
     }
 
     private fun sendUiEvent(event: UiEvent) {
         viewModelScope.launch { _uiEvent.send(event) }
     }
 
-    private fun nextWord() {
+    private fun nextWord(): UiEvent {
         _currentRevision.saveToStorage(app.applicationContext)
-        _currentRevision = wordsToQuiz[++indexIntoQuiz]
+        indexIntoQuiz += 1
+        return if (indexIntoQuiz < size) {
+            _currentRevision = wordsToQuiz[indexIntoQuiz]
+            NewWord
+        } else {
+            // quiz is finished
+            Navigate(Routes.QUIZ_LAUNCH)
+        }
     }
 }

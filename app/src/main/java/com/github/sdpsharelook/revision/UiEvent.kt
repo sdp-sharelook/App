@@ -13,5 +13,6 @@ sealed class UiEvent {
 }
 
 object Routes {
+    const val QUIZ_LAUNCH = "quizLauncherFragment"
     const val QUIZ = "quizFragment"
 }

@@ -13,7 +13,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.github.sdpsharelook.R
+import com.github.sdpsharelook.revision.QuizEvent.ClickEffortButton
 import com.github.sdpsharelook.revision.QuizEvent.Continue
+import com.github.sdpsharelook.revision.UiEvent.NewWord
 import com.github.sdpsharelook.revision.UiEvent.ShowAnswer
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,7 +27,7 @@ class RevisionQuizFragment : RevisionQuizFragmentLift()
 open class RevisionQuizFragmentLift : Fragment() {
     private val viewModel: RevisionQuizViewModel by activityViewModels()
     private var showingHelp = false
-    private val buttonIds = mapOf(
+    private val buttonIds = listOf(
         R.id.answerQualityButton0 to R.string.quality0,
         R.id.answerQualityButton1 to R.string.quality1,
         R.id.answerQualityButton2 to R.string.quality2,
@@ -38,11 +40,18 @@ open class RevisionQuizFragmentLift : Fragment() {
     private lateinit var layout: ConstraintLayout
     private lateinit var wordView: TextView
     private lateinit var answerView: TextView
-    private lateinit var buttons: Map<Button, Int>
+    private lateinit var buttons: List<Button>
+    private lateinit var buttonStrings: List<Int>
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        buttons = buttonIds.mapKeys { view.findViewById(it.key) }
-        buttons.forEach { it.key.visibility = INVISIBLE }
+        buttonStrings = buttonIds.map { it.second }
+        buttons = buttonIds.map { view.findViewById(it.first) }
+        buttons.forEachIndexed { i, it ->
+            it.visibility = INVISIBLE
+            it.setOnClickListener {
+                viewModel.onEvent(ClickEffortButton(i))
+            }
+        }
         helpToggle = view.findViewById(R.id.helpToggleButton)
         layout = view.findViewById(R.id.quizLayout)
         wordView = view.findViewById(R.id.quizWord)
@@ -54,45 +63,48 @@ open class RevisionQuizFragmentLift : Fragment() {
             wordView.text = it.source
             answerView.text = it.target
         }
-        helpToggle.setOnClickListener { handleHelpToggle(view) }
+        helpToggle.setOnClickListener { handleHelpToggle() }
         setClickableView(layout, true)
-        layout.setOnClickListener { revealAnswer(it) }
+        layout.setOnClickListener { viewModel.onEvent(Continue) }
         lifecycleScope.launch { collectViewModelEvents(view) }
-    }
-
-    private fun revealAnswer(it: View) {
-        show()
-        setClickableView(it, false)
-        viewModel.onEvent(Continue)
     }
 
     private suspend fun collectViewModelEvents(view: View) {
         viewModel.uiEvent.collect { event ->
             when (event) {
-                is ShowAnswer -> buttonIds.keys.forEach {
-                    view.findViewById<Button>(it).visibility = VISIBLE
-                }
+                is ShowAnswer -> revealAnswer()
+                is NewWord -> hideAnswer()
                 else -> {}
             }
         }
     }
 
+    private fun revealAnswer() {
+        show()
+        setClickableView(layout, false)
+    }
+
+    private fun hideAnswer() {
+        hide()
+        setClickableView(layout, true)
+    }
+
     private fun show() {
-        setVisibilitiesAndActOnHelp(VISIBLE) { show() }
+        setVisibilities(VISIBLE) { show() }
     }
 
 
     private fun hide() {
-        setVisibilitiesAndActOnHelp(INVISIBLE) { hide() }
+        setVisibilities(INVISIBLE) { hide() }
     }
 
-    private fun setVisibilitiesAndActOnHelp(
+    private fun setVisibilities(
         visibility: Int,
         action: FloatingActionButton.() -> Unit
     ) {
         answerView.visibility = visibility
         helpToggle.action()
-        buttons.keys.forEach { it.visibility = visibility }
+        buttons.forEach { it.visibility = visibility }
     }
 
     private fun setClickableView(
@@ -103,13 +115,13 @@ open class RevisionQuizFragmentLift : Fragment() {
         view.isFocusable = clickable
     }
 
-    private fun handleHelpToggle(view: View) {
+    private fun handleHelpToggle() {
         if (!showingHelp) {
             showingHelp = true
-            buttons.forEach { (b, txt) -> b.setText(txt) }
+            buttons.zip(buttonStrings).forEach { (b, txt) -> b.setText(txt) }
         } else {
             showingHelp = false
-            buttons.forEach { (b, _) -> b.text = "" }
+            buttons.zip(buttonStrings).forEach { (b, _) -> b.text = "" }
         }
     }
 

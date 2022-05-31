@@ -1,9 +1,5 @@
 package com.github.sdpsharelook.revision
 
-import androidx.fragment.app.activityViewModels
-import androidx.navigation.Navigation
-import androidx.navigation.testing.TestNavHostController
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -18,13 +14,8 @@ import com.github.sdpsharelook.utils.FragmentScenarioRule
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestScope
-import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.hamcrest.CoreMatchers.not
-import org.hamcrest.Matchers
-import org.junit.Assert
-import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -51,14 +42,18 @@ class RevisionQuizFragmentTest {
 
     @Test
     fun `test buttons`() = runTest {
-        onView(withId(R.id.answerQualityButton0)).check(matches(withEffectiveVisibility(INVISIBLE)))
+        val answerButton = onView(withId(R.id.answerQualityButton0))
+        answerButton.check(matches(withEffectiveVisibility(INVISIBLE)))
         onView(withId(R.id.quizLayout)).perform(click())
-        onView(withId(R.id.answerQualityButton0)).check(matches(withEffectiveVisibility(VISIBLE)))
+        answerButton.check(matches(withEffectiveVisibility(VISIBLE)))
 
-        onView(withId(R.id.answerQualityButton0)).check(matches(withText("")))
+        answerButton.check(matches(withText("")))
         onView(withId(R.id.helpToggleButton)).perform(click())
-        onView(withId(R.id.answerQualityButton0)).check(matches(withText(not(""))))
+        answerButton.check(matches(withText(not(""))))
         onView(withId(R.id.helpToggleButton)).perform(click())
-        onView(withId(R.id.answerQualityButton0)).check(matches(withText("")))
+        answerButton.check(matches(withText("")))
+
+        answerButton.perform(click())
+        answerButton.check(matches(withEffectiveVisibility(INVISIBLE)))
     }
 }

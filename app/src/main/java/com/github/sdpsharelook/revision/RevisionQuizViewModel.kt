@@ -46,7 +46,7 @@ class RevisionQuizViewModel @Inject constructor(
             _current = getWordFromRevision(value)
             field = value
         }
-    private lateinit var _current: Word
+    private var _current: Word = Word()
     val current: Word get() = _current
     val size
         get() = wordsToQuiz.size

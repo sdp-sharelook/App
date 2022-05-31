@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.github.sdpsharelook.Word
 import com.github.sdpsharelook.storage.IRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -21,8 +22,7 @@ class RevisionQuizViewModel @Inject constructor(
     private val app: Application
 ) : AndroidViewModel(app) {
     init {
-        sendUiEvent(UiEvent.UpdateBadge)
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             repo.flow().collect { result ->
                 result.onSuccess { list ->
                     list?.onEach {
@@ -74,6 +74,7 @@ class RevisionQuizViewModel @Inject constructor(
             }
             is QuizEvent.StartQuiz -> startQuiz(event)
             QuizEvent.Ping -> sendUiEvent(UiEvent.UpdateBadge)
+            is QuizEvent.Started -> launched = true
         }
     }
 
@@ -86,7 +87,6 @@ class RevisionQuizViewModel @Inject constructor(
             )
             return
         }
-        launched = true
         quizLength = event.length
         indexIntoQuiz = 0
         _currentRevision = wordsToQuiz[indexIntoQuiz]

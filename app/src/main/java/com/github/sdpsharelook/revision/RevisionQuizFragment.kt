@@ -24,7 +24,7 @@ class RevisionQuizFragment : RevisionQuizFragmentLift()
 
 open class RevisionQuizFragmentLift : Fragment() {
     private val viewModel: RevisionQuizViewModel by activityViewModels()
-    private var showHelp = false
+    private var showingHelp = false
     private val buttonIds = mapOf(
         R.id.answerQualityButton0 to R.string.quality0,
         R.id.answerQualityButton1 to R.string.quality1,
@@ -49,20 +49,21 @@ open class RevisionQuizFragmentLift : Fragment() {
         answerView = view.findViewById(R.id.quizAnswer)
 
         hide()
+        viewModel.onEvent(QuizEvent.Started)
         viewModel.current.observe(viewLifecycleOwner) {
             wordView.text = it.source
             answerView.text = it.target
         }
         helpToggle.setOnClickListener { handleHelpToggle(view) }
         setClickableView(layout, true)
-        layout.setOnClickListener {
-            show()
-            setClickableView(it, false)
-            viewModel.onEvent(Continue)
-        }
-        lifecycleScope.launch {
-            collectViewModelEvents(view)
-        }
+        layout.setOnClickListener { revealAnswer(it) }
+        lifecycleScope.launch { collectViewModelEvents(view) }
+    }
+
+    private fun revealAnswer(it: View) {
+        show()
+        setClickableView(it, false)
+        viewModel.onEvent(Continue)
     }
 
     private suspend fun collectViewModelEvents(view: View) {
@@ -103,16 +104,12 @@ open class RevisionQuizFragmentLift : Fragment() {
     }
 
     private fun handleHelpToggle(view: View) {
-        if (showHelp) {
-            showHelp = false
-            buttonIds.forEach { (id, txt) ->
-                view.findViewById<Button>(id).setText(txt)
-            }
+        if (!showingHelp) {
+            showingHelp = true
+            buttons.forEach { (b, txt) -> b.setText(txt) }
         } else {
-            showHelp = true
-            buttonIds.forEach { (id, _) ->
-                view.findViewById<Button>(id).text = ""
-            }
+            showingHelp = false
+            buttons.forEach { (b, _) -> b.text = "" }
         }
     }
 

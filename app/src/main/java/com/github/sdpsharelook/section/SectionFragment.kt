@@ -120,7 +120,7 @@ open class SectionFragmentLift : Fragment(), SectionClickListener {
         databaseWordList.flowSection().collect {
             when {
                 it.isSuccess -> {
-                    sectionList = it.getOrDefault(emptyList()) as MutableList<Section>
+                    sectionList = it.getOrDefault(emptyList())?.toMutableList() ?: mutableListOf()
                 }
                 it.isFailure -> {
                     it.exceptionOrNull()?.printStackTrace()

@@ -80,7 +80,9 @@ open class MainActivityLift : AppCompatActivity() {
                             isVisible = true
                             number = quizViewModel.size
                         }
-                else -> {}
+                else -> {
+
+                }
             }
         }
     }

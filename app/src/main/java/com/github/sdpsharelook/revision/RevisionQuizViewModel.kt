@@ -2,12 +2,16 @@ package com.github.sdpsharelook.revision
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.github.sdpsharelook.Word
 import com.github.sdpsharelook.storage.IRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -37,22 +41,24 @@ class RevisionQuizViewModel @Inject constructor(
             .toMutableList()
     private var indexIntoQuiz = -1
     private var quizLength = -1
-    private var _current: RevisionWord = wordsToQuiz.firstOrNull()?: RevisionWord("")
-    set(value) {
-        current = getWordFromRevision(value)
-        field = value
-    }
-    lateinit var current: Word
+    private var _currentRevision: RevisionWord = wordsToQuiz.firstOrNull() ?: RevisionWord("")
+        set(value) {
+            _current.postValue(getWordFromRevision(value))
+            field = value
+        }
+    private val _current: MutableLiveData<Word> = MutableLiveData()
+    val current: LiveData<Word> = _current
     val size
-    get() = wordsToQuiz.size
+        get() = wordsToQuiz.size
 
     private fun getWordFromRevision(revisionWord: RevisionWord): Word {
-        TODO("Not yet implemented")
+        // TODO: get words
+        return Word(revisionWord.wordId)
     }
 
     private var launched: Boolean = false
     private val _uiEvent = Channel<UiEvent>()
-    val uiEvent = _uiEvent.receiveAsFlow()
+    val uiEvent = _uiEvent.receiveAsFlow().shareIn(viewModelScope, SharingStarted.Lazily)
 
     fun onEvent(event: QuizEvent) {
         when (event) {
@@ -61,8 +67,8 @@ class RevisionQuizViewModel @Inject constructor(
                 sendUiEvent(UiEvent.ShowAnswer)
             }
             is QuizEvent.ClickEffortButton -> {
-                _current.n += 1
-                SRAlgo.calcNextReviewTime(_current, event.quality)
+                _currentRevision.n += 1
+                SRAlgo.calcNextReviewTime(_currentRevision, event.quality)
                 nextWord()
                 sendUiEvent(UiEvent.NewWord)
             }
@@ -83,7 +89,7 @@ class RevisionQuizViewModel @Inject constructor(
         launched = true
         quizLength = event.length
         indexIntoQuiz = 0
-        _current = wordsToQuiz[indexIntoQuiz]
+        _currentRevision = wordsToQuiz[indexIntoQuiz]
         sendUiEvent(UiEvent.Navigate(Routes.QUIZ))
     }
 
@@ -92,7 +98,7 @@ class RevisionQuizViewModel @Inject constructor(
     }
 
     private fun nextWord() {
-        _current.saveToStorage(app.applicationContext)
-        _current = wordsToQuiz[++indexIntoQuiz]
+        _currentRevision.saveToStorage(app.applicationContext)
+        _currentRevision = wordsToQuiz[++indexIntoQuiz]
     }
 }

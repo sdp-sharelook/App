@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -21,7 +22,7 @@ import kotlinx.coroutines.withContext
 class LaunchQuizFragment : LaunchQuizFragmentLift()
 
 open class LaunchQuizFragmentLift : Fragment() {
-    private val viewModel: RevisionQuizViewModel by viewModels()
+    private val viewModel: RevisionQuizViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,9 +55,9 @@ open class LaunchQuizFragmentLift : Fragment() {
     }
 
     private suspend fun collectViewModelEvent(view: View) {
-        viewModel.uiEvent.collect {
-            when (it) {
-                is UiEvent.Navigate -> when (it.route) {
+        viewModel.uiEvent.collect { event ->
+            when (event) {
+                is UiEvent.Navigate -> when (event.route) {
                     Routes.QUIZ -> {
                         val action =
                             LaunchQuizFragmentDirections.actionLaunchQuizFragmentToRevisionQuizFragment()
@@ -64,7 +65,7 @@ open class LaunchQuizFragmentLift : Fragment() {
                     }
                 }
                 is UiEvent.ShowSnackbar ->
-                    Snackbar.make(view, it.message, Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(view, event.message, Snackbar.LENGTH_SHORT).show()
                 else -> Unit
             }
         }

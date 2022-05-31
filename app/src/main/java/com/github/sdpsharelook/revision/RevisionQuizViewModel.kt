@@ -19,7 +19,10 @@ class RevisionQuizViewModel @Inject constructor(
     private val repo: IRepository<List<Word>>,
     private val app: Application
 ) : AndroidViewModel(app) {
-    private var orphanRevisions: MutableMap<String, RevisionWord>
+    private var orphanRevisions: MutableMap<String, RevisionWord> =
+        SRAlgo.loadRevWordsFromLocal(app.applicationContext)
+            .associateBy { it.wordId }
+            .toMutableMap()
     private val quizPairs: MutableMap<String, Pair<RevisionWord, Word>> = mutableMapOf()
     private var quizIterator: Iterator<Pair<RevisionWord, Word>>? = null
     private var launched: Boolean = false
@@ -33,10 +36,6 @@ class RevisionQuizViewModel @Inject constructor(
         get() = if (launched) quizLength else orphanRevisions.size
 
     init {
-        orphanRevisions =
-            SRAlgo.loadRevWordsFromLocal(app.applicationContext)
-                .associateBy { it.wordId }
-                .toMutableMap()
         sendUiEvent(UiEvent.UpdateBadge)
         viewModelScope.launch { collectWordsFromFlow(getWordFlow()) }
     }
@@ -80,14 +79,18 @@ class RevisionQuizViewModel @Inject constructor(
                     sendUiEvent(UiEvent.ShowSnackbar("Congratulations"))
                 }
             }
-            is QuizEvent.StartQuiz -> startQuiz(event)
+            is QuizEvent.StartQuiz -> startQuiz(event.length)
             QuizEvent.Ping -> sendUiEvent(UiEvent.UpdateBadge)
-            is QuizEvent.Started -> launched = true
+            is QuizEvent.Started -> if (!launched) {
+                if (quizPairs.isEmpty())
+                    quizPairs[""] = RevisionWord("") to Word()
+                startQuiz(1)
+            }
         }
     }
 
-    private fun startQuiz(event: QuizEvent.StartQuiz) {
-        if (event.length > quizPairs.size) {
+    private fun startQuiz(length: Int) {
+        if (length > quizPairs.size) {
             sendUiEvent(
                 UiEvent.ShowSnackbar(
                     "Not enough words (${orphanRevisions.size})"
@@ -95,7 +98,8 @@ class RevisionQuizViewModel @Inject constructor(
             )
             return
         }
-        quizLength = event.length
+        launched = true
+        quizLength = length
         quizIterator = quizPairs.values.take(quizLength).iterator()
         nextWord()
         sendUiEvent(Navigate(Routes.QUIZ))
@@ -112,9 +116,9 @@ class RevisionQuizViewModel @Inject constructor(
      * @return success (false if state inconsistent)
      */
     private fun nextWord(): Boolean = launched && quizIterator != null &&
-            quizIterator?.let {
-                val hadNext = it.hasNext()
-                _current = quizIterator?.next() ?: (RevisionWord("") to Word())
-                hadNext
-            } ?: false
+            quizIterator!!.let {
+                if (!it.hasNext()) return@let false
+                _current = quizIterator!!.next()
+                true
+            }
 }

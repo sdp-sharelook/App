@@ -17,10 +17,8 @@ import com.github.sdpsharelook.utils.FragmentScenarioRule
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.hamcrest.CoreMatchers.not
-import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
@@ -77,6 +75,10 @@ class RevisionQuizFragmentTest {
         layout.perform(click())
         answerButton.check(matches(withEffectiveVisibility(VISIBLE)))
         answerButton.perform(click())
+//        answerButton.check(matches(withEffectiveVisibility(INVISIBLE)))
+//        layout.perform(click())
+//        answerButton.check(matches(withEffectiveVisibility(VISIBLE)))
+//        answerButton.perform(click())
         assertEquals(R.id.launchQuizFragment, navController.currentDestination!!.id)
     }
 }

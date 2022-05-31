@@ -50,7 +50,6 @@ open class RevisionQuizFragmentLift : Fragment() {
         buttonStrings = buttonIds.map { it.second }
         buttons = buttonIds.map { view.findViewById(it.first) }
         buttons.forEachIndexed { i, it ->
-            it.visibility = INVISIBLE
             it.setOnClickListener {
                 viewModel.onEvent(ClickEffortButton(i))
             }
@@ -61,7 +60,6 @@ open class RevisionQuizFragmentLift : Fragment() {
         answerView = view.findViewById(R.id.quizAnswer)
 
         hide()
-        viewModel.onEvent(QuizEvent.Started)
         viewModel.current.apply {
             wordView.text = source
             answerView.text = target
@@ -72,13 +70,19 @@ open class RevisionQuizFragmentLift : Fragment() {
         lifecycleScope.launch { collectViewModelEvents(view) }
     }
 
+    override fun onStart() {
+        super.onStart()
+        viewModel.onEvent(QuizEvent.Started)
+    }
+
     private suspend fun collectViewModelEvents(view: View) {
         viewModel.uiEvent.collect { event ->
             when (event) {
                 is ShowAnswer -> revealAnswer()
                 is NewWord -> hideAnswer()
                 is Navigate -> when (event.route) {
-                    Routes.QUIZ_LAUNCH -> {
+                    Routes.QUIZ_RESULTS -> {
+                        hide()
                         val action =
                             RevisionQuizFragmentDirections.actionRevisionQuizFragmentToLaunchQuizFragment()
                         withContext(Dispatchers.Main) { findNavController().navigate(action) }

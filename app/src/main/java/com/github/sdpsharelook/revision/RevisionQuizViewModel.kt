@@ -82,19 +82,7 @@ class RevisionQuizViewModel @Inject constructor(
                 assert(launched)
                 sendUiEvent(UiEvent.ShowAnswer)
             }
-            is QuizEvent.ClickEffortButton -> {
-                _current?.let {
-                    it.first.n += 1
-                    SRAlgo.calcNextReviewTime(it.first, event.quality)
-                    it.first.saveToStorage(app.applicationContext)
-                }
-                if (nextWord()) {
-                    sendUiEvent(UiEvent.NewWord)
-                } else {
-                    sendUiEvent(Navigate(Routes.QUIZ_RESULTS))
-                    sendUiEvent(UiEvent.ShowSnackbar(LAUNCH_QUIZ, "Congratulations"))
-                }
-            }
+            is QuizEvent.ClickEffortButton -> handleEffortButton(event.quality)
             is QuizEvent.StartQuiz -> startQuiz(event.length)
             QuizEvent.Ping -> sendUiEvent(UiEvent.UpdateBadge)
             is QuizEvent.Started -> if (!launched) {
@@ -102,6 +90,20 @@ class RevisionQuizViewModel @Inject constructor(
                     quizPairs[""] = RevisionWord("") to Word()
                 startQuiz(1)
             }
+        }
+    }
+
+    private fun handleEffortButton(quality: Int) {
+        _current?.let {
+            it.first.n += 1
+            SRAlgo.calcNextReviewTime(it.first, quality)
+            it.first.saveToStorage(app.applicationContext)
+        }
+        if (nextWord()) {
+            sendUiEvent(UiEvent.NewWord)
+        } else {
+            sendUiEvent(Navigate(Routes.QUIZ_RESULTS))
+            sendUiEvent(UiEvent.ShowSnackbar(LAUNCH_QUIZ, "Congratulations"))
         }
     }
 

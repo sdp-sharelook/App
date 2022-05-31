@@ -80,16 +80,20 @@ open class MainActivityLift : AppCompatActivity() {
                         ).show()
                     }
                 is UiEvent.UpdateBadge ->
-                    badge.apply {
-                        if (quizViewModel.size > 0) {
-                            isVisible = true
-                            number = quizViewModel.size
-                        } else {
-                            isVisible = false
-                            number = 0
-                        }
-                    }
+                    handleBadge(badge)
                 else -> {}
+            }
+        }
+    }
+
+    private fun handleBadge(badge: BadgeDrawable) {
+        badge.apply {
+            if (quizViewModel.size > 0) {
+                isVisible = true
+                number = quizViewModel.size
+            } else {
+                isVisible = false
+                number = 0
             }
         }
     }

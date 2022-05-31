@@ -33,13 +33,19 @@ open class LaunchQuizFragmentLift : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        view.findViewById<Button>(R.id.start10QuizButton).setOnClickListener {
+            viewModel.onEvent(QuizEvent.StartQuiz(10))
+        }
+        view.findViewById<Button>(R.id.startAllQuizButton).setOnClickListener {
+            viewModel.onEvent(QuizEvent.StartQuiz(viewModel.size))
+        }
         view.findViewById<Button>(R.id.startQuizButton).setOnClickListener {
-            try{
+            try {
                 val len =
                     view.findViewById<EditText>(R.id.quizLengthPicker).text.toString().toInt()
                 viewModel.onEvent(QuizEvent.StartQuiz(len))
             } catch (e: NumberFormatException) {
-                Snackbar.make(view,"Must be a number",Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(view, "Must be a number", Snackbar.LENGTH_SHORT).show()
             }
         }
         lifecycleScope.launch {

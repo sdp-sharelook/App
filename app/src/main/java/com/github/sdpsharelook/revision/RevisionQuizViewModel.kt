@@ -61,6 +61,7 @@ class RevisionQuizViewModel @Inject constructor(
                 sendUiEvent(UiEvent.ShowAnswer)
             }
             is QuizEvent.ClickEffortButton -> {
+                _current.n += 1
                 SRAlgo.calcNextReviewTime(_current, event.quality)
                 nextWord()
                 sendUiEvent(UiEvent.NewWord)

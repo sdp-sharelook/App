@@ -1,10 +1,16 @@
 package com.github.sdpsharelook.revision
 
+import androidx.navigation.Navigation
+import androidx.navigation.testing.TestNavHostController
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.assertion.ViewAssertions
-import androidx.test.espresso.matcher.ViewMatchers.isClickable
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.Visibility.INVISIBLE
+import androidx.test.espresso.matcher.ViewMatchers.Visibility.VISIBLE
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.github.sdpsharelook.R
 import com.github.sdpsharelook.Word
 import com.github.sdpsharelook.storage.IRepository
 import com.github.sdpsharelook.utils.FragmentScenarioRule
@@ -13,8 +19,9 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
-import org.hamcrest.CoreMatchers.allOf
-import org.hamcrest.CoreMatchers.anything
+import org.hamcrest.CoreMatchers.not
+import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -40,15 +47,36 @@ class RevisionQuizFragmentTest {
     }
 
     @Test
-    fun `test continue part`() = runTest {
-        advanceUntilIdle()
-        onView(allOf(isClickable(), isDisplayed())).check(ViewAssertions.matches(anything()))
-//        onView(withId(R.id.helpToggleButton)).perform(click())
-//        onView(withId(R.id.answerQualityButton0)).check(matches(withText(any<String>())))
-//        onView(withId(R.id.answerQualityButton1)).check(matches(withText(any<String>())))
-//        onView(withId(R.id.answerQualityButton2)).check(matches(withText(any<String>())))
-//        onView(withId(R.id.answerQualityButton3)).check(matches(withText(any<String>())))
-//        onView(withId(R.id.answerQualityButton4)).check(matches(withText(any<String>())))
-//        onView(withId(R.id.answerQualityButton5)).check(matches(withText(any<String>())))
+    fun `test visibilities`() = runTest {
+        val answerButton = onView(withId(R.id.answerQualityButton0))
+        val layout = onView(withId(R.id.quizLayout))
+        answerButton.check(matches(withEffectiveVisibility(INVISIBLE)))
+        layout.perform(click())
+        answerButton.check(matches(withEffectiveVisibility(VISIBLE)))
+
+        answerButton.check(matches(withText("")))
+        onView(withId(R.id.helpToggleButton)).perform(click())
+        answerButton.check(matches(withText(not(""))))
+        onView(withId(R.id.helpToggleButton)).perform(click())
+        answerButton.check(matches(withText("")))
+    }
+
+    @Test
+    fun `test navigation`() = runTest {
+        val navController = TestNavHostController(ApplicationProvider.getApplicationContext())
+        fragmentScenarioRule.scenario.onFragment {
+            navController.setGraph(R.navigation.main)
+            navController.setCurrentDestination(R.id.revisionQuizFragment)
+            Navigation.setViewNavController(requireView(), navController)
+        }
+        val layout = onView(withId(R.id.quizLayout))
+        val answerButton = onView(withId(R.id.answerQualityButton0))
+
+        assertEquals(R.id.revisionQuizFragment, navController.currentDestination!!.id)
+        answerButton.check(matches(withEffectiveVisibility(INVISIBLE)))
+        layout.perform(click())
+        answerButton.check(matches(withEffectiveVisibility(VISIBLE)))
+        answerButton.perform(click())
+        assertEquals(R.id.launchQuizFragment, navController.currentDestination!!.id)
     }
 }

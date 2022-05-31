@@ -4,14 +4,12 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.sdpsharelook.Word
+import com.github.sdpsharelook.revision.UiEvent.Navigate
 import com.github.sdpsharelook.storage.IRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -19,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class RevisionQuizViewModel @Inject constructor(
     private val repo: IRepository<List<Word>>,
-    app: Application
+    private val app: Application
 ) : AndroidViewModel(app) {
     private var orphanRevisions: MutableMap<String, RevisionWord>
     private val quizPairs: MutableMap<String, Pair<RevisionWord, Word>> = mutableMapOf()
@@ -27,16 +25,10 @@ class RevisionQuizViewModel @Inject constructor(
     private var launched: Boolean = false
     private var quizLength = -1
     private var _current: Pair<RevisionWord, Word>? = null
-        set(value) {
-            if (value != null) {
-                current = value.second
-            }
-            field = value
-        }
     private val _uiEvent = Channel<UiEvent>()
 
-    val uiEvent = _uiEvent.receiveAsFlow()
-    var current: Word? = null
+    val uiEvent = _uiEvent.receiveAsFlow().shareIn(viewModelScope, SharingStarted.Lazily)
+    val current: Word get() = _current?.second ?: Word()
     val size: Int
         get() = if (launched) quizLength else orphanRevisions.size
 
@@ -78,16 +70,19 @@ class RevisionQuizViewModel @Inject constructor(
                 sendUiEvent(UiEvent.ShowAnswer)
             }
             is QuizEvent.ClickEffortButton -> {
+                _current!!.first.n += 1
                 SRAlgo.calcNextReviewTime(_current!!.first, event.quality)
+                _current!!.first.saveToStorage(app.applicationContext)
                 if (nextWord()) {
                     sendUiEvent(UiEvent.NewWord)
                 } else {
-                    sendUiEvent(UiEvent.Navigate(Routes.QUIZ_RESULTS))
+                    sendUiEvent(Navigate(Routes.QUIZ_RESULTS))
                     sendUiEvent(UiEvent.ShowSnackbar("Congratulations"))
                 }
             }
             is QuizEvent.StartQuiz -> startQuiz(event)
             QuizEvent.Ping -> sendUiEvent(UiEvent.UpdateBadge)
+            is QuizEvent.Started -> launched = true
         }
     }
 
@@ -100,11 +95,10 @@ class RevisionQuizViewModel @Inject constructor(
             )
             return
         }
-        launched = true
         quizLength = event.length
         quizIterator = quizPairs.values.take(quizLength).iterator()
         nextWord()
-        sendUiEvent(UiEvent.Navigate(Routes.QUIZ))
+        sendUiEvent(Navigate(Routes.QUIZ))
     }
 
 
@@ -120,7 +114,7 @@ class RevisionQuizViewModel @Inject constructor(
     private fun nextWord(): Boolean = launched && quizIterator != null &&
             quizIterator?.let {
                 val hadNext = it.hasNext()
-                _current = quizIterator?.next()
+                _current = quizIterator?.next() ?: (RevisionWord("") to Word())
                 hadNext
             } ?: false
 }

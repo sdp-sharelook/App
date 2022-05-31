@@ -87,7 +87,7 @@ class SRAlgo {
 
             if (q < 3) {
                 //if got it wrong or can't remember
-                //start repetitions anew without changing the E-Facto
+                //start repetitions anew without changing the E-Factor
                 word.n = 0
             } else {
                 //else calc new EF

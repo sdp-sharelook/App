@@ -13,15 +13,18 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.github.sdpsharelook.R
 import com.github.sdpsharelook.Word
 import com.github.sdpsharelook.databinding.CardSectionBinding
 import com.github.sdpsharelook.databinding.FragmentSectionBinding
 import com.github.sdpsharelook.databinding.PopupBinding
+import com.github.sdpsharelook.downloads.MLKitTranslatorDownloader
+import com.github.sdpsharelook.language.Language
 import com.github.sdpsharelook.storage.IRepository
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -43,12 +46,12 @@ open class SectionFragmentLift : Fragment(), SectionClickListener {
     private var _binding: FragmentSectionBinding? = null
     private lateinit var popupBinding: PopupBinding
     private lateinit var cardBinding: CardSectionBinding
+    private lateinit var availableLanguages: List<Language>
 
     @Inject
     lateinit var databaseWordList: IRepository<List<Word>>
 
     private lateinit var dialog: Dialog
-    var mainCountryList = initList()
 
     private var sectionWord: Word? = null
 
@@ -62,7 +65,6 @@ open class SectionFragmentLift : Fragment(), SectionClickListener {
         cardBinding = CardSectionBinding.inflate(layoutInflater)
 
         //init list of possible languages for the spinner
-        initList()
 
         // set up the popup when cliking on add button
         dialog = Dialog(requireContext())
@@ -70,7 +72,7 @@ open class SectionFragmentLift : Fragment(), SectionClickListener {
         dialog.setOnDismissListener { popupBinding.editSectionName.text.clear() }
 
         // set up the spinner
-        popupBinding.spinnerCountries.adapter = CountryAdapter(requireContext(), mainCountryList)
+        putLanguagesInSpinners()
 
         // set up the recyclerView
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -88,17 +90,19 @@ open class SectionFragmentLift : Fragment(), SectionClickListener {
         }
 
         popupBinding.popupAddBtn.setOnClickListener {
+
             val sectionName = popupBinding.editSectionName.text.toString()
             val countryIndex = popupBinding.spinnerCountries.selectedItemPosition
+            val flag = (popupBinding.spinnerCountries.adapter as SpinnerAdapter).getItemFlag(countryIndex)
             val newSection = Section(
                 sectionName,
-                mainCountryList[countryIndex].flag,
+                flag,
                 UUID.randomUUID().toString()
             )
 
             // Popu do 2 different things if it is editing a section or creating one
             if (edit) {
-                cardAdapter.editItem(sectionName, mainCountryList[countryIndex].flag)
+                cardAdapter.editItem(sectionName, flag)
             } else {
                 addSection(newSection)
                 Toast.makeText(requireContext(), "Section: $sectionName saved", Toast.LENGTH_SHORT)
@@ -112,7 +116,7 @@ open class SectionFragmentLift : Fragment(), SectionClickListener {
         databaseWordList.flowSection().collect {
             when {
                 it.isSuccess -> {
-                    sectionList = it.getOrDefault(emptyList()) as MutableList<Section>
+                    sectionList = it.getOrDefault(emptyList())?.toMutableList() ?: mutableListOf()
                 }
                 it.isFailure -> {
                     it.exceptionOrNull()?.printStackTrace()
@@ -131,11 +135,15 @@ open class SectionFragmentLift : Fragment(), SectionClickListener {
         binding.recyclerView.adapter?.notifyDataSetChanged()
     }
 
-    private fun initList(): List<CountryItem> {
-        val list = mutableListOf<CountryItem>()
-        list.add(CountryItem(R.drawable.spain))
-        list.add(CountryItem(R.drawable.us))
-        return list
+    private fun putLanguagesInSpinners() {
+        CoroutineScope(Dispatchers.IO).launch {
+            availableLanguages =
+                MLKitTranslatorDownloader().downloadedLanguages() ?: listOf(Language("en"))
+            withContext(Dispatchers.Main) {
+                popupBinding.spinnerCountries.adapter = SpinnerAdapter(
+                    requireContext(), availableLanguages)
+            }
+        }
     }
 
     private fun addSection(section: Section) {

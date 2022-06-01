@@ -1,5 +1,6 @@
 package com.github.sdpsharelook.storage
 
+import android.util.Log
 import com.github.sdpsharelook.Word
 import com.github.sdpsharelook.authorization.AuthProvider
 import com.github.sdpsharelook.section.Section
@@ -43,8 +44,15 @@ class RTDBWordListRepository @Inject constructor(
                 }
 
                 override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                    val list = listOfNotNull(snapshot.getValue<Word>())
-                    trySendBlocking(Result.success(list))
+                    val word = Gson().fromJson(snapshot.value.toString(), Word::class.java)
+                    val oldSection= wordList.find {
+                        it.uid == word.uid
+                    }
+                    val oldIndex = wordList.indexOf(oldSection)
+                    wordList.removeAt(oldIndex)
+                    wordList.add(oldIndex, word)
+                    trySendBlocking(Result.success(wordList))
+
                 }
 
                 override fun onChildRemoved(snapshot: DataSnapshot){
@@ -83,6 +91,7 @@ class RTDBWordListRepository @Inject constructor(
      * @param entity Entity List of words
      */
     override suspend fun insertList(name: String, entity: List<Word>) {
+        Log.e("inserting list", entity.toString())
         for (word in entity) {
            getSectionReference(name).child(word.uid).setValue(Gson().toJson(word))
         }

@@ -32,13 +32,13 @@ class SectionFragmentTest {
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
 
-    @get:Rule(order = 1)
-    val fragmentScenarioRule = FragmentScenarioRule.launch(SectionFragment::class)
-
-    @Before
-    fun init() {
-        hiltRule.inject()
-    }
+//    @get:Rule(order = 1)
+//    val fragmentScenarioRule = FragmentScenarioRule.launch(SectionFragment::class)
+//
+//    @Before
+//    fun init() {
+//        hiltRule.inject()
+//    }
 
     @Test
     fun sectionFragmentTest() = runTest {

@@ -56,13 +56,13 @@ class SectionFragmentTest {
 
         //wait the recyclerView to be updated
         Robolectric.flushForegroundThreadScheduler()
-        val recyclerView = onView(withId(R.id.recyclerView))
-        recyclerView.perform(click())
-        recyclerView.perform(pressBack())
+
+        val sectionCard = onView(withText("section"))
 
         //chek that we are in section details
-//        onView(withText("section")).check(matches(isDisplayed()))
-//        onView(allOf(withId(R.id.sectionFlag), isDisplayed()))
+        sectionCard.check(matches(isDisplayed()))
+        onView(allOf(withId(R.id.sectionFlag), isDisplayed()))
+        //TODO sectionCard.perform(click())
     }
 
 }

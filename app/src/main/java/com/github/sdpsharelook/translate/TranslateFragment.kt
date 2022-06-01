@@ -248,7 +248,7 @@ open class TranslateFragmentLift : Fragment() {
     }
 
     private fun captureImage() {
-        val action = TranslateFragmentDirections.actionMenuTranslateLinkToMenuSectionsLink()
+        val action = TranslateFragmentDirections.actionMenuTranslateLinkToMenuCameraLink()
         findNavController().navigate(action)
     }
 

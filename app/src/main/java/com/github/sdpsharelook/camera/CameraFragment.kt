@@ -3,9 +3,11 @@ package com.github.sdpsharelook.camera
 import android.Manifest
 import android.app.AlertDialog
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,7 +43,6 @@ open class CameraFragmentLift : Fragment() {
     private var _binding: FragmentCameraBinding? = null
     private var currentPath: String? = null
     private var hasPermissions = false
-    private var textDetected = "Aucun Text"
 
     @Inject
     lateinit var recognizer : TextRecognizer
@@ -61,6 +62,11 @@ open class CameraFragmentLift : Fragment() {
         }
 
         binding.buttonTraduire.isEnabled = false
+
+        binding.textData.isFocusable = false
+        binding.textData.isFocusableInTouchMode = false
+        binding.textData.isCursorVisible = false
+        binding.textData.setBackgroundColor(Color.TRANSPARENT)
 
         binding.buttonTraduire.setOnClickListener{
             translatWord()
@@ -163,17 +169,20 @@ open class CameraFragmentLift : Fragment() {
 
     private fun processTextBlock(result: Text) {
         if (result.text.isBlank()){
-            textDetected = "Aucun Text"
-            binding.textData.text = "Aucun Text"
+            binding.textData.setText("Aucun Text")
         }else{
             binding.buttonTraduire.isEnabled = true
-            textDetected = result.text
-            binding.textData.text = result.text
+
+            binding.textData.isFocusable = true
+            binding.textData.isFocusableInTouchMode = true
+            binding.textData.isCursorVisible = true
+            //TODO Create word and pass it
+            binding.textData.setText(result.text)
         }
     }
 
     fun translatWord(){
-        val action = CameraFragmentDirections.actionMenuCameraLinkToMenuTranslateLink2(textDetected)
+        val action = CameraFragmentDirections.actionMenuCameraLinkToMenuTranslateLink2(binding.textData.text.toString())
         findNavController().navigate(action)
     }
 }

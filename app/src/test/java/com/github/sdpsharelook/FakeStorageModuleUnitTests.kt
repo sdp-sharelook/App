@@ -2,6 +2,8 @@ package com.github.sdpsharelook
 
 import com.github.sdpsharelook.di.StorageBindsModule
 import com.github.sdpsharelook.storage.IRepository
+import com.github.sdpsharelook.storage.RTDBWordListRepository
+import com.github.sdpsharelook.storage.RTDBWordListRepositoryTest
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.components.SingletonComponent
@@ -51,4 +53,5 @@ class FakeStorageModuleUnitTests {
         override suspend fun update(name: String, entity: List<Word>) = Unit
         override suspend fun delete(name: String) = Unit
     }
+
 }

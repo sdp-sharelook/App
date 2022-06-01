@@ -97,8 +97,7 @@ open class SectionFragmentLift : Fragment(), SectionClickListener {
             val newSection = Section(
                 sectionName,
                 flag,
-                UUID.randomUUID().toString(),
-                sectionName + countryIndex
+                UUID.randomUUID().toString()
             )
 
             // Popu do 2 different things if it is editing a section or creating one

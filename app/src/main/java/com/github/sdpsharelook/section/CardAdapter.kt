@@ -49,7 +49,6 @@ class CardAdapter constructor(
         val newSection = Section(name,  flag, oldSection.id)
 
         CoroutineScope(Dispatchers.IO).launch{
-            wordRTDB.deleteSection(oldSection)
             wordRTDB.insertSection(newSection)
         }
 

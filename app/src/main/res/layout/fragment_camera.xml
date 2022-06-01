@@ -11,23 +11,25 @@
         android:id="@+id/cameraImageView"
         android:layout_width="match_parent"
         android:layout_height="450dp"
-        android:layout_marginHorizontal="50dp"
-        android:layout_marginTop="40dp"
+        android:layout_above="@+id/textData"
+        android:layout_marginHorizontal="5dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="10dp"
         android:adjustViewBounds="true"
-        android:scaleType="fitXY"
+        android:scaleType="centerInside"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_launcher_foreground" />
 
-    <TextView
+    <EditText
         android:id="@+id/textData"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="30dp"
-        android:layout_marginBottom="97dp"
+        android:layout_marginBottom="72dp"
         android:gravity="center"
         android:text="Capture or choose an image from your gallery"
         android:textColor="@color/black"
@@ -35,17 +37,17 @@
 
     <LinearLayout
         android:id="@+id/linearHolder"
-        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
         <Button
             android:id="@+id/buttonTakePic"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Capture"
             android:layout_margin="8dp"
-            />
+            android:layout_weight="1"
+            android:text="Capture" />
 
         <Button
             android:id="@+id/buttonTraduire"

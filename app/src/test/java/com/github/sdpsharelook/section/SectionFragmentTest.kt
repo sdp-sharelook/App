@@ -41,28 +41,28 @@ class SectionFragmentTest {
     }
 
     @Test
-    fun `test receives and prints hello world`() = runTest {
-//        val floatingActionButton = onView(withId(R.id.addingBtn))
-//        floatingActionButton.perform(click())
-//
-//        // wait for the dialogue to popup
-//        val dialog = ShadowDialog.getLatestDialog()
-//        assertTrue(dialog.isShowing)
-//        val title = dialog.findViewById<TextView>(R.id.edit_section_name)
-//        title.text = "section"
-//        dialog.findViewById<Button>(R.id.popup_add_btn).performClick()
-//        ShadowLooper.runUiThreadTasks()
-//        assertFalse(dialog.isShowing)
-//
-//        //wait the recyclerView to be updated
-//        Robolectric.flushForegroundThreadScheduler()
-//        val recyclerView = onView(withId(R.id.recyclerView))
-//        recyclerView.perform(click())
-//        recyclerView.perform(pressBack())
-//
-//        //chek that we are in section details
-//        onView(withText("section")).check(matches(isDisplayed()))
+    fun sectionFragmentTest() = runTest {
+        val floatingActionButton = onView(withId(R.id.addingBtn))
+        floatingActionButton.perform(click())
+
+        // wait for the dialogue to popup
+        val dialog = ShadowDialog.getLatestDialog()
+        assertTrue(dialog.isShowing)
+        val title = dialog.findViewById<TextView>(R.id.edit_section_name)
+        title.text = "section"
+        dialog.findViewById<Button>(R.id.popup_add_btn).performClick()
+        ShadowLooper.runUiThreadTasks()
+        assertFalse(dialog.isShowing)
+
+        //wait the recyclerView to be updated
+        Robolectric.flushForegroundThreadScheduler()
+
+        val sectionCard = onView(withText("section"))
+
+        //chek that we are in section details
+//        sectionCard.check(matches(isDisplayed()))
 //        onView(allOf(withId(R.id.sectionFlag), isDisplayed()))
+        //TODO sectionCard.perform(click())
     }
 
 }

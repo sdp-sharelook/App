@@ -5,9 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
+import com.github.sdpsharelook.SelectPictureFragment
 import com.github.sdpsharelook.Word
 import com.github.sdpsharelook.databinding.FragmentSectionDetailBinding
 import com.github.sdpsharelook.storage.IRepository
@@ -32,12 +34,12 @@ open class SectionDetailFragmentLift : Fragment() {
 
     private var wordList = mutableListOf<Word>()
 
-    private var section: Section? = null
+    private lateinit var section: Section
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val args: SectionDetailFragmentArgs by navArgs()
-        var section:Section? = null
+
         if(args.section!= null){
             section = Json.decodeFromString<Section>(args.section!!)
         }
@@ -47,7 +49,22 @@ open class SectionDetailFragmentLift : Fragment() {
             binding.sectionTitle.text = section.title
             binding.sectionFlag.setImageResource(section.flag)
         }
+        binding.wordList.isLongClickable = true
 
+        binding.wordList.setOnItemLongClickListener { _, _, pos, _ ->
+            lifecycleScope.launch{
+                removeWord(pos, section!!)
+            }
+            true
+        }
+
+        binding.wordList.setOnItemClickListener { _, _, index, _ ->
+            val w = wordList[index]
+            SelectPictureFragment(w!!) {
+                //TODO w.picture = it
+                Toast.makeText(requireContext(), it ?: "picture deleted", Toast.LENGTH_SHORT).show()
+            }.show(parentFragmentManager, null)
+        }
 
         lifecycleScope.launch{
             section?.let { collectListFlow(it) }
@@ -71,6 +88,10 @@ open class SectionDetailFragmentLift : Fragment() {
             }
             (binding.wordList.adapter as BaseAdapter).notifyDataSetChanged()
         }
+    }
+
+    private suspend fun removeWord(pos: Int, section: Section) {
+        wordRTDB.deleteWord(section.id, wordList[pos])
     }
 
 

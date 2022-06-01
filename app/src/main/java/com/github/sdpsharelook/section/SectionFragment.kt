@@ -104,16 +104,9 @@ open class SectionFragmentLift : Fragment(), SectionClickListener {
             // Popu do 2 different things if it is editing a section or creating one
             if (edit) {
                 cardAdapter.editItem(sectionName, flag)
-            } else if (addSection(newSection)) {
-                // TODO
-                //lifecycleScope.launch {
-                //    databaseWordList.insertSection(newSection)
-                //}
-                Toast.makeText(requireContext(), "Section: $sectionName saved", Toast.LENGTH_SHORT)
-                    .show()
             } else {
-                // if the section already exist
-                Toast.makeText(requireContext(), "$sectionName already exist", Toast.LENGTH_SHORT)
+                addSection(newSection)
+                Toast.makeText(requireContext(), "Section: $sectionName saved", Toast.LENGTH_SHORT)
                     .show()
             }
             dialog.dismiss()
@@ -154,19 +147,12 @@ open class SectionFragmentLift : Fragment(), SectionClickListener {
         }
     }
 
-    fun addSection(section: Section): Boolean {
+    private fun addSection(section: Section) {
         // if the section already exist do not add it
-        return if (sectionList.contains(section)) {
-            false
-        } else {
-            sectionList.add(section)
-            lifecycleScope.launch {
-                databaseWordList.insertSection(section)
-            }
-
-            binding.recyclerView.adapter?.notifyItemInserted(sectionList.lastIndex)
-            true
+        lifecycleScope.launch {
+            databaseWordList.insertSection(section)
         }
+        true
     }
 
     override fun onClick(section: Section) {

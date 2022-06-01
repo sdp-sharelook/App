@@ -48,8 +48,9 @@ class RTDBWordListRepository @Inject constructor(
                 }
 
                 override fun onChildRemoved(snapshot: DataSnapshot){
-                    val list: List<Word> = listOfNotNull(snapshot.getValue<Word>())
-                    trySendBlocking(Result.success(list))
+                    var word = Gson().fromJson(snapshot.value.toString(), Word::class.java)
+                    wordList.remove(word)
+                    trySendBlocking(Result.success(wordList))
                 }
 
                 override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
@@ -122,7 +123,8 @@ class RTDBWordListRepository @Inject constructor(
 
                 override fun onChildRemoved(snapshot: DataSnapshot) {
                     var section = Gson().fromJson(snapshot.value.toString(), Section::class.java)
-                    trySendBlocking(Result.success(listOf(section)))
+                    sectionList.remove(section)
+                    trySendBlocking(Result.success(sectionList))
                 }
 
                 override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
@@ -160,8 +162,12 @@ class RTDBWordListRepository @Inject constructor(
      *
      * @param name identifier of entity
      */
-    override suspend fun delete(name: String) {
-        getSectionReference(name).removeValue().await()
+    override suspend fun deleteWord(name: String, word: Word) {
+        getSectionReference(name).child(word.uid).removeValue().await()
+    }
+
+    override suspend fun deleteSection(entity: Section) {
+        getSectionReference("SectionList").child(entity.id).removeValue().await()
     }
 
     /**
@@ -184,6 +190,10 @@ class RTDBWordListRepository @Inject constructor(
      * @param entity Entity
      */
     override suspend fun update(name: String, entity: List<Word>) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun delete(name: String) {
         TODO("Not yet implemented")
     }
 

@@ -93,23 +93,15 @@ open class SectionFragmentLift : Fragment(), SectionClickListener {
             val newSection = Section(
                 sectionName,
                 mainCountryList[countryIndex].flag,
-                UUID.randomUUID().toString(),
-                sectionName + countryIndex
+                UUID.randomUUID().toString()
             )
 
             // Popu do 2 different things if it is editing a section or creating one
             if (edit) {
-                cardAdapter.editItem(sectionName, mainCountryList.get(countryIndex).flag)
-            } else if (addSection(newSection)) {
-                // TODO
-                //lifecycleScope.launch {
-                //    databaseWordList.insertSection(newSection)
-                //}
-                Toast.makeText(requireContext(), "Section: $sectionName saved", Toast.LENGTH_SHORT)
-                    .show()
+                cardAdapter.editItem(sectionName, mainCountryList[countryIndex].flag)
             } else {
-                // if the section already exist
-                Toast.makeText(requireContext(), "$sectionName already exist", Toast.LENGTH_SHORT)
+                addSection(newSection)
+                Toast.makeText(requireContext(), "Section: $sectionName saved", Toast.LENGTH_SHORT)
                     .show()
             }
             dialog.dismiss()
@@ -146,19 +138,12 @@ open class SectionFragmentLift : Fragment(), SectionClickListener {
         return list
     }
 
-    fun addSection(section: Section): Boolean {
+    private fun addSection(section: Section) {
         // if the section already exist do not add it
-        return if (sectionList.contains(section)) {
-            false
-        } else {
-            sectionList.add(section)
-            lifecycleScope.launch {
-                databaseWordList.insertSection(section)
-            }
-
-            binding.recyclerView.adapter?.notifyItemInserted(sectionList.lastIndex)
-            true
+        lifecycleScope.launch {
+            databaseWordList.insertSection(section)
         }
+        true
     }
 
     override fun onClick(section: Section) {
@@ -172,6 +157,7 @@ open class SectionFragmentLift : Fragment(), SectionClickListener {
             sectionWord?.let {
                 databaseWordList.insertList(section.id, listOf(it))
             }
+            sectionWord = null
         }
 
         findNavController().navigate(action)

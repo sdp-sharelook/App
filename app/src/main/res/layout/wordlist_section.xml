@@ -49,12 +49,14 @@
             android:layout_width="77dp"
             android:layout_height="77dp"
             android:layout_marginEnd="5dp"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
             android:contentDescription="@string/switch_arrow"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/constraintLayout"
             app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@drawable/default_user_path" />
+            app:srcCompat="@drawable/ic_camera" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

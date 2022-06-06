@@ -38,27 +38,24 @@
         android:name="com.github.sdpsharelook.section.SectionFragment"
         android:label="fragment_section"
         tools:layout="@layout/fragment_section" >
-        <argument
-            android:name="sectionWord"
-            app:argType="com.github.sdpsharelook.section.SectionWord"
-            app:nullable="true"
-            android:defaultValue="@null" />
         <action
             android:id="@+id/action_menuSectionsLink_to_sectionDetailFragment"
             app:destination="@id/sectionDetailFragment" />
+        <argument
+            android:name="sectionWord"
+            app:argType="string"
+            android:defaultValue="@null"
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/sectionDetailFragment"
         android:name="com.github.sdpsharelook.section.SectionDetailFragment"
         android:label="SectionDetailFragment" >
         <argument
-            android:name="sectionID"
-            app:argType="integer" />
-        <argument
-            android:name="sectionWord"
-            app:argType="com.github.sdpsharelook.section.SectionWord"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            android:name="section"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true"/>
     </fragment>
     <fragment
         android:id="@+id/menuDatabaseViewLink"
@@ -123,4 +120,22 @@
         android:name="com.github.sdpsharelook.authorization.ProfileInformation"
         android:label="fragment_profile_information"
         tools:layout="@layout/fragment_profile_information" />
+    <fragment
+        android:id="@+id/launchQuizFragment"
+        android:name="com.github.sdpsharelook.revision.LaunchQuizFragment"
+        android:label="fragment_launch_quiz"
+        tools:layout="@layout/fragment_launch_quiz" >
+        <action
+            android:id="@+id/action_launchQuizFragment_to_revisionQuizFragment"
+            app:destination="@id/revisionQuizFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/revisionQuizFragment"
+        android:name="com.github.sdpsharelook.revision.RevisionQuizFragment"
+        android:label="fragment_revision_quiz"
+        tools:layout="@layout/fragment_revision_quiz" >
+        <action
+            android:id="@+id/action_revisionQuizFragment_to_launchQuizFragment"
+            app:destination="@id/launchQuizFragment" />
+    </fragment>
 </navigation>

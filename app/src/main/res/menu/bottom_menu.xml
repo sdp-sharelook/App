@@ -18,4 +18,9 @@
         android:id="@+id/mapFragment"
         android:icon="@android:drawable/ic_menu_mapmode"
         android:title="Map" />
+    <item
+        android:id="@id/launchQuizFragment"
+        android:icon="@drawable/ic_baseline_fact_check_24"
+        android:title="Quiz"
+        />
 </menu>

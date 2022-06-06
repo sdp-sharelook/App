@@ -28,6 +28,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 
+/**
 @ExperimentalCoroutinesApi
 @UninstallModules(TextDetectionModule::class)
 @HiltAndroidTest
@@ -79,4 +80,4 @@ class CameraFragmentTest {
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
     }
 
-}
+ **/

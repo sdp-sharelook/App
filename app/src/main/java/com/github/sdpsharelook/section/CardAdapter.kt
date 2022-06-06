@@ -5,15 +5,17 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.github.sdpsharelook.Word
 import com.github.sdpsharelook.databinding.CardSectionBinding
+import com.github.sdpsharelook.storage.IRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class CardAdapter(
-    private val sections: MutableList<Section>,
+class CardAdapter constructor(
     private val clickListener: SectionClickListener,
-    private val dialog: Dialog
+    private val dialog: Dialog,
+    private val wordRTDB : IRepository<List<Word>>
 )
     : RecyclerView.Adapter<CardViewHolder>()
 
@@ -38,27 +40,27 @@ class CardAdapter(
             dialog.show()
         }
 
-        holder.bindBook(sections[position])
+        holder.bindBook(sectionList[position])
     }
 
     fun editItem(name: String, flag: Int) {
-        val section = sections[editPosition]
-        section.title = name
-        section.flag = flag
+        val oldSection = sectionList[editPosition]
+        val newSection = Section(name,  flag, oldSection.id)
+
+        CoroutineScope(Dispatchers.IO).launch{
+            wordRTDB.insertSection(newSection)
+        }
+
         edit = false
         notifyItemChanged(editPosition)
     }
 
-    fun removeItem(viewHolder: RecyclerView.ViewHolder, index: Int) {
-        val section = sections[index]
-        Log.d("INDEX", index.toString())
-        sections.removeAt(index)
+    private fun removeItem(viewHolder: RecyclerView.ViewHolder, index: Int) {
+        val section = sectionList[index]
         CoroutineScope(Dispatchers.IO).launch{
-            section.databaseRepo.delete(section.sectionRepo)
+            wordRTDB.deleteSection(section)
         }
-        notifyItemRemoved(viewHolder.adapterPosition)
-        notifyDataSetChanged()
     }
 
-    override fun getItemCount(): Int = sections.size
+    override fun getItemCount(): Int = sectionList.size
 }

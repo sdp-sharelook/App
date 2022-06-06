@@ -14,11 +14,11 @@ import androidx.navigation.fragment.navArgs
 import androidx.test.espresso.IdlingResource
 import androidx.test.espresso.idling.CountingIdlingResource
 import com.github.sdpsharelook.R
+import com.github.sdpsharelook.Word
 import com.github.sdpsharelook.databinding.FragmentTranslateBinding
 import com.github.sdpsharelook.downloads.TranslatorDownloader
 import com.github.sdpsharelook.language.Language
 import com.github.sdpsharelook.language.LanguageAdapter
-import com.github.sdpsharelook.section.SectionWord
 import com.github.sdpsharelook.speechRecognition.RecognitionListener
 import com.github.sdpsharelook.speechRecognition.SpeechRecognizer
 import com.github.sdpsharelook.textToSpeech.TextToSpeech
@@ -27,6 +27,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -36,6 +39,7 @@ open class TranslateFragmentLift : Fragment() {
 
     @Inject
     lateinit var translator: TranslationProvider
+
     @Inject
     lateinit var translatorDownloader: TranslatorDownloader
 
@@ -122,8 +126,10 @@ open class TranslateFragmentLift : Fragment() {
                 initTranslator()
                 binding.apply {
                     spinnerSourceLang.adapter =
-                        LanguageAdapter(requireContext(),
-                            (listOf(Language.auto) + availableLanguages))
+                        LanguageAdapter(
+                            requireContext(),
+                            (listOf(Language.auto) + availableLanguages)
+                        )
                     spinnerTargetLang.adapter =
                         LanguageAdapter(requireContext(), availableLanguages)
                     spinnerSourceLang.onItemSelectedListener = onSourceLanguageSelected
@@ -225,23 +231,35 @@ open class TranslateFragmentLift : Fragment() {
                 return@launch
             }
             targetText = getString(R.string.translation_running)
-            targetText = translator.translate(sourceText, detectedLanguage.tag,
-                targetLanguage.tag)
+            targetText = translator.translate(
+                sourceText, detectedLanguage.tag,
+                targetLanguage.tag
+            )
             mIdlingResource?.decrement()
         }
     }
 
     private fun addWordToSection() {
 
+        if (sourceText.isNullOrEmpty() || targetText.isNullOrEmpty()) {
+            Log.e("TRANSLATE", "TRYING TO TRANSLATE WORD WITHOUT SOURCE AND/OR TARGET TEXT")
+            return
+        }
         val action = TranslateFragmentDirections.actionMenuTranslateLinkToMenuSectionsLink(
-            SectionWord(sourceText, targetText, null)
+            Json.encodeToString(
+                Word(
+                    uid = UUID.randomUUID().toString(),
+                    source = sourceText.toString(),
+                    target = targetText.toString()
+                )
+            )
         )
         findNavController().navigate(action)
 
     }
 
     private fun captureImage() {
-        val action = TranslateFragmentDirections.actionMenuTranslateLinkToMenuSectionsLink()
+        val action = TranslateFragmentDirections.actionMenuTranslateLinkToMenuCameraLink()
         findNavController().navigate(action)
     }
 
@@ -249,8 +267,13 @@ open class TranslateFragmentLift : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        binding = FragmentTranslateBinding.inflate(layoutInflater)
+        _binding = FragmentTranslateBinding.inflate(layoutInflater)
         return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     /**

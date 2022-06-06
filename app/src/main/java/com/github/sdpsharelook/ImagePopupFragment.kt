@@ -12,6 +12,7 @@ import androidx.fragment.app.DialogFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import kotlinx.datetime.Instant
 import java.util.*
 
 class ImagePopupFragment : DialogFragment() {
@@ -25,11 +26,11 @@ class ImagePopupFragment : DialogFragment() {
         private const val KEY_IMAGE = "KEY_IMAGE"
         private const val KEY_DATE = "KEY_DATE"
 
-        fun newInstance(source: String, target: String, date: Date, image: Bitmap): ImagePopupFragment {
+        fun newInstance(source: String, target: String, date: Instant, image: Bitmap): ImagePopupFragment {
             val args = Bundle()
             args.putString(KEY_SOURCE, source)
             args.putString(KEY_TARGET, target)
-            args.putLong(KEY_DATE, date.time)
+            args.putLong(KEY_DATE, date.toEpochMilliseconds())
             args.putParcelable(KEY_IMAGE, image)
             val fragment = ImagePopupFragment()
             fragment.arguments = args

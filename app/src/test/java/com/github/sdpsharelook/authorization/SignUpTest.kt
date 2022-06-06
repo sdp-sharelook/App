@@ -83,21 +83,19 @@ class SignUpTest {
             navController.setCurrentDestination(R.id.signUpFragment)
             Navigation.setViewNavController(requireView(), navController)
         }
-        onView(withId(R.id.firstName)).perform(replaceText("Jean"), closeSoftKeyboard())
-        onView(withId(R.id.lastName)).perform(replaceText("Paul"), closeSoftKeyboard())
-//        onView(withId(R.id.phoneNumber)).perform(replaceText("000 000 00 00"), closeSoftKeyboard())
-        onView(withId(R.id.email)).perform(replaceText(TEST_USER_EMAIL), closeSoftKeyboard())
-        onView(withId(R.id.password)).perform(replaceText(TEST_USER_PASS), closeSoftKeyboard())
+        onView(withId(R.id.firstName)).perform(replaceText("Jean"))
+        onView(withId(R.id.lastName)).perform(replaceText("Paul"))
+//        onView(withId(R.id.phoneNumber)).perform(replaceText("000 000 00 00"))
+        onView(withId(R.id.email)).perform(replaceText(TEST_USER_EMAIL))
+        onView(withId(R.id.password)).perform(replaceText(TEST_USER_PASS))
         onView(withId(R.id.confirmPassword)).perform(
-            replaceText(TEST_USER_PASS),
-            closeSoftKeyboard()
+            replaceText(TEST_USER_PASS)
         )
         onView(allOf(withId(R.id.loginButton), withText("Sign Up !"))).perform(click())
-        onView(withId(R.id.email)).perform(replaceText(NEW_USER_EMAIL), closeSoftKeyboard())
-        onView(withId(R.id.password)).perform(replaceText(NEW_USER_PASS), closeSoftKeyboard())
+        onView(withId(R.id.email)).perform(replaceText(NEW_USER_EMAIL))
+        onView(withId(R.id.password)).perform(replaceText(NEW_USER_PASS))
         onView(withId(R.id.confirmPassword)).perform(
-            replaceText(NEW_USER_PASS),
-            closeSoftKeyboard()
+            replaceText(NEW_USER_PASS)
         )
         onView(allOf(withId(R.id.loginButton), withText("Sign Up !"))).perform(click())
         assertEquals(R.id.greetingFragment, navController.currentDestination!!.id)
@@ -119,8 +117,8 @@ class SignUpTest {
             replaceText(NEW_USER_PASS),
             closeSoftKeyboard()
         )
-        onView(withId(R.id.loginButton)).perform(click())
-
+        onView(allOf(withId(R.id.loginButton), withText("Sign Up !"))).perform(click())
+        onView(allOf(withId(R.id.loginButton), withText("Sign Up !"))).perform(click())
         assertEquals(R.id.signUpFragment, navController.currentDestination!!.id)
         assertNull(auth.currentUser)
     }

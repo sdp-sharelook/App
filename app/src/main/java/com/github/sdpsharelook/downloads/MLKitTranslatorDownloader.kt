@@ -10,9 +10,9 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 class MLKitTranslatorDownloader @Inject constructor(
-    private val translator: MLKitTranslator
+    private val translator: MLKitTranslator,
+    private val modelManager: RemoteModelManager
 ) : TranslatorDownloader {
-    private val modelManager = RemoteModelManager.getInstance()
 
     override suspend fun downloadedLanguages(): List<Language>? = suspendCoroutine { continuation ->
         modelManager.getDownloadedModels(TranslateRemoteModel::class.java)

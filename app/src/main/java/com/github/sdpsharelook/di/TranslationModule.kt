@@ -4,6 +4,7 @@ import com.github.sdpsharelook.downloads.MLKitTranslatorDownloader
 import com.github.sdpsharelook.downloads.TranslatorDownloader
 import com.github.sdpsharelook.translate.MLKitTranslator
 import com.github.sdpsharelook.translate.TranslationProvider
+import com.google.mlkit.common.model.RemoteModelManager
 import com.google.mlkit.nl.languageid.LanguageIdentification
 import com.google.mlkit.nl.languageid.LanguageIdentifier
 import dagger.Binds
@@ -31,4 +32,8 @@ object MLKitModule {
     @Singleton
     @Provides
     fun provideLanguageIdentifier(): LanguageIdentifier = LanguageIdentification.getClient()
+
+    @Singleton
+    @Provides
+    fun provideModelManager(): RemoteModelManager = RemoteModelManager.getInstance()
 }

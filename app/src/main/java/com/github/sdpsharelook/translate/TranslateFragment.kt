@@ -1,6 +1,7 @@
 package com.github.sdpsharelook.translate
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -46,7 +47,8 @@ open class TranslateFragmentLift : Fragment() {
     /**
      * This property is only valid between onCreateView and onDestroyView.
      */
-    private lateinit var binding: FragmentTranslateBinding
+    private var _binding: FragmentTranslateBinding? = null
+    private val binding get() = _binding!!
     private lateinit var textToSpeech: TextToSpeech
     private val sourceLanguage: Language
         get() = binding.spinnerSourceLang.selectedItem as Language? ?: Language.auto

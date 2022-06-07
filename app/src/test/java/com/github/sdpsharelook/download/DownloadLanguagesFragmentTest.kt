@@ -37,13 +37,18 @@ class DownloadLanguagesFragmentTest {
     }
 
     @Test
-    fun `test download a language`() = runTest {
+    fun `one language is always already downloaded`() = runTest {
         advanceUntilIdle()
-        onView(allOf(withId(R.id.image_button_download))).perform(click())
-        onView(withId(R.id.progress_bar_downloading)).check(matches(isDisplayed()))
-        // i hope the coroutine block before the next line
-        onView(withId(R.id.image_view_downloaded)).check(matches(isDisplayed()))
-        onView(withId(R.id.image_button_delete)).check(matches(isDisplayed()))
+        onView(allOf(withId(R.id.image_view_downloaded), isDisplayed()))
+            .check(matches(isDisplayed()))
+        onView(allOf(withId(R.id.image_button_delete), isDisplayed())).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun `test progressbar is visible`() {
+        onView(allOf(withId(R.id.image_button_download), isDisplayed())).perform(click())
+        onView(allOf(withId(R.id.progress_bar_downloading), isDisplayed()))
+            .check(matches(isDisplayed()))
     }
 
 }

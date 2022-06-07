@@ -13,6 +13,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
+import kotlinx.coroutines.delay
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import javax.inject.Singleton
@@ -27,35 +28,34 @@ object FakeTranslationModule {
     @Singleton
     fun providesTranslationProvider() = object : TranslationProvider {
         override val availableLanguages: Set<Language>
-            //            get() = listOf("en", "fr").map { Language(it) }.toSet()
-            get() = listOf("en").map { Language(it) }.toSet()
+            get() = setOf(Language("en"), Language("fr"))
 
         override suspend fun detectLanguage(text: String): String =
             "en"
 
         override suspend fun translate(text: String, src: String, dst: String): String =
-            when (text + src + dst) {
-                "helloenfr" -> "bonjour"
-                else -> "test"
+            when (Triple(text, src, dst)) {
+                Triple("bonjour", "fr", "en") -> "hello"
+                else -> "unmatched pattern"
             }
     }
 
     @Provides
     @Singleton
     fun providesTranslationDownloader() = object : TranslatorDownloader {
-        private val downloads = hashMapOf("en" to true, "fr" to false)
+        val available = setOf(Language("en"), Language("fr"))
+        val downloaded = mutableSetOf(Language("en"))
         override suspend fun downloadedLanguages(): List<Language> =
-            downloads.filter { it.value }.keys.map { Language(it) }
+            listOf(Language("en"))
 
-        //            listOf(Language("en"))
         override suspend fun deleteLanguage(language: Language): Boolean {
-            downloads[language.tag] = false
-            return true
+            delay(100)
+            return language in available && language != Language("en") && downloaded.remove(language)
         }
 
         override suspend fun downloadLanguage(language: Language, requireWifi: Boolean): Boolean {
-            downloads[language.tag] = false
-            return true
+            delay(100)
+            return language in available && downloaded.add(language)
         }
     }
 

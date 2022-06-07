@@ -5,13 +5,14 @@ import com.github.sdpsharelook.translate.MLKitTranslator
 import com.google.mlkit.common.model.DownloadConditions
 import com.google.mlkit.common.model.RemoteModelManager
 import com.google.mlkit.nl.translate.TranslateRemoteModel
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 class MLKitTranslatorDownloader @Inject constructor(
     private val translator: MLKitTranslator,
-    private val modelManager: RemoteModelManager
+    private val modelManager: RemoteModelManager,
 ) : TranslatorDownloader {
 
     override suspend fun downloadedLanguages(): List<Language>? = suspendCoroutine { continuation ->
@@ -45,14 +46,11 @@ class MLKitTranslatorDownloader @Inject constructor(
                 val model = TranslateRemoteModel.Builder(language.tag).build()
                 val conditionsBuilder = DownloadConditions.Builder()
                 if (requireWifi) conditionsBuilder.requireWifi()
-                return suspendCoroutine { continuation ->
-                    modelManager.download(model, conditionsBuilder.build())
-                        .addOnSuccessListener {
-                            continuation.resume(true)
-                        }
-                        .addOnFailureListener {
-                            continuation.resume(false)
-                        }
+                return try {
+                    modelManager.download(model, conditionsBuilder.build()).await()
+                    true
+                } catch (e: Throwable) {
+                    false
                 }
             }
         } ?: false

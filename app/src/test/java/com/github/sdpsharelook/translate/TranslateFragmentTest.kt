@@ -17,6 +17,7 @@ import com.github.sdpsharelook.utils.FragmentScenarioRule
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -45,8 +46,9 @@ class TranslateFragmentTest {
         }
     }
 
-    private fun selectSourceLanguage(language: Language) {
+    private fun selectSourceLanguage(language: Language)= runTest {
         onView(withId(R.id.spinner_source_lang)).perform(click())
+        advanceUntilIdle()
         onData(MatchersTest.isEquals(language)).perform(click())
     }
 
@@ -56,7 +58,14 @@ class TranslateFragmentTest {
     }
 
     @Test
+    fun `test select source language`() = runTest {
+        advanceUntilIdle()
+        selectSourceLanguage(Language("en"))
+    }
+
+    @Test
     fun `test translate hello from auto to english`() = runTest {
+        advanceUntilIdle()
         selectSourceLanguage(Language.auto)
         selectTargetLanguage(Language("en"))
         onView(withId(R.id.sourceText)).perform(replaceText("Hello"))

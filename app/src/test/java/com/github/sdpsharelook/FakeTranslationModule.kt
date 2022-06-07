@@ -69,10 +69,14 @@ object FakeTranslationModule {
         val translateRemoteModel = mock<TranslateRemoteModel> {
             on { language } doReturn "en"
         }
-        on { getDownloadedModels(TranslateRemoteModel::class.java) } doReturn Tasks.forResult(
-            setOf(
-                translateRemoteModel
-            )
-        )
+        on { getDownloadedModels(TranslateRemoteModel::class.java) } doReturn
+                Tasks.forResult(setOf(
+            translateRemoteModel))
+
+        on { deleteDownloadedModel(translateRemoteModel) } doReturn Tasks.forResult(null)
+
+        /*on { download(translateRemoteModel, TODO conditions) } doAnswer {
+            Tasks.forResult(null)
+        }*/
     }
 }

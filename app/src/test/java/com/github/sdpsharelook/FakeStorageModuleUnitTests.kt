@@ -26,8 +26,7 @@ class FakeStorageModuleUnitTests {
         override suspend fun insert(name: String, entity: Any) = Unit
         override suspend fun read(name: String): Any? = null
         override suspend fun update(name: String, entity: Any) = Unit
-        override suspend fun delete(name: String) = Unit
-        override suspend fun deleteWord(name: String, entity: Word) = Unit
+        override suspend fun delete(name: String, entity: Any) = Unit
     }
 
     @Provides
@@ -39,8 +38,7 @@ class FakeStorageModuleUnitTests {
         override suspend fun insert(name: String, entity: List<String>) = Unit
         override suspend fun read(name: String): List<String>? = null
         override suspend fun update(name: String, entity: List<String>) = Unit
-        override suspend fun delete(name: String) = Unit
-        override suspend fun deleteWord(name: String, entity: Word) = Unit
+        override suspend fun delete(name: String, entity: List<String>) = Unit
     }
 
     @Provides
@@ -57,16 +55,18 @@ class FakeStorageModuleUnitTests {
         override suspend fun insert(name: String, entity: List<Word>) = Unit
         override suspend fun read(name: String): List<Word>? = null
         override suspend fun update(name: String, entity: List<Word>) = Unit
-        override suspend fun delete(name: String) = Unit
-        override fun flowSection(): Flow<Result<List<Section>?>> =
-            flowOf(
-                Result.success(
-                    listOf(
-                        Section("Test")
-                    )
-                )
-            )
-        override suspend fun deleteWord(name: String, entity: Word) = Unit
+        override suspend fun delete(name: String, entity: List<Word>) = Unit
     }
 
+    @Provides
+    @Singleton
+    fun sectionRepo(): IRepository<List<Section>> = object : IRepository<List<Section>> {
+        override fun flow(name: String): Flow<Result<List<Section>?>> =
+            flowOf(Result.failure(CancellationException("test")))
+
+        override suspend fun insert(name: String, entity: List<Section>) = Unit
+        override suspend fun read(name: String): List<Section>? = null
+        override suspend fun update(name: String, entity: List<Section>) = Unit
+        override suspend fun delete(name: String, entity: List<Section>) = Unit
+    }
 }

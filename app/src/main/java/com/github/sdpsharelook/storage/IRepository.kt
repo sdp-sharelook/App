@@ -2,8 +2,7 @@ package com.github.sdpsharelook.storage
 
 import com.github.sdpsharelook.Word
 import com.github.sdpsharelook.section.Section
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.*
 
 /**
  * Generic repository contract
@@ -31,7 +30,8 @@ interface IRepository<T> {
      * @param name identifier of entity
      * @return [T] or null
      */
-    suspend fun read(name: String = "test"): T?
+    suspend fun read(name: String = "test"): T? =
+        flow(name).first().getOrNull()
 
     /**
      * Update data entry at [name].
@@ -48,25 +48,7 @@ interface IRepository<T> {
      *
      * @param name identifier of entity
      */
-    suspend fun delete(name : String = "test")
-
-    /**
-     * Delete repository entry at [name].
-     *
-     * @param name identifier of entity
-     * @param entity: Word
-     */
-    suspend fun deleteWord(name : String = "test", entity: Word)
-
-    /**
-     * Completely fuck up the dependency injection because
-     * it's too damn hard to make a new implementation of [IRepository]
-     *
-     * And frankly that's not my job to fix
-     *
-     * @return an abstraction leak, my man
-     */
-    fun flowSection(): Flow<Result<List<Section>?>> = emptyFlow()
+    suspend fun delete(name: String = "test", entity: T)
 
     /**
      * Create permanent repository entry
@@ -74,22 +56,10 @@ interface IRepository<T> {
      * @param name identifier of entity
      * @param entity Entity List of words
      */
-    suspend fun insertList(name: String, entity: T) = Unit
+    suspend fun insertMultiple(name: String, entity: List<T>) =
+        entity.forEach { insert(name, it) }
 
-    /**
-     * Create permanent repository entry
-     *
-     * @param name identifier of entity
-     * @param entity Entity Section
-     */
-    suspend fun insertSection(entity: Section) = Unit
-
-    /**
-     * Create permanent repository entry
-     *
-     * @param name identifier of entity
-     * @param entity Entity Section
-     */
-    suspend fun deleteSection(entity: Section) = Unit
-
+    companion object {
+        const val SECTION_LIST = "SectionList"
+    }
 }

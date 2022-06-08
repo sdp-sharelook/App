@@ -1,9 +1,9 @@
 package com.github.sdpsharelook.storage
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.github.sdpsharelook.Word
 import com.github.sdpsharelook.authorization.AuthProvider
 import com.github.sdpsharelook.di.StorageModule
+import com.github.sdpsharelook.section.Section
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.database.*
 import com.google.gson.Gson
@@ -27,12 +27,11 @@ import org.mockito.Answers
 import org.mockito.kotlin.*
 import javax.inject.Inject
 
-
 @UninstallModules(StorageModule::class)
 @ExperimentalCoroutinesApi
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-class RTDBWordListRepositoryTest {
+class RTSectionRepoTest {
     @BindValue
     @JvmField
     var db: FirebaseDatabase = mock(defaultAnswer = { reference })
@@ -48,14 +47,15 @@ class RTDBWordListRepositoryTest {
     private val snap: DataSnapshot = mock(defaultAnswer = {
         Gson().toJson(testVal).toString()
     })
-
+    private val testVal = Section("test")
+    private val testString = "test"
 
     @Inject
     lateinit var auth: AuthProvider
-    private val testString = "test"
-    private val testVal = Word.testWord
-    private lateinit var repo: RTDBWordListRepository
-    private lateinit var testFlow: Flow<Result<List<Word>?>>
+
+    @Inject
+    lateinit var repo: RTSectionRepo
+    private lateinit var testFlow: Flow<Result<List<Section>?>>
 
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
@@ -63,34 +63,31 @@ class RTDBWordListRepositoryTest {
     @Before
     fun setUp() {
         hiltRule.inject()
-        repo = RTDBWordListRepository(db, auth)
         testFlow = repo.flow()
     }
 
     @Test
-    fun `test flow`() = runTest(dispatchTimeoutMs = 5000) {
-        val changed = testVal.copy(source = "test2")
+    fun `test flow`() = runTest {
+        val changed = testVal.copy(title = testString)
         val changedSnap = mock<DataSnapshot>(defaultAnswer = {
             Gson().toJson(changed).toString()
         })
-        val databaseExceptionMock = mock<DatabaseException> {
-            on { message } doReturn testString
-        }
         val databaseError = mock<DatabaseError> {
+            val databaseExceptionMock = mock<DatabaseException> {
+                on { message } doReturn testString
+            }
             on { toException() } doReturn databaseExceptionMock
         }
         var i = 0
         val job = testFlow
             .onEach { result ->
                 result
-                    .onSuccess { list ->
-                        list!!.let {
-                            when (i++) {
-                                0 -> assertEquals(listOf(testVal), it)
-//                                1 -> assertEquals(listOf(changed), it)
-                                2 -> assertEquals(listOf(testVal), it)
-                                3 -> assertEquals(listOf<Word>(), it)
-                            }
+                    .onSuccess {
+                        when (i++) {
+                            0 -> assertEquals(listOf(testVal), it!!)
+                            1 -> assertEquals(listOf(changed), it!!)
+                            2 -> assertEquals(listOf(testVal), it!!)
+                            3 -> assertEquals(listOf<Section>(), it!!)
                         }
                     }.onFailure {
                         assertEquals(testString, it.message) // 4
@@ -103,7 +100,7 @@ class RTDBWordListRepositoryTest {
         advanceUntilIdle()
         lastFlowListener!!.onChildChanged(snap, null) // 2
         advanceUntilIdle()
-        lastFlowListener!!.onChildMoved(snap, null) // Nothing
+        lastFlowListener!!.onChildMoved(snap, null) // nothing
         advanceUntilIdle()
         lastFlowListener!!.onChildRemoved(snap) // 3
         advanceUntilIdle()
@@ -115,20 +112,13 @@ class RTDBWordListRepositoryTest {
     }
 
     @Test
-    fun `insert three words`() = runTest {
-        val word = Word("test")
-        repo.insert("test", listOf(word, word, word))
-        verify(reference, times(3)).setValue(any())
-    }
-
-    @Test
     fun `test other functions`() = runTest {
         runCatching { repo.update(entity = listOf(testVal)) }
             .onSuccess { Assert.fail() }
             .onFailure { assertEquals(NotImplementedError::class.java, it.javaClass) }
         repo.insert(entity = listOf(testVal))
         verify(reference).setValue(any())
-        repo.delete(words = listOf(testVal))
+        repo.delete(entity = listOf(testVal))
         verify(reference).removeValue()
     }
 }

@@ -72,7 +72,7 @@ open class SectionDetailFragmentLift : Fragment() {
                 lifecycleScope.launch{
                     val newW = w.copy(picture=url)
                     Log.e("newW", newW.toString())
-                    wordRTDB.insertList(section.id, listOf(newW))
+                    wordRTDB.insert(section.id, listOf(newW))
                 }
 
                 Log.e("Avant", "Avant")

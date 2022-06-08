@@ -1,6 +1,5 @@
 package com.github.sdpsharelook.storage
 
-import com.github.sdpsharelook.Word
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
 import kotlinx.coroutines.channels.awaitClose
@@ -79,13 +78,10 @@ class RTDBStringListRepository @Inject constructor(
      *
      * @param name identifier of entity
      */
-    override suspend fun delete(name: String) {
+    override suspend fun delete(name: String, entity: List<@JvmSuppressWildcards String>) {
         databaseReference(name).removeValue().await()
     }
 
     private fun databaseReference(name: String) = reference.child(name)
 
-    override suspend fun deleteWord(name: String, entity: Word) {
-        TODO("Not yet implemented")
-    }
 }

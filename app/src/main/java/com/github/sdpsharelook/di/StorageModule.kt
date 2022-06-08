@@ -1,6 +1,7 @@
 package com.github.sdpsharelook.di
 
 import com.github.sdpsharelook.Word
+import com.github.sdpsharelook.section.Section
 import com.github.sdpsharelook.storage.*
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
@@ -22,6 +23,10 @@ abstract class StorageBindsModule {
     @Singleton
     @Binds
     abstract fun bindWordListRepo(r: RTDBWordListRepository): IRepository<List<Word>>
+
+    @Singleton
+    @Binds
+    abstract fun bindSectionRepo(r: RTSectionRepo): IRepository<List<Section>>
 
     @Singleton
     @Binds

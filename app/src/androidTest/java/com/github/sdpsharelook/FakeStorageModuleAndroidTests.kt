@@ -25,8 +25,7 @@ class FakeStorageModuleAndroidTests {
         override suspend fun insert(name: String, entity: Any) = Unit
         override suspend fun read(name: String): Any? = null
         override suspend fun update(name: String, entity: Any) = Unit
-        override suspend fun delete(name: String) = Unit
-        override suspend fun deleteWord(name: String, entity: Word) = Unit
+        override suspend fun delete(name: String, entity: Any) = Unit
     }
 
     @Provides
@@ -38,7 +37,6 @@ class FakeStorageModuleAndroidTests {
         override suspend fun insert(name: String, entity: List<String>) = Unit
         override suspend fun read(name: String): List<String>? = null
         override suspend fun update(name: String, entity: List<String>) = Unit
-        override suspend fun delete(name: String) = Unit
-        override suspend fun deleteWord(name: String, entity: Word) = Unit
+        override suspend fun delete(name: String, entity: List<String>) = Unit
     }
 }

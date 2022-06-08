@@ -1,6 +1,5 @@
 package com.github.sdpsharelook.storage
 
-import com.github.sdpsharelook.Word
 import com.google.firebase.database.*
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
@@ -66,12 +65,7 @@ class RTDBAnyRepository @Inject constructor(
      *
      * @param name identifier of entity
      */
-    override suspend fun delete(name: String) {
+    override suspend fun delete(name: String, entity: Any) {
         TODO("Not yet implemented")
     }
-
-    override suspend fun deleteWord(name: String, entity: Word) {
-        TODO("Not yet implemented")
-    }
-
 }

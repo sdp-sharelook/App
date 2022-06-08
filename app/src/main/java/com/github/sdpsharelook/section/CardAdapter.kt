@@ -15,7 +15,8 @@ import kotlinx.coroutines.launch
 class CardAdapter constructor(
     private val clickListener: SectionClickListener,
     private val dialog: Dialog,
-    private val wordRTDB : IRepository<List<Word>>
+    private val wordRTDB : IRepository<List<Word>>,
+    private val sectionDb : IRepository<List<Section>>
 )
     : RecyclerView.Adapter<CardViewHolder>()
 
@@ -48,7 +49,7 @@ class CardAdapter constructor(
         val newSection = Section(name,  flag, oldSection.id)
 
         CoroutineScope(Dispatchers.IO).launch{
-            wordRTDB.insertSection(newSection)
+            sectionDb.insert(IRepository.SECTION_LIST, listOf(newSection))
         }
 
         edit = false
@@ -58,7 +59,7 @@ class CardAdapter constructor(
     private fun removeItem(viewHolder: RecyclerView.ViewHolder, index: Int) {
         val section = sectionList[index]
         CoroutineScope(Dispatchers.IO).launch{
-            wordRTDB.deleteSection(section)
+            sectionDb.delete("SectionList", listOf(section))
         }
     }
 

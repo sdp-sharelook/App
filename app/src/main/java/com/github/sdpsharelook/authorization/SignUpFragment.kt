@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -42,7 +43,9 @@ open class SignUpFragmentLift : Fragment() {
     private fun firstNameListener() {
         binding.firstName.setOnFocusChangeListener { _, focus ->
             if (!focus) {
-                binding.firstName.error = isFirstNameValid()
+                val firstNameValid = isFirstNameValid()
+                binding.firstNameBox.error = firstNameValid
+                binding.firstName.error = firstNameValid
             }
         }
     }
@@ -57,7 +60,9 @@ open class SignUpFragmentLift : Fragment() {
     private fun lastNameListener() {
         binding.lastName.setOnFocusChangeListener { _, focus ->
             if (!focus) {
-                binding.lastName.error = isLastNameValid()
+                val lastNameValid = isLastNameValid()
+                binding.lastNameBox.error = lastNameValid
+                binding.lastName.error = lastNameValid
             }
         }
     }
@@ -72,10 +77,11 @@ open class SignUpFragmentLift : Fragment() {
     private fun emailListener() {
         binding.email.setOnFocusChangeListener { _, focus ->
             if (!focus) {
-                binding.email.error = isEmailValid()
+                val emailValid = isEmailValid()
+                binding.emailBox.error = emailValid
+                binding.email.error = emailValid
             }
         }
-
     }
 
     private fun isEmailValid(): String? {
@@ -90,11 +96,11 @@ open class SignUpFragmentLift : Fragment() {
     }
 
     private fun prelimPasswordListener() {
-        binding.password.setOnFocusChangeListener { _, focus ->
-            if (!focus) {
-                binding.password.error = isPrelimPassword()
-                binding.prelimPasswordBox.helperText = isPrelimPassword()
-            }
+        binding.password.addTextChangedListener {
+            val prelimPassword = isPrelimPassword()
+            binding.prelimPasswordBox.error = prelimPassword
+            binding.prelimPasswordBox.helperText = prelimPassword
+            bindConfirmPass()
         }
     }
 
@@ -102,7 +108,7 @@ open class SignUpFragmentLift : Fragment() {
         val upperCase = "(.*?[A-Z].*)".toRegex()
         val lowerCase = "(.*?[a-z].*)".toRegex()
         val oneDigit = "(.*?[0-9].*)".toRegex()
-        val specialChar = "(.*?[#?!()@\$ %^&*-].*)".toRegex()
+        val specialChar = "(.*?[#?!()@\$ %^&*-+\"].*)".toRegex()
         val minLength8 = ".{8,}".toRegex()
         return if (binding.password.text.toString() == "")
             "Required"
@@ -121,12 +127,13 @@ open class SignUpFragmentLift : Fragment() {
     }
 
     private fun passwordListener() {
-        binding.password.setOnFocusChangeListener { _, focus ->
-            if (!focus) {
-                binding.passwordBox.error = isPasswordValid()
-                binding.passwordBox.helperText = isPasswordValid()
-            }
-        }
+        binding.confirmPassword.addTextChangedListener { bindConfirmPass() }
+    }
+
+    private fun bindConfirmPass() {
+        val passwordValid = isPasswordValid()
+        binding.passwordBox.error = passwordValid
+        binding.passwordBox.helperText = passwordValid
     }
 
     private fun isPasswordValid(): String? = when {
@@ -136,23 +143,24 @@ open class SignUpFragmentLift : Fragment() {
 
     private fun checkBeforeSignUp() {
         updateErrors()
-        val firstNameValid = binding.firstName.error == null
-        val lastNameValid = binding.lastName.error == null
-        val emailValid = binding.email.error == null
+        val firstNameValid = binding.firstNameBox.error == null
+        val lastNameValid = binding.lastNameBox.error == null
+        val emailValid = binding.emailBox.error == null
         val prelimPassValid = binding.prelimPasswordBox.helperText == null
-        val passValid = binding.password.error == null && binding.passwordBox.helperText == null
+        val passValid = binding.passwordBox.error == null && binding.passwordBox.helperText == null
         if (firstNameValid && lastNameValid && emailValid && prelimPassValid && passValid) {
             signUp()
         } else {
-            Toast.makeText(requireContext(), "Form is filled incorrectly", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Form is filled incorrectly", Toast.LENGTH_SHORT)
+                .show()
         }
     }
 
     private fun updateErrors() {
-        binding.firstName.error = isFirstNameValid()
-        binding.lastName.error = isLastNameValid()
-        binding.email.error = isEmailValid()
-        binding.password.error = isPrelimPassword()
+        binding.firstNameBox.error = isFirstNameValid()
+        binding.lastNameBox.error = isLastNameValid()
+        binding.emailBox.error = isEmailValid()
+        binding.prelimPasswordBox.error = isPrelimPassword()
         binding.prelimPasswordBox.helperText = isPrelimPassword()
         binding.passwordBox.error = isPasswordValid()
         binding.passwordBox.helperText = isPasswordValid()

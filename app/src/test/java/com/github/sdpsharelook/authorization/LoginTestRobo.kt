@@ -78,4 +78,16 @@ class LoginTestRobo {
             assert(auth.currentUser == null)
         }
     }
+
+    @Test
+    fun `test nab to signup`() = runTest {
+        val navController = TestNavHostController(ApplicationProvider.getApplicationContext())
+        fragmentScenarioRule.scenario.onFragment {
+            navController.setGraph(R.navigation.main)
+            navController.setCurrentDestination(R.id.menuLoginLink)
+            Navigation.setViewNavController(requireView(), navController)
+        }
+        onView(withId(R.id.signUpButton)).perform(click())
+        assertEquals(R.id.signUpFragment, navController.currentDestination!!.id)
+    }
 }

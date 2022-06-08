@@ -18,8 +18,12 @@ import com.github.sdpsharelook.databinding.CardSectionBinding
 import com.github.sdpsharelook.databinding.FragmentSectionBinding
 import com.github.sdpsharelook.databinding.PopupBinding
 import com.github.sdpsharelook.downloads.MLKitTranslatorDownloader
+import com.github.sdpsharelook.downloads.TranslatorDownloader
 import com.github.sdpsharelook.language.Language
 import com.github.sdpsharelook.storage.IRepository
+import com.github.sdpsharelook.translate.MLKitTranslator
+import com.google.mlkit.common.model.RemoteModelManager
+import com.google.mlkit.nl.languageid.LanguageIdentification
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -38,6 +42,14 @@ var sectionList: MutableList<Section> = mutableListOf()
 @AndroidEntryPoint
 class SectionFragment : SectionFragmentLift()
 open class SectionFragmentLift : Fragment(), SectionClickListener {
+
+    //    @Inject
+//    lateinit var
+    val translatorDownloader: TranslatorDownloader =
+        MLKitTranslatorDownloader(
+            MLKitTranslator(LanguageIdentification.getClient()),
+            RemoteModelManager.getInstance()
+        )
 
     /**
      * This property is only valid between onCreateView and onDestroyView.
@@ -93,7 +105,8 @@ open class SectionFragmentLift : Fragment(), SectionClickListener {
 
             val sectionName = popupBinding.editSectionName.text.toString()
             val countryIndex = popupBinding.spinnerCountries.selectedItemPosition
-            val flag = (popupBinding.spinnerCountries.adapter as SpinnerAdapter).getItemFlag(countryIndex)
+            val flag =
+                (popupBinding.spinnerCountries.adapter as SpinnerAdapter).getItemFlag(countryIndex)
             val newSection = Section(
                 sectionName,
                 flag,
@@ -138,10 +151,11 @@ open class SectionFragmentLift : Fragment(), SectionClickListener {
     private fun putLanguagesInSpinners() {
         CoroutineScope(Dispatchers.IO).launch {
             availableLanguages =
-                MLKitTranslatorDownloader().downloadedLanguages() ?: listOf(Language("en"))
+                translatorDownloader.downloadedLanguages() ?: listOf(Language("en"))
             withContext(Dispatchers.Main) {
                 popupBinding.spinnerCountries.adapter = SpinnerAdapter(
-                    requireContext(), availableLanguages)
+                    requireContext(), availableLanguages
+                )
             }
         }
     }

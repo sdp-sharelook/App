@@ -61,7 +61,7 @@ class RTSectionRepo @Inject constructor(
     override suspend fun insert(name: String, entity: List<Section>) =
         entity.forEach {
             getUserFolderReference(name).child(it.id)
-                .setValue(Gson().toJson(it).toString())
+                .setValue(Gson().toJson(it).toString()).await()
         }
 
     override suspend fun update(name: String, entity: List<Section>) {

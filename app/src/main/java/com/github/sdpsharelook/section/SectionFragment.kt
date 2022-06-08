@@ -43,13 +43,8 @@ var sectionList: MutableList<Section> = mutableListOf()
 class SectionFragment : SectionFragmentLift()
 open class SectionFragmentLift : Fragment(), SectionClickListener {
 
-    //    @Inject
-//    lateinit var
-    val translatorDownloader: TranslatorDownloader =
-        MLKitTranslatorDownloader(
-            MLKitTranslator(LanguageIdentification.getClient()),
-            RemoteModelManager.getInstance()
-        )
+    @Inject
+    lateinit var translatorDownloader: TranslatorDownloader
 
     /**
      * This property is only valid between onCreateView and onDestroyView.
@@ -105,8 +100,7 @@ open class SectionFragmentLift : Fragment(), SectionClickListener {
 
             val sectionName = popupBinding.editSectionName.text.toString()
             val countryIndex = popupBinding.spinnerCountries.selectedItemPosition
-            val flag =
-                (popupBinding.spinnerCountries.adapter as SpinnerAdapter).getItemFlag(countryIndex)
+            val flag = (popupBinding.spinnerCountries.adapter as SpinnerAdapter).getItemFlag(countryIndex)
             val newSection = Section(
                 sectionName,
                 flag,
@@ -161,11 +155,9 @@ open class SectionFragmentLift : Fragment(), SectionClickListener {
     }
 
     private fun addSection(section: Section) {
-        // if the section already exist do not add it
         lifecycleScope.launch {
             databaseWordList.insertSection(section)
         }
-        true
     }
 
     override fun onClick(section: Section) {

@@ -91,7 +91,7 @@ open class SectionDetailFragmentLift : Fragment() {
     }
 
     private suspend fun removeWord(pos: Int, section: Section) {
-        wordRTDB.deleteWord(section.id, wordList[pos])
+        wordRTDB.delete(section.id, listOf(wordList[pos]))
     }
 
 

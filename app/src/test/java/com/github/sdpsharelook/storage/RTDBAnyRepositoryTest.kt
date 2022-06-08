@@ -13,6 +13,7 @@ import dagger.hilt.android.testing.UninstallModules
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.*
@@ -68,8 +69,8 @@ class RTDBAnyRepositoryTest {
         lastFlowListener!!.onDataChange(mock(defaultAnswer = { testString }))
         advanceUntilIdle()
         lastFlowListener!!.onCancelled(mock {
-            on {message} doReturn testString
-            on {toException()} doReturn failure
+            on { message } doReturn testString
+            on { toException() } doReturn failure
         })
         advanceUntilIdle()
         job.cancel()
@@ -85,11 +86,21 @@ class RTDBAnyRepositoryTest {
         runCatching { repo.update(entity = "test") }
             .onSuccess { fail() }
             .onFailure { assertEquals(NotImplementedError::class.java, it.javaClass) }
-        runCatching { repo.read() }
+        runCatching { repo.delete("", object {}) }
             .onSuccess { fail() }
             .onFailure { assertEquals(NotImplementedError::class.java, it.javaClass) }
-        runCatching { repo.delete() }
-            .onSuccess { fail() }
-            .onFailure { assertEquals(NotImplementedError::class.java, it.javaClass) }
+    }
+
+    @Test
+    fun testDefaultRead() = runTest {
+        // read() has default implementation using flow()
+        var res: String? = null
+        launch {
+            res = repo.read().toString()
+        }
+        advanceUntilIdle()
+        lastFlowListener!!.onDataChange(mock(defaultAnswer = { testString }))
+        advanceUntilIdle()
+        assertEquals(testString, res)
     }
 }

@@ -39,6 +39,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
                 android:layout_margin="15dp"
+                android:background="@color/white"
                 android:contentDescription="@string/listen"
                 android:src="@drawable/ic_microphone" />
 
@@ -48,6 +49,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentBottom="true"
                 android:layout_margin="15dp"
+                android:background="@color/white"
                 android:contentDescription="@string/listen"
                 android:src="@drawable/ic_camera" />
         </RelativeLayout>
@@ -69,7 +71,7 @@
                 android:minHeight="48dp"
                 android:text="@string/source_language"
                 android:textAlignment="center"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black" />
 
             <ImageButton
                 android:id="@+id/buttonSwitchLang"
@@ -95,41 +97,101 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/targetText"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/linearLayoutButtons"
                 android:layout_margin="8dp"
-                android:textAlignment="center"
+                android:textAlignment="viewStart"
                 android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@id/imageButtonTTS"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:scrollbars="vertical|horizontal"/>
+            <LinearLayout
+                android:id="@+id/linearLayoutButtons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@id/targetText"
+                app:layout_constraintTop_toTopOf="parent">
 
-            <ImageButton
-                android:id="@+id/addWordToSectionButton"
-                style="@style/Theme.AppCompat.smallImageButton"
-                android:layout_margin="15dp"
-                android:contentDescription="@string/speak"
-                android:src="@drawable/ic_add"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:tint="@color/black" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-            <ImageButton
-                android:id="@+id/imageButtonTTS"
-                style="@style/Theme.AppCompat.smallImageButton"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginEnd="15dp"
-                android:contentDescription="@string/speak"
-                android:src="@drawable/ic_speaker"
-                app:layout_constraintLeft_toRightOf="@id/targetText"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                    <ImageButton
+                        android:id="@+id/downloadDetectedLanguage"
+                        style="@style/Theme.AppCompat.smallImageButton"
+                        android:contentDescription="@string/need_to_download_source_language"
+                        android:src="@drawable/ic_download"
+                        app:tint="@color/black" />
+
+                    <TextView
+                        android:id="@+id/textViewDetectedLanguage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="fr"
+                        android:textColor="#444444" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginVertical="3dp"
+                    android:layout_weight="1" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <ImageButton
+                        android:id="@+id/addWordToSectionButton"
+                        style="@style/Theme.AppCompat.smallImageButton"
+                        android:contentDescription="@string/speak"
+                        android:src="@drawable/ic_add"
+                        app:tint="@color/black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="save"
+                        android:textColor="#444444" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginVertical="3dp"
+                    android:background="@android:color/darker_gray" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <ImageButton
+                        android:id="@+id/imageButtonTTS"
+                        style="@style/Theme.AppCompat.smallImageButton"
+                        android:contentDescription="@string/speak"
+                        android:src="@drawable/ic_speaker" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/speak"
+                        android:textColor="#444444" />
+                </LinearLayout>
+            </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </TableLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

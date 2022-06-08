@@ -3,7 +3,7 @@ package com.github.sdpsharelook.translate
 import com.github.sdpsharelook.language.Language
 
 interface TranslationProvider {
-    val availableLanguages: Set<Language>
+    val availableLanguages: List<Language>
     suspend fun detectLanguage(text: String): String
 
     /** Translate the text from src language to dst language using coroutines

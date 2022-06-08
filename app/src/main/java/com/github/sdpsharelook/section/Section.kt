@@ -19,4 +19,8 @@ data class Section(
         )
     }
     constructor(id:String) : this("",0, id)
+
+    override fun equals(other: Any?): Boolean {
+        return id == (other as Section).id
+    }
 }

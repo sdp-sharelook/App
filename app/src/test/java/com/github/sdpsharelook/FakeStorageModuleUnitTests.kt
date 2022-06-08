@@ -8,11 +8,8 @@ import dagger.Provides
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.*
 import javax.inject.Singleton
-import kotlin.coroutines.cancellation.CancellationException
 
 @Module
 @TestInstallIn(
@@ -47,18 +44,21 @@ class FakeStorageModuleUnitTests {
     @Provides
     @Singleton
     fun wordListRepo(): IRepository<List<Word>> = object : IRepository<List<Word>> {
-        private var word: Word = Word(source = "test", target = "translation")
+        private var word: Word = Word(source= "Hola", target = "Bonjour")
         private var wordList: MutableList<Word> = mutableListOf(word)
+        private var flow = Channel<Result<List<Word>?>>()
 
-
-        override fun flow(name: String): Flow<Result<List<Word>?>> =
-            flowOf(Result.success(wordList))
-
+        override fun flow(name: String): Flow<Result<List<Word>?>> {
+            return flow.receiveAsFlow().onStart { emit(Result.success(wordList)) }
+        }
 
         override suspend fun insert(name: String, entity: List<Word>) = Unit
         override suspend fun read(name: String): List<Word>? = null
         override suspend fun update(name: String, entity: List<Word>) = Unit
-        override suspend fun delete(name: String, entity: List<Word>) = Unit
+        override suspend fun delete(name: String, entity: List<Word>) = entity.forEach {
+            wordList.remove(it)
+            flow.send(Result.success(wordList))
+        }
     }
 
     @Provides

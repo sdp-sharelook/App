@@ -141,23 +141,6 @@ class RTDBWordListRepository @Inject constructor(
         }
 
     /**
-     * Don't use
-     */
-    override suspend fun read(name: String): List<Word> {
-        throw UnsupportedOperationException("Use flow function for lists")
-    }
-
-
-    /**
-     * Update data entry at [name].
-     *
-     * Note: will not create entry, for that use [insert]
-     *
-     * @param name Caution: wrong [name] can overwrite data.
-     * @param entity Entity
-     */
-
-    /**
      * Delete repository entry at [name].
      *
      * @param name identifier of entity

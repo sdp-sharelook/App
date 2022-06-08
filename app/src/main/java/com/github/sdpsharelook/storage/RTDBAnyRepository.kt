@@ -50,16 +50,6 @@ class RTDBAnyRepository @Inject constructor(
     }
 
     /**
-     * Read data at [name] once asynchronously.
-     *
-     * @param name identifier of entity
-     * @return [Any] or null
-     */
-    override suspend fun read(name: String): Any? {
-        TODO("Not yet implemented")
-    }
-
-    /**
      * Update data entry at [name].
      *
      * Note: will not create entry, for that use [insert]

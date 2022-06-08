@@ -63,14 +63,6 @@ class RTDBStringListRepository @Inject constructor(
     }
 
     /**
-     * Don't use
-     */
-    override suspend fun read(name: String): List<String>? {
-        throw UnsupportedOperationException("Use flow function for lists")
-    }
-
-
-    /**
      * Update data entry at [name].
      *
      * Note: will not create entry, for that use [insert]

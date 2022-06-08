@@ -2,8 +2,7 @@ package com.github.sdpsharelook.storage
 
 import com.github.sdpsharelook.Word
 import com.github.sdpsharelook.section.Section
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.*
 
 /**
  * Generic repository contract
@@ -31,7 +30,8 @@ interface IRepository<T> {
      * @param name identifier of entity
      * @return [T] or null
      */
-    suspend fun read(name: String = "test"): T?
+    suspend fun read(name: String = "test"): T? =
+        flow(name).last().getOrNull()
 
     /**
      * Update data entry at [name].
@@ -48,7 +48,7 @@ interface IRepository<T> {
      *
      * @param name identifier of entity
      */
-    suspend fun delete(name : String = "test")
+    suspend fun delete(name: String = "test")
 
     /**
      * Delete repository entry at [name].
@@ -56,7 +56,7 @@ interface IRepository<T> {
      * @param name identifier of entity
      * @param entity: Word
      */
-    suspend fun deleteWord(name : String = "test", entity: Word)
+    suspend fun deleteWord(name: String = "test", entity: Word)
 
     /**
      * Completely fuck up the dependency injection because

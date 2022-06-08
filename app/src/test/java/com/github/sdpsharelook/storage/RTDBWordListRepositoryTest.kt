@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
+import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
@@ -37,21 +38,22 @@ class RTDBWordListRepositoryTest {
     var db: FirebaseDatabase = mock(defaultAnswer = { reference })
     private val reference: DatabaseReference = mock(defaultAnswer = Answers.RETURNS_SELF) {
         on { setValue(any()) } doReturn Tasks.forResult(null)
+        on { removeValue() } doReturn Tasks.forResult(null)
         on { addChildEventListener(any()) } doAnswer {
             lastFlowListener = it.arguments[0] as ChildEventListener
             lastFlowListener
         }
     }
     var lastFlowListener: ChildEventListener? = null
-    private val snapWord: DataSnapshot = mock(defaultAnswer = {
-        Gson().toJson(testWord).toString()
+    private val snap: DataSnapshot = mock(defaultAnswer = {
+        Gson().toJson(testVal).toString()
     })
 
 
     @Inject
     lateinit var auth: AuthProvider
     private val testString = "test"
-    private val testWord = Word.testWord
+    private val testVal = Word.testWord
     private lateinit var repo: RTDBWordListRepository
     private lateinit var testFlow: Flow<Result<List<Word>?>>
 
@@ -67,36 +69,45 @@ class RTDBWordListRepositoryTest {
 
     @Test
     fun `test flow`() = runTest(dispatchTimeoutMs = 5000) {
-//        val changed = testWord.copy(source = "test2")
+        val changed = testVal.copy(source = "test2")
+        val changedSnap = mock<DataSnapshot>(defaultAnswer = {
+            Gson().toJson(changed).toString()
+        })
+        val databaseExceptionMock = mock<DatabaseException> {
+            on { message } doReturn testString
+        }
+        val databaseError = mock<DatabaseError> {
+            on { toException() } doReturn databaseExceptionMock
+        }
         var i = 0
         val job = testFlow
             .onEach { result ->
                 result
-                    .onSuccess {
-                        when (i++) {
-                            0 -> assertEquals(listOf(testWord), it!!)
-//                            1 -> assertEquals(listOf(changed), it!!)
-//                            2 -> assertEquals(emptyList<Word>(), it!!)
+                    .onSuccess { list ->
+                        list!!.let {
+                            when (i++) {
+                                0 -> assertEquals(listOf(testVal), it)
+//                                1 -> assertEquals(listOf(changed), it)
+                                2 -> assertEquals(listOf(testVal), it)
+                                3 -> assertEquals(listOf<Word>(), it)
+                            }
                         }
                     }.onFailure {
-                        assertEquals(testString, it.message)
+                        assertEquals(testString, it.message) // 4
                     }
             }.launchIn(this)
         advanceUntilIdle()
-        lastFlowListener!!.onChildAdded(snapWord, null) // 0
+        lastFlowListener!!.onChildAdded(snap, null) // 0
         advanceUntilIdle()
-        lastFlowListener!!.onChildChanged(snapWord, null) // 1
+        lastFlowListener!!.onChildChanged(changedSnap, null) // 1
         advanceUntilIdle()
-        lastFlowListener!!.onChildMoved(snapWord, null)
+        lastFlowListener!!.onChildChanged(snap, null) // 2
         advanceUntilIdle()
-        lastFlowListener!!.onChildRemoved(snapWord) // 2
+        lastFlowListener!!.onChildMoved(snap, null) // Nothing
         advanceUntilIdle()
-        lastFlowListener!!.onCancelled(mock {
-            val databaseExceptionMock = mock<DatabaseException> {
-                on { message } doReturn testString
-            }
-            on { toException() } doReturn databaseExceptionMock
-        })
+        lastFlowListener!!.onChildRemoved(snap) // 3
+        advanceUntilIdle()
+        lastFlowListener!!.onCancelled(databaseError) // 4
         advanceUntilIdle()
         job.cancel()
         advanceUntilIdle()
@@ -108,5 +119,16 @@ class RTDBWordListRepositoryTest {
         val word = Word("test")
         repo.insert("test", listOf(word, word, word))
         verify(reference, times(3)).setValue(any())
+    }
+
+    @Test
+    fun `test other functions`() = runTest {
+        runCatching { repo.update(entity = listOf(testVal)) }
+            .onSuccess { Assert.fail() }
+            .onFailure { assertEquals(NotImplementedError::class.java, it.javaClass) }
+        repo.insert(entity = listOf(testVal))
+        verify(reference).setValue(any())
+        repo.delete(words = listOf(testVal))
+        verify(reference).removeValue()
     }
 }

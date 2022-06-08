@@ -37,8 +37,10 @@ class RTDBWordListRepository @Inject constructor(
                 }
 
                 override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                    val list = listOfNotNull(snapshot.getValue<Word>())
-                    trySendBlocking(Result.success(list))
+                    val word = Gson().fromJson(snapshot.value.toString(), Word::class.java)
+                    val i = wordList.indexOfFirst { it.uid == word.uid }
+                    wordList[i] = word
+                    trySendBlocking(Result.success(wordList))
                 }
 
                 override fun onChildRemoved(snapshot: DataSnapshot) {

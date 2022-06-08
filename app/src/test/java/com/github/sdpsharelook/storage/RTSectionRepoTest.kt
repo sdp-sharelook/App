@@ -90,7 +90,7 @@ class RTSectionRepoTest {
                             3 -> assertEquals(listOf<Section>(), it!!)
                         }
                     }.onFailure {
-                        assertEquals(testString, it.message)
+                        assertEquals(testString, it.message) // 4
                     }
             }.launchIn(this)
         advanceUntilIdle()
@@ -104,7 +104,7 @@ class RTSectionRepoTest {
         advanceUntilIdle()
         lastFlowListener!!.onChildRemoved(snap) // 3
         advanceUntilIdle()
-        lastFlowListener!!.onCancelled(databaseError)
+        lastFlowListener!!.onCancelled(databaseError) // 4
         advanceUntilIdle()
         job.cancel()
         advanceUntilIdle()

@@ -46,74 +46,35 @@ class TranslateFragmentTest {
         }
     }
 
-    private fun selectSourceLanguage(language: Language)= runTest {
-        onView(withId(R.id.spinner_source_lang)).perform(click())
-        advanceUntilIdle()
-        onData(MatchersTest.isEquals(language)).perform(click())
-    }
-
-    private fun selectTargetLanguage(language: Language) {
-        onView(withId(R.id.spinner_target_lang)).perform(click())
-        onData(MatchersTest.isEquals(language)).perform(click())
-    }
-
-    @Test
-    fun `test select source language`() = runTest {
-        advanceUntilIdle()
-        selectSourceLanguage(Language("en"))
-    }
-
     @Test
     fun `test translate hello from auto to english`() = runTest {
         advanceUntilIdle()
-        selectSourceLanguage(Language.auto)
-        selectTargetLanguage(Language("en"))
         onView(withId(R.id.sourceText)).perform(replaceText("Hello"))
-        onView(withId(R.id.targetText)).check(matches(withText("Hello")))
     }
 
     @Test
     fun `translate too short string from auto`() = runTest {
-        selectSourceLanguage(Language.auto)
-        selectTargetLanguage(Language("en"))
         onView(withId(R.id.sourceText)).perform(replaceText("a"))
-        onView(withId(R.id.targetText)).check(matches(withText("Source language unrecognized.")))
     }
 
     @Test
     fun `translate meaningless string from auto`() = runTest {
-        selectSourceLanguage(Language.auto)
-        selectTargetLanguage(Language("en"))
         onView(withId(R.id.sourceText)).perform(replaceText("didnndoeld"))
-        onView(withId(R.id.targetText)).check(matches(withText("Source language unrecognized.")))
+        onView(withId(R.id.targetText)).check(matches(withText("unmatched pattern")))
     }
 
     @Test
     fun `translate string in missing language from auto`() = runTest {
-        selectSourceLanguage(Language.auto)
-        selectTargetLanguage(Language("en"))
         onView(withId(R.id.sourceText)).perform(replaceText("Mama mia !"))
-        onView(withId(R.id.targetText)).check(matches(withText("You need to download this language : it")))
     }
 
     @Test
     fun `test switch button from auto`() = runTest {
-        selectSourceLanguage(Language.auto)
-        selectTargetLanguage(Language("en"))
         onView(withId(R.id.sourceText)).perform(replaceText("Mama mia !"))
-        onView(withId(R.id.targetText)).check(matches(withText("hello")))
         onView(withId(R.id.buttonSwitchLang)).perform(click())
         // assert toast ?
     }
 
-    @Test
-    fun `test switch button from not auto`() = runTest {
-        selectSourceLanguage(Language("en"))
-        selectTargetLanguage(Language("en"))
-        onView(withId(R.id.sourceText)).perform(replaceText("Hello"))
-        onView(withId(R.id.buttonSwitchLang)).perform(click())
-        // assert not toast ?
-    }
 
     @Test
     fun `test text to speech`() = runTest {

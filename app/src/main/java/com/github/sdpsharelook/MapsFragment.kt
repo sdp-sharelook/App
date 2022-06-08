@@ -4,15 +4,12 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Base64.*
-import android.util.Log
 import android.view.View
-import android.widget.BaseAdapter
 import android.widget.ImageView
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import coil.load
-import com.github.sdpsharelook.section.WordAdapter
 import com.github.sdpsharelook.storage.IRepository
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -21,8 +18,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 import java.util.*
@@ -53,24 +48,37 @@ class MapsFragment : Fragment(R.layout.fragment_maps) {
         // TODO: Fill words with real list of words in the database
         // TODO: Check why Picture is a String and not a Bitmap in Word
         lifecycleScope.launch {
-            wordRepos.flowSection().collect{
-                when {
-                    it.isSuccess -> {
-                        val list = it.getOrDefault(emptyList())
-                        if (list != null) {
-                            list.forEach{
+            wordRepos.flow().collect { words ->
+                val wordList = words.getOrDefault(emptyList<Word>())
+                markerMap.forEach { entry ->
+                    entry.key?.remove()
+                }
+                markerMap.clear()
+                for (word in wordList!!) {
+                    if (word.location != null) {
+                        val position = LatLng(word.location!!.latitude, word.location!!.longitude)
+                        val snippet = String.format(
+                            Locale.getDefault(),
+                            "Lat: %1$.5f, Long: %2$.5f",
+                            position.latitude,
+                            position.longitude
+                        )
+                        val marker = googleMap.addMarker(
+                            MarkerOptions()
+                                .position(position)
+                                .title(
+                                    String.format(
+                                        Locale.getDefault(),
+                                        word.source + " : " + word.savedDate.toString()
+                                    )
+                                )
+                                .snippet(snippet)
+                        )
+                        markerMap[marker] = word
+                    }
+                }
 
-                                getWords(it.id,googleMap)
-                            }
-                        }
-                }
-                    it.isFailure -> {
-                    it.exceptionOrNull()?.printStackTrace()
-                }
-                }
             }
-
-
         }
 
         setMapLongClick(googleMap)
@@ -79,40 +87,6 @@ class MapsFragment : Fragment(R.layout.fragment_maps) {
 
     }
 
-    private suspend fun getWords(sectionId: String, googleMap: GoogleMap){
-        wordRepos.flowSection().collect { words ->
-
-            val wordList: List<Word> = words.getOrDefault(emptyList<Word>()) as List<Word>
-            markerMap.forEach { entry ->
-                entry.key?.remove()
-            }
-            markerMap.clear()
-            for (word in wordList!!) {
-                if (word != null) {
-                    val position = LatLng(word.location!!.latitude, word.location!!.longitude)
-                    val snippet = String.format(
-                        Locale.getDefault(),
-                        "Lat: %1$.5f, Long: %2$.5f",
-                        position.latitude,
-                        position.longitude
-                    )
-                    val marker = googleMap.addMarker(
-                        MarkerOptions()
-                            .position(position)
-                            .title(
-                                String.format(
-                                    Locale.getDefault(),
-                                    word.source + " : " + word.savedDate.toString()
-                                )
-                            )
-                            .snippet(snippet)
-                    )
-                    markerMap[marker] = word
-                }
-            }
-
-        }
-    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
@@ -183,5 +157,4 @@ class MapsFragment : Fragment(R.layout.fragment_maps) {
         return BitmapFactory.decodeByteArray(p, 0, p.size)
     }
 }
-
 

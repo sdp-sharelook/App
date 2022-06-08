@@ -55,7 +55,7 @@ open class TranslateFragmentLift : Fragment() {
     private val targetLanguage: Language
         get() = binding.spinnerTargetLang.selectedItem as Language? ?: Language("en")
 
-    private lateinit var speechRecognizer: SpeechRecognizer
+    private var speechRecognizer: SpeechRecognizer? = null
 
     private lateinit var availableLanguages: List<Language>
     private val sourceText
@@ -75,8 +75,7 @@ open class TranslateFragmentLift : Fragment() {
         putLanguagesInSpinners()
 
         initTextToSpeech()
-
-
+        initSpeechRecognizer()
         binding.captureImageButton.setOnClickListener {
             captureImage()
         }
@@ -93,7 +92,7 @@ open class TranslateFragmentLift : Fragment() {
             position: Int,
             id: Long,
         ) {
-            // speechRecognizer.language = availableLanguages[position]
+            speechRecognizer?.language = sourceLanguage
             updateTranslation()
         }
 
@@ -115,10 +114,6 @@ open class TranslateFragmentLift : Fragment() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        initSpeechRecognizer()
-    }
 
     private fun putLanguagesInSpinners() {
         CoroutineScope(Dispatchers.IO).launch {
@@ -206,8 +201,8 @@ open class TranslateFragmentLift : Fragment() {
     private fun initSpeechRecognizer() {
         speechRecognizer = SpeechRecognizer(this, requireContext(), recognitionListener)
         binding.imageButtonSR.setOnClickListener {
-            speechRecognizer.cancel()
-            speechRecognizer.recognizeSpeech()
+            speechRecognizer?.cancel()
+            speechRecognizer?.recognizeSpeech()
         }
     }
 

@@ -40,7 +40,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/text_data"
         android:layout_marginTop="31dp"
-        android:layout_weight="1"
-        android:text="Detect" />
+        android:text="@string/detect_text" />
 
 </RelativeLayout>

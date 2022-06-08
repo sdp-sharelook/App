@@ -3,20 +3,14 @@ package com.github.sdpsharelook.speechRecognition
 import android.Manifest
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.speech.RecognitionListener as GoogleRecognitionListener
 import android.speech.RecognizerIntent
-import android.widget.Toast
 import androidx.activity.result.ActivityResultCaller
-import android.speech.SpeechRecognizer as GoogleSpeechRecognizer
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.fragment.app.FragmentActivity
 import com.github.sdpsharelook.language.Language
 import com.github.sdpsharelook.permissions.PermissionManager
 import java.util.*
+import android.speech.RecognitionListener as GoogleRecognitionListener
+import android.speech.SpeechRecognizer as GoogleSpeechRecognizer
 
 
 class SpeechRecognizer(
@@ -24,7 +18,7 @@ class SpeechRecognizer(
     private val context: Context,
     private val listener: RecognitionListener,
 ) {
-    // private val permissionManager = PermissionManager(Manifest.permission.RECORD_AUDIO, caller)
+    private val permissionManager = PermissionManager(Manifest.permission.RECORD_AUDIO, caller)
 
     /** Start the speech recognition
      * @param listener: the listener for callback when the result is ready
@@ -32,10 +26,10 @@ class SpeechRecognizer(
     fun recognizeSpeech() {
         val intent = createIntent()
         val googleListener = createGoogleRecognitionListener(listener)
-        // permissionManager.grantPermission(context) {
-        speechRecognizer.setRecognitionListener(googleListener)
-        speechRecognizer.startListening(intent)
-        // }
+        permissionManager.grantPermission(context) {
+            speechRecognizer.setRecognitionListener(googleListener)
+            speechRecognizer.startListening(intent)
+        }
     }
 
     /** Cancel the speech recognition (must call it before starting a new one)

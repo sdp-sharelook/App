@@ -23,7 +23,6 @@ class CardAdapter constructor(
     private var editPosition = 0
     private lateinit var binding: CardSectionBinding
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolder {
         val from = LayoutInflater.from(parent.context)
         binding = CardSectionBinding.inflate(from, parent, false)
@@ -53,6 +52,7 @@ class CardAdapter constructor(
         }
 
         edit = false
+        notifyItemChanged(editPosition)
     }
 
     private fun removeItem(viewHolder: RecyclerView.ViewHolder, index: Int) {

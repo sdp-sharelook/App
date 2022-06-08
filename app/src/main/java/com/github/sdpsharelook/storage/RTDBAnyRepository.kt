@@ -1,6 +1,5 @@
 package com.github.sdpsharelook.storage
 
-import com.github.sdpsharelook.Word
 import com.google.firebase.database.*
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
@@ -50,16 +49,6 @@ class RTDBAnyRepository @Inject constructor(
     }
 
     /**
-     * Read data at [name] once asynchronously.
-     *
-     * @param name identifier of entity
-     * @return [Any] or null
-     */
-    override suspend fun read(name: String): Any? {
-        TODO("Not yet implemented")
-    }
-
-    /**
      * Update data entry at [name].
      *
      * Note: will not create entry, for that use [insert]
@@ -76,12 +65,7 @@ class RTDBAnyRepository @Inject constructor(
      *
      * @param name identifier of entity
      */
-    override suspend fun delete(name: String) {
+    override suspend fun delete(name: String, entity: Any) {
         TODO("Not yet implemented")
     }
-
-    override suspend fun deleteWord(name: String, entity: Word) {
-        TODO("Not yet implemented")
-    }
-
 }

@@ -58,6 +58,9 @@ open class SectionFragmentLift : Fragment(), SectionClickListener {
     @Inject
     lateinit var databaseWordList: IRepository<List<Word>>
 
+    @Inject
+    lateinit var sectionDb: IRepository<List<Section>>
+
     private lateinit var dialog: Dialog
 
     private var sectionWord: Word? = null
@@ -83,7 +86,7 @@ open class SectionFragmentLift : Fragment(), SectionClickListener {
 
         // set up the recyclerView
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        val cardAdapter = CardAdapter(this, dialog, databaseWordList)
+        val cardAdapter = CardAdapter(this, dialog, databaseWordList, sectionDb)
         binding.recyclerView.adapter = cardAdapter
 
         lifecycleScope.launch(Dispatchers.IO) {
@@ -120,7 +123,7 @@ open class SectionFragmentLift : Fragment(), SectionClickListener {
     }
 
     private suspend fun collectSectionFlow() {
-        databaseWordList.flowSection().collect {
+        sectionDb.flow().collect {
             when {
                 it.isSuccess -> {
                     sectionList = it.getOrDefault(emptyList())?.toMutableList() ?: mutableListOf()
@@ -156,7 +159,7 @@ open class SectionFragmentLift : Fragment(), SectionClickListener {
 
     private fun addSection(section: Section) {
         lifecycleScope.launch {
-            databaseWordList.insertSection(section)
+            sectionDb.insert(IRepository.SECTION_LIST, listOf(section))
         }
     }
 
@@ -169,7 +172,7 @@ open class SectionFragmentLift : Fragment(), SectionClickListener {
 
         lifecycleScope.launch(Dispatchers.IO) {
             sectionWord?.let {
-                databaseWordList.insertList(section.id, listOf(it))
+                databaseWordList.insert(section.id, listOf(it))
             }
             sectionWord = null
         }

@@ -15,13 +15,9 @@ import java.util.*
 import javax.inject.Inject
 
 class RTDBWordListRepository @Inject constructor(
-    private val firebaseDatabase: FirebaseDatabase,
-    private val auth: AuthProvider
-) : IRepository<@JvmSuppressWildcards List<Word>> {
-    private val user = auth.currentUser
-    private val reference: DatabaseReference by lazy { firebaseDatabase.getReference("users/" + user!!.uid) }
-
-
+    firebaseDatabase: FirebaseDatabase,
+    auth: AuthProvider
+) : RTRepo<@JvmSuppressWildcards List<Word>>(firebaseDatabase, auth) {
     /**
      * Gets an asynchronous data stream any updated [List] of [String]s
      *
@@ -47,8 +43,8 @@ class RTDBWordListRepository @Inject constructor(
                     trySendBlocking(Result.success(list))
                 }
 
-                override fun onChildRemoved(snapshot: DataSnapshot){
-                    var word = Gson().fromJson(snapshot.value.toString(), Word::class.java)
+                override fun onChildRemoved(snapshot: DataSnapshot) {
+                    val word = Gson().fromJson(snapshot.value.toString(), Word::class.java)
                     wordList.remove(word)
                     trySendBlocking(Result.success(wordList))
                 }
@@ -62,19 +58,11 @@ class RTDBWordListRepository @Inject constructor(
                 }
 
             }
-            getSectionReference(name).addChildEventListener(fireListener)
+            getUserFolderReference(name).addChildEventListener(fireListener)
             awaitClose {
-                getSectionReference(name).removeEventListener(fireListener)
+                getUserFolderReference(name).removeEventListener(fireListener)
             }
         }
-
-    private fun getSectionReference(uid: String): DatabaseReference {
-        if (user != null) {
-            return firebaseDatabase.getReference("users/" + user.uid ).child(uid)
-        }
-        return firebaseDatabase.getReference("users/guest/$uid")
-    }
-
 
     /**
      * Create permanent repository entry
@@ -84,7 +72,7 @@ class RTDBWordListRepository @Inject constructor(
      */
     override suspend fun insertList(name: String, entity: List<Word>) {
         for (word in entity) {
-           getSectionReference(name).child(word.uid).setValue(Gson().toJson(word))
+            getUserFolderReference(name).child(word.uid).setValue(Gson().toJson(word))
         }
     }
 
@@ -96,7 +84,8 @@ class RTDBWordListRepository @Inject constructor(
      * @param entity Entity Section
      */
     override suspend fun insertSection(entity: Section) {
-        getSectionReference("SectionList").child(entity.id).setValue(Gson().toJson(entity).toString())
+        getUserFolderReference("SectionList").child(entity.id)
+            .setValue(Gson().toJson(entity).toString())
     }
 
     override fun flowSection(): Flow<Result<List<Section>?>> =
@@ -105,14 +94,14 @@ class RTDBWordListRepository @Inject constructor(
             val fireListener = object : ChildEventListener {
                 val sectionList = mutableListOf<Section>()
                 override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                    var section = Gson().fromJson(snapshot.value.toString(), Section::class.java)
+                    val section = Gson().fromJson(snapshot.value.toString(), Section::class.java)
                     sectionList.add(section)
                     trySendBlocking(Result.success(sectionList))
                 }
 
                 override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                    var section = Gson().fromJson(snapshot.value.toString(), Section::class.java)
-                    val oldSection= sectionList.find {
+                    val section = Gson().fromJson(snapshot.value.toString(), Section::class.java)
+                    val oldSection = sectionList.find {
                         it.id == section.id
                     }
                     val oldIndex = sectionList.indexOf(oldSection)
@@ -122,7 +111,7 @@ class RTDBWordListRepository @Inject constructor(
                 }
 
                 override fun onChildRemoved(snapshot: DataSnapshot) {
-                    var section = Gson().fromJson(snapshot.value.toString(), Section::class.java)
+                    val section = Gson().fromJson(snapshot.value.toString(), Section::class.java)
                     sectionList.remove(section)
                     trySendBlocking(Result.success(sectionList))
                 }
@@ -134,9 +123,9 @@ class RTDBWordListRepository @Inject constructor(
                 }
 
             }
-            getSectionReference("SectionList").addChildEventListener(fireListener)
+            getUserFolderReference("SectionList").addChildEventListener(fireListener)
             awaitClose {
-                getSectionReference("SectionList").removeEventListener(fireListener)
+                getUserFolderReference("SectionList").removeEventListener(fireListener)
             }
         }
 
@@ -146,11 +135,11 @@ class RTDBWordListRepository @Inject constructor(
      * @param name identifier of entity
      */
     override suspend fun deleteWord(name: String, word: Word) {
-        getSectionReference(name).child(word.uid).removeValue().await()
+        getUserFolderReference(name).child(word.uid).removeValue().await()
     }
 
     override suspend fun deleteSection(entity: Section) {
-        getSectionReference("SectionList").child(entity.id).removeValue().await()
+        getUserFolderReference("SectionList").child(entity.id).removeValue().await()
     }
 
     /**

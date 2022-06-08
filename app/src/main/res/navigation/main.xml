@@ -23,6 +23,9 @@
         <action
             android:id="@+id/action_menuTranslateLink_to_menuCameraLink"
             app:destination="@id/menuCameraLink" />
+        <action
+            android:id="@+id/action_menuTranslateLink_to_menuDownloadLink"
+            app:destination="@id/downloadFragment" />
         <argument
             android:name="textDetected"
             app:argType="string"

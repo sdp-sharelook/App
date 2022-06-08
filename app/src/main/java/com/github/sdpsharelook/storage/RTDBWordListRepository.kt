@@ -11,13 +11,15 @@ import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
+import java.util.*
 import javax.inject.Inject
 
 class RTDBWordListRepository @Inject constructor(
     private val firebaseDatabase: FirebaseDatabase,
-    auth: AuthProvider
+    private val auth: AuthProvider
 ) : IRepository<@JvmSuppressWildcards List<Word>> {
     private val user = auth.currentUser
+    private val reference: DatabaseReference by lazy { firebaseDatabase.getReference("users/" + user!!.uid) }
 
 
     /**
@@ -46,8 +48,9 @@ class RTDBWordListRepository @Inject constructor(
                 }
 
                 override fun onChildRemoved(snapshot: DataSnapshot){
-                    val list: List<Word> = listOfNotNull(snapshot.getValue<Word>())
-                    trySendBlocking(Result.success(list))
+                    var word = Gson().fromJson(snapshot.value.toString(), Word::class.java)
+                    wordList.remove(word)
+                    trySendBlocking(Result.success(wordList))
                 }
 
                 override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
@@ -89,6 +92,7 @@ class RTDBWordListRepository @Inject constructor(
     /**
      * Create permanent repository entry
      *
+     * @param name identifier of entity
      * @param entity Entity Section
      */
     override suspend fun insertSection(entity: Section) {
@@ -101,13 +105,13 @@ class RTDBWordListRepository @Inject constructor(
             val fireListener = object : ChildEventListener {
                 val sectionList = mutableListOf<Section>()
                 override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                    val section = Gson().fromJson(snapshot.value.toString(), Section::class.java)
+                    var section = Gson().fromJson(snapshot.value.toString(), Section::class.java)
                     sectionList.add(section)
                     trySendBlocking(Result.success(sectionList))
                 }
 
                 override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                    val section = Gson().fromJson(snapshot.value.toString(), Section::class.java)
+                    var section = Gson().fromJson(snapshot.value.toString(), Section::class.java)
                     val oldSection= sectionList.find {
                         it.id == section.id
                     }
@@ -118,8 +122,9 @@ class RTDBWordListRepository @Inject constructor(
                 }
 
                 override fun onChildRemoved(snapshot: DataSnapshot) {
-                    val section = Gson().fromJson(snapshot.value.toString(), Section::class.java)
-                    trySendBlocking(Result.success(listOf(section)))
+                    var section = Gson().fromJson(snapshot.value.toString(), Section::class.java)
+                    sectionList.remove(section)
+                    trySendBlocking(Result.success(sectionList))
                 }
 
                 override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
@@ -142,13 +147,27 @@ class RTDBWordListRepository @Inject constructor(
         throw UnsupportedOperationException("Use flow function for lists")
     }
 
+
+    /**
+     * Update data entry at [name].
+     *
+     * Note: will not create entry, for that use [insert]
+     *
+     * @param name Caution: wrong [name] can overwrite data.
+     * @param entity Entity
+     */
+
     /**
      * Delete repository entry at [name].
      *
      * @param name identifier of entity
      */
-    override suspend fun delete(name: String) {
-        getSectionReference(name).removeValue().await()
+    override suspend fun deleteWord(name: String, word: Word) {
+        getSectionReference(name).child(word.uid).removeValue().await()
+    }
+
+    override suspend fun deleteSection(entity: Section) {
+        getSectionReference("SectionList").child(entity.id).removeValue().await()
     }
 
     /**
@@ -171,6 +190,10 @@ class RTDBWordListRepository @Inject constructor(
      * @param entity Entity
      */
     override suspend fun update(name: String, entity: List<Word>) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun delete(name: String) {
         TODO("Not yet implemented")
     }
 

@@ -23,7 +23,6 @@ class CardAdapter constructor(
     private var editPosition = 0
     private lateinit var binding: CardSectionBinding
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolder {
         val from = LayoutInflater.from(parent.context)
         binding = CardSectionBinding.inflate(from, parent, false)
@@ -46,20 +45,21 @@ class CardAdapter constructor(
 
     fun editItem(name: String, flag: Int) {
         val oldSection = sectionList[editPosition]
-        sectionList[editPosition] = Section(name,  flag, oldSection.sectionRepo, oldSection.id)
+        val newSection = Section(name,  flag, oldSection.id)
+
+        CoroutineScope(Dispatchers.IO).launch{
+            wordRTDB.insertSection(newSection)
+        }
+
         edit = false
         notifyItemChanged(editPosition)
     }
 
     private fun removeItem(viewHolder: RecyclerView.ViewHolder, index: Int) {
         val section = sectionList[index]
-        Log.d("INDEX", index.toString())
-        sectionList.removeAt(index)
         CoroutineScope(Dispatchers.IO).launch{
-            wordRTDB.delete(section.id)
+            wordRTDB.deleteSection(section)
         }
-        notifyItemRemoved(viewHolder.adapterPosition)
-//        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int = sectionList.size

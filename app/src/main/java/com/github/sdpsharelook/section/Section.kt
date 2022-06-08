@@ -9,16 +9,14 @@ import java.util.*
 data class Section(
     var title: String ="",
     var flag: Int=0,
-    var sectionRepo: String="",
     val id : String= ""
 ) {
     fun toMap(): Map<String, Any?> {
         return mapOf(
             "title" to title,
             "flag" to flag,
-            "sectionRepo" to sectionRepo,
             "id" to id
         )
     }
-    constructor(id:String) : this("",0,"", id)
+    constructor(id:String) : this("",0, id)
 }

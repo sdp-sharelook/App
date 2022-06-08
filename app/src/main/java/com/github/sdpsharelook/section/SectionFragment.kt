@@ -13,15 +13,22 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.github.sdpsharelook.R
 import com.github.sdpsharelook.Word
 import com.github.sdpsharelook.databinding.CardSectionBinding
 import com.github.sdpsharelook.databinding.FragmentSectionBinding
 import com.github.sdpsharelook.databinding.PopupBinding
+import com.github.sdpsharelook.downloads.MLKitTranslatorDownloader
+import com.github.sdpsharelook.downloads.TranslatorDownloader
+import com.github.sdpsharelook.language.Language
 import com.github.sdpsharelook.storage.IRepository
+import com.github.sdpsharelook.translate.MLKitTranslator
+import com.google.mlkit.common.model.RemoteModelManager
+import com.google.mlkit.nl.languageid.LanguageIdentification
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -36,6 +43,14 @@ var sectionList: MutableList<Section> = mutableListOf()
 class SectionFragment : SectionFragmentLift()
 open class SectionFragmentLift : Fragment(), SectionClickListener {
 
+    //    @Inject
+//    lateinit var
+    val translatorDownloader: TranslatorDownloader =
+        MLKitTranslatorDownloader(
+            MLKitTranslator(LanguageIdentification.getClient()),
+            RemoteModelManager.getInstance()
+        )
+
     /**
      * This property is only valid between onCreateView and onDestroyView.
      */
@@ -43,12 +58,12 @@ open class SectionFragmentLift : Fragment(), SectionClickListener {
     private var _binding: FragmentSectionBinding? = null
     private lateinit var popupBinding: PopupBinding
     private lateinit var cardBinding: CardSectionBinding
+    private lateinit var availableLanguages: List<Language>
 
     @Inject
     lateinit var databaseWordList: IRepository<List<Word>>
 
     private lateinit var dialog: Dialog
-    var mainCountryList = initList()
 
     private var sectionWord: Word? = null
 
@@ -62,7 +77,6 @@ open class SectionFragmentLift : Fragment(), SectionClickListener {
         cardBinding = CardSectionBinding.inflate(layoutInflater)
 
         //init list of possible languages for the spinner
-        initList()
 
         // set up the popup when cliking on add button
         dialog = Dialog(requireContext())
@@ -70,7 +84,7 @@ open class SectionFragmentLift : Fragment(), SectionClickListener {
         dialog.setOnDismissListener { popupBinding.editSectionName.text.clear() }
 
         // set up the spinner
-        popupBinding.spinnerCountries.adapter = CountryAdapter(requireContext(), mainCountryList)
+        putLanguagesInSpinners()
 
         // set up the recyclerView
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -88,28 +102,23 @@ open class SectionFragmentLift : Fragment(), SectionClickListener {
         }
 
         popupBinding.popupAddBtn.setOnClickListener {
+
             val sectionName = popupBinding.editSectionName.text.toString()
             val countryIndex = popupBinding.spinnerCountries.selectedItemPosition
+            val flag =
+                (popupBinding.spinnerCountries.adapter as SpinnerAdapter).getItemFlag(countryIndex)
             val newSection = Section(
                 sectionName,
-                mainCountryList[countryIndex].flag,
-                UUID.randomUUID().toString(),
-                sectionName + countryIndex
+                flag,
+                UUID.randomUUID().toString()
             )
 
             // Popu do 2 different things if it is editing a section or creating one
             if (edit) {
-                cardAdapter.editItem(sectionName, mainCountryList.get(countryIndex).flag)
-            } else if (addSection(newSection)) {
-                // TODO
-                //lifecycleScope.launch {
-                //    databaseWordList.insertSection(newSection)
-                //}
-                Toast.makeText(requireContext(), "Section: $sectionName saved", Toast.LENGTH_SHORT)
-                    .show()
+                cardAdapter.editItem(sectionName, flag)
             } else {
-                // if the section already exist
-                Toast.makeText(requireContext(), "$sectionName already exist", Toast.LENGTH_SHORT)
+                addSection(newSection)
+                Toast.makeText(requireContext(), "Section: $sectionName saved", Toast.LENGTH_SHORT)
                     .show()
             }
             dialog.dismiss()
@@ -139,26 +148,24 @@ open class SectionFragmentLift : Fragment(), SectionClickListener {
         binding.recyclerView.adapter?.notifyDataSetChanged()
     }
 
-    private fun initList(): List<CountryItem> {
-        val list = mutableListOf<CountryItem>()
-        list.add(CountryItem(R.drawable.spain))
-        list.add(CountryItem(R.drawable.us))
-        return list
+    private fun putLanguagesInSpinners() {
+        CoroutineScope(Dispatchers.IO).launch {
+            availableLanguages =
+                translatorDownloader.downloadedLanguages() ?: listOf(Language("en"))
+            withContext(Dispatchers.Main) {
+                popupBinding.spinnerCountries.adapter = SpinnerAdapter(
+                    requireContext(), availableLanguages
+                )
+            }
+        }
     }
 
-    fun addSection(section: Section): Boolean {
+    private fun addSection(section: Section) {
         // if the section already exist do not add it
-        return if (sectionList.contains(section)) {
-            false
-        } else {
-            sectionList.add(section)
-            lifecycleScope.launch {
-                databaseWordList.insertSection(section)
-            }
-
-            binding.recyclerView.adapter?.notifyItemInserted(sectionList.lastIndex)
-            true
+        lifecycleScope.launch {
+            databaseWordList.insertSection(section)
         }
+        true
     }
 
     override fun onClick(section: Section) {
@@ -172,6 +179,7 @@ open class SectionFragmentLift : Fragment(), SectionClickListener {
             sectionWord?.let {
                 databaseWordList.insertList(section.id, listOf(it))
             }
+            sectionWord = null
         }
 
         findNavController().navigate(action)

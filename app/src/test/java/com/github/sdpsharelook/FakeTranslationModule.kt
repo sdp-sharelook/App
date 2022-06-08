@@ -27,8 +27,8 @@ object FakeTranslationModule {
     @Provides
     @Singleton
     fun providesTranslationProvider() = object : TranslationProvider {
-        override val availableLanguages: Set<Language>
-            get() = setOf(Language("en"), Language("fr"))
+        override val availableLanguages: List<Language>
+            get() = listOf(Language("en"), Language("fr"))
 
         override suspend fun detectLanguage(text: String): String =
             "en"

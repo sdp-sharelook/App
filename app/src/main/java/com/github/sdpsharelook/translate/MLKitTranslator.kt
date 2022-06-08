@@ -32,8 +32,8 @@ class MLKitTranslator @Inject constructor(
         return translator.translate(text).await()
     }
 
-    override val availableLanguages: Set<Language> =
+    override val availableLanguages:List<Language> =
         TranslateLanguage.getAllLanguages().map {
             Language(it)
-        }.toSet()
+        }.sortedBy { it.displayName }
 }

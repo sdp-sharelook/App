@@ -1,9 +1,8 @@
 package com.github.sdpsharelook
 
 import com.github.sdpsharelook.di.StorageBindsModule
+import com.github.sdpsharelook.section.Section
 import com.github.sdpsharelook.storage.IRepository
-import com.github.sdpsharelook.storage.RTDBWordListRepository
-import com.github.sdpsharelook.storage.RTDBWordListRepositoryTest
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.components.SingletonComponent
@@ -28,8 +27,7 @@ class FakeStorageModuleUnitTests {
         override suspend fun insert(name: String, entity: Any) = Unit
         override suspend fun read(name: String): Any? = null
         override suspend fun update(name: String, entity: Any) = Unit
-        override suspend fun delete(name: String) = Unit
-        override suspend fun deleteWord(name: String, entity: Word) = Unit
+        override suspend fun delete(name: String, entity: Any) = Unit
     }
 
     @Provides
@@ -41,8 +39,7 @@ class FakeStorageModuleUnitTests {
         override suspend fun insert(name: String, entity: List<String>) = Unit
         override suspend fun read(name: String): List<String>? = null
         override suspend fun update(name: String, entity: List<String>) = Unit
-        override suspend fun delete(name: String) = Unit
-        override suspend fun deleteWord(name: String, entity: Word) = Unit
+        override suspend fun delete(name: String, entity: List<String>) = Unit
     }
 
     @Provides
@@ -50,11 +47,22 @@ class FakeStorageModuleUnitTests {
     fun wordListRepo(): IRepository<List<Word>> = object : IRepository<List<Word>> {
         override fun flow(name: String): Flow<Result<List<Word>?>> =
             flowOf(Result.failure(CancellationException("test")))
+
         override suspend fun insert(name: String, entity: List<Word>) = Unit
         override suspend fun read(name: String): List<Word>? = null
         override suspend fun update(name: String, entity: List<Word>) = Unit
-        override suspend fun delete(name: String) = Unit
-        override suspend fun deleteWord(name: String, entity: Word) = Unit
+        override suspend fun delete(name: String, entity: List<Word>) = Unit
     }
 
+    @Provides
+    @Singleton
+    fun sectionRepo(): IRepository<List<Section>> = object : IRepository<List<Section>> {
+        override fun flow(name: String): Flow<Result<List<Section>?>> =
+            flowOf(Result.failure(CancellationException("test")))
+
+        override suspend fun insert(name: String, entity: List<Section>) = Unit
+        override suspend fun read(name: String): List<Section>? = null
+        override suspend fun update(name: String, entity: List<Section>) = Unit
+        override suspend fun delete(name: String, entity: List<Section>) = Unit
+    }
 }

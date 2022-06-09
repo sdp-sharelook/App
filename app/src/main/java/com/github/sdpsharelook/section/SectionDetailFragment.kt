@@ -1,7 +1,6 @@
 package com.github.sdpsharelook.section
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -71,15 +70,12 @@ open class SectionDetailFragmentLift : Fragment() {
                 Toast.makeText(requireContext(), url ?: "picture deleted", Toast.LENGTH_SHORT).show()
                 lifecycleScope.launch{
                     val newW = w.copy(picture=url)
-                    Log.e("newW", newW.toString())
                     wordRTDB.insert(section.id, listOf(newW))
                 }
 
-                Log.e("Avant", "Avant")
                 (binding.wordList.adapter as ArrayAdapter<Word>).notifyDataSetChanged()
 
             }.show(parentFragmentManager, null)
-            Log.e("Apres", "Apres")
             //binding.wordList.adapter
 
         }
@@ -99,7 +95,6 @@ open class SectionDetailFragmentLift : Fragment() {
                     wordList.clear()
                     wordList.addAll(it.getOrDefault(emptyList()) as MutableList<Word>)
                     binding.wordList.adapter = WordAdapter(requireContext(),wordList )
-                    Log.e("NEW SUCCESS","")
                 }
                 it.isFailure -> {
                     it.exceptionOrNull()?.printStackTrace()

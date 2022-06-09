@@ -1,6 +1,5 @@
 package com.github.sdpsharelook.storage
 
-import android.util.Log
 import com.github.sdpsharelook.Word
 import com.github.sdpsharelook.authorization.AuthProvider
 import com.google.firebase.database.*

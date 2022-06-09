@@ -1,21 +1,22 @@
 package com.github.sdpsharelook
 
-import android.app.Dialog
-import android.content.DialogInterface
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.fragment.app.DialogFragment
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.datetime.Instant
 import java.util.*
 
-class ImagePopupFragment : DialogFragment() {
+@AndroidEntryPoint
+class ImagePopUpFragment : ImagePopupFragmentLift()
+
+open class ImagePopupFragmentLift : DialogFragment() {
 
     companion object {
 
@@ -26,13 +27,13 @@ class ImagePopupFragment : DialogFragment() {
         private const val KEY_IMAGE = "KEY_IMAGE"
         private const val KEY_DATE = "KEY_DATE"
 
-        fun newInstance(source: String, target: String, date: Instant, image: Bitmap): ImagePopupFragment {
+        fun newInstance(source: String, target: String, date: Instant, image: Bitmap): ImagePopupFragmentLift {
             val args = Bundle()
             args.putString(KEY_SOURCE, source)
             args.putString(KEY_TARGET, target)
             args.putLong(KEY_DATE, date.toEpochMilliseconds())
             args.putParcelable(KEY_IMAGE, image)
-            val fragment = ImagePopupFragment()
+            val fragment = ImagePopupFragmentLift()
             fragment.arguments = args
 
             return fragment
@@ -58,10 +59,4 @@ class ImagePopupFragment : DialogFragment() {
         view.findViewById<Button>(R.id.button3).setOnClickListener { dismiss() }
     }
 
-//    private fun showBottomSheetDialog() {
-//        val bottomSheetDialog = BottomSheetDialog(requireActivity())
-//        bottomSheetDialog.setContentView(R.layout.image_popup_layout)
-//        bottomSheetDialog.findViewById<TextView>(R.id.popUpSource2).text
-//        bottomSheetDialog.show()
-//    }
 }

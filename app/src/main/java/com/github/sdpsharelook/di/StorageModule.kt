@@ -1,15 +1,15 @@
 package com.github.sdpsharelook.di
 
 import com.github.sdpsharelook.Word
-import com.github.sdpsharelook.storage.IRepository
-import com.github.sdpsharelook.storage.RTDBAnyRepository
-import com.github.sdpsharelook.storage.RTDBStringListRepository
-import com.github.sdpsharelook.storage.RTDBWordListRepository
+import com.github.sdpsharelook.section.Section
+import com.github.sdpsharelook.storage.*
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -26,7 +26,15 @@ abstract class StorageBindsModule {
 
     @Singleton
     @Binds
+    abstract fun bindSectionRepo(r: RTSectionRepo): IRepository<List<Section>>
+
+    @Singleton
+    @Binds
     abstract fun bindStringListRepo(r: RTDBStringListRepository): IRepository<List<String>>
+
+    @Singleton
+    @Binds
+    abstract  fun bindImageStorage(r: ImageStorage): ImageStorer
 }
 
 @Module
@@ -36,4 +44,8 @@ object StorageModule {
     @Provides
     fun provideFirebaseDatabase(): FirebaseDatabase =
         FirebaseDatabase.getInstance("https://billinguee-default-rtdb.europe-west1.firebasedatabase.app/")
+    @Singleton
+    @Provides
+    fun provideFirebaseStorage(): FirebaseStorage =
+        FirebaseStorage.getInstance()
 }

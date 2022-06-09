@@ -3,6 +3,7 @@ package com.github.sdpsharelook.storage
 import com.github.sdpsharelook.Word
 import com.github.sdpsharelook.authorization.AuthProvider
 import com.google.firebase.database.*
+import com.google.firebase.database.ktx.getValue
 import com.google.gson.Gson
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
@@ -12,13 +13,9 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class RTDBWordListRepository @Inject constructor(
-    private val firebaseDatabase: FirebaseDatabase,
-    private val auth: AuthProvider
-) : IRepository<List<@JvmSuppressWildcards Word>> {
-
-    private val reference: DatabaseReference by lazy { firebaseDatabase.getReference("wordlists") }
-
-
+    firebaseDatabase: FirebaseDatabase,
+    auth: AuthProvider
+) : RTRepo<@JvmSuppressWildcards List<Word>>(firebaseDatabase, auth) {
     /**
      * Gets an asynchronous data stream any updated [List] of [String]s
      *
@@ -27,27 +24,28 @@ class RTDBWordListRepository @Inject constructor(
      */
     override fun flow(name: String): Flow<Result<List<Word>?>> =
         callbackFlow {
+
             val fireListener = object : ChildEventListener {
                 val wordList = mutableListOf<Word>()
                 override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                    val word = Gson().fromJson(snapshot.value.toString(), Word::class.java)
+                    val builder = Gson()
+
+                    val word = builder.fromJson(snapshot.value.toString(), Word::class.java)
+
                     wordList.add(wordList.size, word)
                     trySendBlocking(Result.success(wordList))
                 }
 
                 override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
                     val word = Gson().fromJson(snapshot.value.toString(), Word::class.java)
-                    val oldWord = wordList.find { w ->w.uid==word.uid}
-                    wordList[wordList.indexOf(oldWord)] = word.copy()
+                    val i = wordList.indexOfFirst { it.uid == word.uid }
+                    wordList[i] = word
                     trySendBlocking(Result.success(wordList))
                 }
 
-                override fun onChildRemoved(snapshot: DataSnapshot){
+                override fun onChildRemoved(snapshot: DataSnapshot) {
                     val word = Gson().fromJson(snapshot.value.toString(), Word::class.java)
-                    val changedWord = wordList.find {w->
-                        w.uid==word.uid
-                    }
-                    wordList[wordList.indexOf(changedWord)] = word
+                    wordList.remove(word)
                     trySendBlocking(Result.success(wordList))
                 }
 
@@ -60,48 +58,22 @@ class RTDBWordListRepository @Inject constructor(
                 }
 
             }
-            getUserReference().addChildEventListener(fireListener)
+            getUserFolderReference(name).addChildEventListener(fireListener)
             awaitClose {
-                getUserReference().removeEventListener(fireListener)
+                getUserFolderReference(name).removeEventListener(fireListener)
             }
         }
-
-    private fun getUserReference(): DatabaseReference {
-        val user = auth.currentUser
-        //TODO: handle when user not logged
-        if (user != null) {
-            return firebaseDatabase.getReference("users/" + user.uid+"/words")
-        }
-        return firebaseDatabase.getReference("users/guest/words")
-    }
 
     /**
      * Create permanent repository entry
      *
      * @param name identifier of entity
-     * @param entity Entity
+     * @param entity Entity List of words
      */
     override suspend fun insert(name: String, entity: List<Word>) {
-        entity.forEach {
-            getUserReference().child(it.uid).setValue(Gson().toJson(it).toString()).addOnSuccessListener {
-                //TODO: SHOULD MAYBE DO SOMETHING ON SUCCESS ?
-            }
+        for (word in entity) {
+            getUserFolderReference(name).child(word.uid).setValue(Gson().toJson(word))
         }
-    }
-
-
-
-
-    /**
-     * Update data entry
-     *
-     * Note: will not create entry, for that use [insert]
-     *
-     * @param name Caution: wrong [name] can overwrite data.
-     * @param entity Entity
-     */
-    override suspend fun update(name: String, entity: List<Word>) {
-        getUserReference().setValue(entity).await()
     }
 
     /**
@@ -109,22 +81,20 @@ class RTDBWordListRepository @Inject constructor(
      *
      * @param name identifier of entity
      */
-    override suspend fun delete(name: String) {
-        getUserReference().removeValue().await()
-    }
-
-    fun databaseReference(name: String): DatabaseReference {
-        return if (name == "test") getUserReference() else reference.child(name)
-    }
+    override suspend fun delete(name: String, words: List<Word>) =
+        words.forEach {
+            getUserFolderReference(name).child(it.uid).removeValue().await()
+        }
 
     /**
-     * Read data at [name] once asynchronously.
+     * Update data entry at [name].
      *
-     * @param name identifier of entity
-     * @return [T] or null
+     * Note: will not create entry, for that use [insert]
+     *
+     * @param name Caution: wrong [name] can overwrite data.
+     * @param entity Entity
      */
-    override suspend fun read(name: String): List<Word>? {
+    override suspend fun update(name: String, entity: List<Word>) {
         TODO("Not yet implemented")
     }
-
 }

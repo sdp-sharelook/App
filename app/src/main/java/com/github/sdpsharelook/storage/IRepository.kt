@@ -1,6 +1,8 @@
 package com.github.sdpsharelook.storage
 
-import kotlinx.coroutines.flow.Flow
+import com.github.sdpsharelook.Word
+import com.github.sdpsharelook.section.Section
+import kotlinx.coroutines.flow.*
 
 /**
  * Generic repository contract
@@ -28,7 +30,8 @@ interface IRepository<T> {
      * @param name identifier of entity
      * @return [T] or null
      */
-    suspend fun read(name: String = "test"): T?
+    suspend fun read(name: String = "test"): T? =
+        flow(name).first().getOrNull()
 
     /**
      * Update data entry at [name].
@@ -45,5 +48,18 @@ interface IRepository<T> {
      *
      * @param name identifier of entity
      */
-    suspend fun delete(name : String = "test")
+    suspend fun delete(name: String = "test", entity: T)
+
+    /**
+     * Create permanent repository entry
+     *
+     * @param name identifier of entity
+     * @param entity Entity List of words
+     */
+    suspend fun insertMultiple(name: String, entity: List<T>) =
+        entity.forEach { insert(name, it) }
+
+    companion object {
+        const val SECTION_LIST = "SectionList"
+    }
 }

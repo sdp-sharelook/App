@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.annotation.VisibleForTesting
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.test.espresso.IdlingResource
@@ -275,7 +276,13 @@ open class TranslateFragmentLift : Fragment() {
                 )
             )
         )
-        findNavController().navigate(action)
+
+        val navOptions: NavOptions = NavOptions.Builder()
+            .setPopUpTo(R.id.menuTranslateLink, false, true)
+            .setRestoreState(true)
+            .build()
+
+        findNavController().navigate(action, navOptions)
     }
 
     private fun captureImage() {

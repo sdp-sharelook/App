@@ -11,7 +11,6 @@ import android.widget.ImageView
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import coil.load
 import com.github.sdpsharelook.storage.IRepository
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -22,6 +21,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
+import java.net.URL
 import java.util.*
 import javax.inject.Inject
 
@@ -122,7 +122,9 @@ open class MapsFragmentLift : Fragment(R.layout.fragment_maps) {
             BitmapFactory.decodeResource(requireContext().resources, R.drawable.default_user_path)
             val imageView : ImageView = ImageView(requireContext())
             if (word != null) {
-                imageView.load(word.picture!!)
+                val u = URL(word.picture)
+                val m = BitmapFactory.decodeStream(u.openConnection().getInputStream())
+                imageView.setImageBitmap(m)
             }
             if (word != null) {
                 ImagePopupFragment.newInstance(
@@ -130,7 +132,6 @@ open class MapsFragmentLift : Fragment(R.layout.fragment_maps) {
                     word.target.toString(),
                     word.savedDate!!,
                     imageView.drawable.toBitmap()
-                    //decodeImage(word.picture!!)
                 ).show(childFragmentManager, ImagePopupFragment.TAG)
 
             }

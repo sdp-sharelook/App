@@ -1,6 +1,8 @@
 package com.github.sdpsharelook
 
-import com.google.android.gms.maps.model.LatLng
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.junit.Test
 
 class WordTest {
@@ -49,5 +51,20 @@ class WordTest {
         assert(map.containsValue(picture))
         assert(map.containsValue(isFavourite))
     }
+
+    @Test
+    fun serializeTest() {
+        var testWordCpy = Word.testWord.copy()
+
+        var stringWord = Json.encodeToString(testWordCpy)
+        var word = Json.decodeFromString<Word>(stringWord)
+        assert(testWordCpy == word)
+
+        val w = Word()
+        stringWord = Json.encodeToString(w)
+        word = Json.decodeFromString<Word>(stringWord)
+        assert(w == word)
+    }
+
 
 }

@@ -20,7 +20,8 @@ import javax.inject.Inject
 @FlowPreview
 @HiltViewModel
 class RevisionQuizViewModel @Inject constructor(
-    private val repo: IRepository<List<Word>>,
+    private val wordRepo: IRepository<List<Word>>,
+    private val sectionRepo: IRepository<List<Section>>,
     private val app: Application
 ) : AndroidViewModel(app) {
     private var orphanRevisions: MutableMap<String, RevisionWord> =
@@ -45,14 +46,14 @@ class RevisionQuizViewModel @Inject constructor(
         viewModelScope.launch { collectWordsFromFlow(getWordFlow()) }
     }
 
-    private fun getWordFlow(): Flow<List<Word>?> = repo.flowSection()
+    private fun getWordFlow(): Flow<List<Word>?> = sectionRepo.flow()
         .filter { it.isSuccess }
         .map { it.getOrThrow() }
         .filterNotNull()
         .flatMapMerge { list: List<Section> ->
             list.filter { it.id !in sectionIds }
                 .onEach { sectionIds.add(it.id) }
-                .map { repo.flow(it.id) }.merge()
+                .map { wordRepo.flow(it.id) }.merge()
         }
         .filter { it.isSuccess }
         .map { it.getOrThrow() }

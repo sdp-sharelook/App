@@ -6,16 +6,24 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentManager
 import com.github.sdpsharelook.SelectPictureFragment
+import com.github.sdpsharelook.SelectPictureFragmentLift
 import com.github.sdpsharelook.databinding.FragmentOnlinePictureSelectionBinding
 import com.github.sdpsharelook.language.Language
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.launch
 
 
-class OnlinePictureFragment : BottomSheetDialogFragment() {
+@FlowPreview
+@AndroidEntryPoint
+class OnlinePictureFragment : OnlinePictureFragmentLift()
+
+@FlowPreview
+open class OnlinePictureFragmentLift : BottomSheetDialogFragment() {
     private lateinit var keyword: String
     private lateinit var language: String
     private lateinit var onSuccessListener: (OnlinePicture) -> Unit

@@ -7,13 +7,20 @@ import android.view.ViewGroup
 import androidx.fragment.app.setFragmentResult
 import com.github.sdpsharelook.camera.Camera
 import com.github.sdpsharelook.databinding.FragmentChoosePictureBinding
-import com.github.sdpsharelook.language.Language
 import com.github.sdpsharelook.onlinePictures.OnlinePicture
 import com.github.sdpsharelook.onlinePictures.OnlinePictureFragment
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.FlowPreview
 import java.io.Serializable
 
-class SelectPictureFragment : BottomSheetDialogFragment() {
+@FlowPreview
+@AndroidEntryPoint
+class SelectPictureFragment:SelectPictureFragmentLift()
+
+@FlowPreview
+open class SelectPictureFragmentLift : BottomSheetDialogFragment() {
+
     private val camera = Camera(this)
     private lateinit var word: String
     private lateinit var language: String

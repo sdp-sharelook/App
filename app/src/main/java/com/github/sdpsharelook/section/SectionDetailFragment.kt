@@ -66,12 +66,13 @@ open class SectionDetailFragmentLift : Fragment() {
             }.show(parentFragmentManager, null)
         }
 
+        binding.wordList.adapter = WordAdapter(requireContext(),wordList)
+
+
         lifecycleScope.launch{
             section?.let { collectListFlow(it) }
         }
 
-        /**Check if we are adding a word from the translator Fragment**/
-        binding.wordList.adapter = WordAdapter(requireContext(),wordList)
     }
 
     private suspend fun collectListFlow(section: Section) {

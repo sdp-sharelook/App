@@ -28,7 +28,6 @@ class WordAdapter(
 //      val translatedWord =
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        Log.e("getView called", "IND")
         val word = getItem(position)
         val view = convertView ?: LayoutInflater.from(context)
             .inflate(R.layout.wordlist_section, parent, false)
@@ -40,7 +39,6 @@ class WordAdapter(
         if (word?.picture != null) {
             imageView3.load(word.picture)
         }
- //       imageView3.isShown
         sourceWord?.text = word?.source
         translatedWord?.text = word?.target
         return view

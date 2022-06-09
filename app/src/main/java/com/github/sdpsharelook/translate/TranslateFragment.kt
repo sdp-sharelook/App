@@ -287,7 +287,13 @@ open class TranslateFragmentLift : Fragment() {
 
     private fun captureImage() {
         val action = TranslateFragmentDirections.actionMenuTranslateLinkToMenuCameraLink()
-        findNavController().navigate(action)
+
+        val navOptions: NavOptions = NavOptions.Builder()
+            .setPopUpTo(R.id.menuTranslateLink, false, true)
+            .setRestoreState(true)
+            .build()
+
+        findNavController().navigate(action, navOptions)
     }
 
     private fun downloadLanguage() {

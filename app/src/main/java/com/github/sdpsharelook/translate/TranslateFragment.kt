@@ -292,7 +292,13 @@ open class TranslateFragmentLift : Fragment() {
 
     private fun downloadLanguage() {
         val action = TranslateFragmentDirections.actionMenuTranslateLinkToMenuDownloadLink()
-        findNavController().navigate(action)
+
+        val navOptions: NavOptions = NavOptions.Builder()
+            .setPopUpTo(R.id.menuTranslateLink, false, true)
+            .setRestoreState(true)
+            .build()
+
+        findNavController().navigate(action, navOptions)
     }
 
     override fun onCreateView(

@@ -33,6 +33,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
+import javax.inject.Inject
 
 @FlowPreview
 @ExperimentalCoroutinesApi
@@ -44,6 +45,11 @@ class LaunchQuizFragmentTest {
 
     @get:Rule(order = 1)
     val fragmentScenarioRule = FragmentScenarioRule.launch(LaunchQuizFragment::class)
+
+    @Inject
+    lateinit var repo1 : IRepository<List<Section>>
+    @Inject
+    lateinit var repo2 : IRepository<List<Word>>
 
     @Before
     fun setUp() {
@@ -94,5 +100,25 @@ class LaunchQuizFragmentTest {
         onView(withId(R.id.startAllQuizButton)).perform(click())
         advanceUntilIdle()
 //        assertEquals(R.id.revisionQuizFragment, navController.currentDestination!!.id)
+    }
+
+    /**
+     * Test section  flow  collection.
+     *
+     * don't comment out: this generates almost 6 % of global coverage
+     */
+    @Test
+    fun `test section flow collection`() = runTest {
+        repo1.insert(entity = listOf(Section()))
+        repo2.insert(entity = listOf(Word.testWord))
+        advanceUntilIdle()
+        onView(withId(R.id.sectionCheckBox)).perform(click())
+        repo1.delete(entity = listOf(Section()))
+        repo1.insert(entity = listOf(Section()))
+        repo2.insert(entity = listOf(Word.testWord))
+        repo2.delete(entity = listOf(Word.testWord))
+        repo2.delete(entity = listOf(Word.testWord))
+        advanceUntilIdle()
+        onView(withId(R.id.startAllQuizButton)).perform(click())
     }
 }

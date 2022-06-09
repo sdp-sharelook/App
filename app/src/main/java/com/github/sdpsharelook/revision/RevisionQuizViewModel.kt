@@ -208,7 +208,7 @@ class RevisionQuizViewModel @Inject constructor(
             sendUiEvent(UiEvent.NewWord)
         } else {
             sendUiEvent(Navigate(Routes.QUIZ_RESULTS))
-            sendUiEvent(UiEvent.ShowSnackbar(LAUNCH_QUIZ, "Congratulations"))
+//            sendUiEvent(UiEvent.ShowSnackbar(LAUNCH_QUIZ, "Congratulations"))
         }
     }
 

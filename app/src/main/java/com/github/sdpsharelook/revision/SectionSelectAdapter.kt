@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.github.sdpsharelook.R
 
 class SectionSelectAdapter(
-    var sections: List<SectionSelect>
+    var sections: MutableList<SectionSelect>
 ) : RecyclerView.Adapter<SectionSelectAdapter.SectionSelectViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SectionSelectViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -24,7 +24,13 @@ class SectionSelectAdapter(
                 findViewById<ImageView>(R.id.sectionFlag).setBackgroundResource(it.section.flag)
                 findViewById<TextView>(R.id.sectionTitle).text = it.section.title
                 findViewById<TextView>(R.id.wordsToReview).text = it.wordsToReview.toString()
-                findViewById<CheckBox>(R.id.sectionCheckBox).isChecked = it.isChecked
+                findViewById<CheckBox>(R.id.sectionCheckBox).apply {
+                    isChecked = it.isChecked
+                    setOnClickListener { _ ->
+                        it.isChecked = isChecked
+                    }
+                }
+
             }
         }
     }

@@ -39,8 +39,18 @@ open class LaunchQuizFragmentLift : Fragment() {
     }
 
     private val sectionSelects: MutableList<SectionSelect> = mutableListOf()
+    private lateinit var sectionSelectAdapter: SectionSelectAdapter
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        sectionSelectAdapter = SectionSelectAdapter(sectionSelects)
+        bindView(view)
+        observeModel(sectionSelectAdapter)
+        viewModel.onEvent(QuizEvent.RequestSections)
+        handleViewModelEvents(view)
+    }
+
+    private fun bindView(view: View) {
         view.findViewById<Button>(R.id.start10QuizButton).setOnClickListener {
             viewModel.onEvent(QuizEvent.StartQuiz(10))
         }
@@ -50,16 +60,12 @@ open class LaunchQuizFragmentLift : Fragment() {
         view.findViewById<Button>(R.id.startQuizButton).setOnClickListener {
             numberButton(view)
         }
-        view.findViewById<TextView>(R.id.maxWordsToQuiz).text = viewModel.size.toString()
-        val sectionSelectAdapter = SectionSelectAdapter(sectionSelects)
         view.findViewById<RecyclerView>(R.id.sectionPicker).apply {
             adapter = sectionSelectAdapter
             layoutManager = LinearLayoutManager(requireContext())
-        }
-        observeModel(sectionSelectAdapter)
-        viewModel.onEvent(QuizEvent.RequestSections)
-        lifecycleScope.launch {
-            collectViewModelEvent(view)
+            setOnClickListener {
+                view.findViewById<TextView>(R.id.maxWordsToQuiz).text = viewModel.size.toString()
+            }
         }
     }
 
@@ -89,22 +95,22 @@ open class LaunchQuizFragmentLift : Fragment() {
         }
     }
 
-    private suspend fun collectViewModelEvent(view: View) {
-        viewModel.uiEvent.collect { event ->
-            when (event) {
-                is UiEvent.Navigate -> when (event.route) {
-                    Routes.QUIZ -> {
-                        val action =
-                            LaunchQuizFragmentDirections.actionLaunchQuizFragmentToRevisionQuizFragment()
-                        withContext(Dispatchers.Main) { findNavController().navigate(action) }
+    private fun handleViewModelEvents(view: View) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            viewModel.uiEvent.collect { event ->
+                when (event) {
+                    is UiEvent.Navigate -> when (event.route) {
+                        Routes.QUIZ -> {
+                            val action =
+                                LaunchQuizFragmentDirections.actionLaunchQuizFragmentToRevisionQuizFragment()
+                            withContext(Dispatchers.Main) { findNavController().navigate(action) }
+                        }
                     }
+                    is UiEvent.ShowSnackbar -> if (event.who == LAUNCH_QUIZ)
+                        Snackbar.make(view, event.message, Snackbar.LENGTH_SHORT).show()
+                    else -> Unit
                 }
-                is UiEvent.ShowSnackbar -> if (event.who == LAUNCH_QUIZ)
-                    Snackbar.make(view, event.message, Snackbar.LENGTH_SHORT).show()
-                else -> Unit
             }
         }
     }
-
-
 }

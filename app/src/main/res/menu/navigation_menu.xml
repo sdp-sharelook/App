@@ -7,25 +7,9 @@
         android:icon="@drawable/ic_translate"
         android:title="Translate" />
     <item
-        android:id="@+id/menuDatabaseViewLink"
-        android:icon="@drawable/ic_microphone"
-        android:title="Database" />
-    <item
         android:id="@+id/menuSectionsLink"
         android:icon="@android:drawable/ic_menu_save"
         android:title="Saved words" />
-    <item
-        android:id="@+id/menuCameraLink"
-        android:icon="@android:drawable/ic_menu_camera"
-        android:title="Camera" />
-    <item
-        android:id="@+id/menuLoginLink"
-        android:icon="@android:drawable/ic_lock_power_off"
-        android:title="Login" />
-    <item
-        android:id="@+id/menuTextDetectionLink"
-        android:icon="@android:drawable/ic_menu_sort_alphabetically"
-        android:title="Text detection" />
     <item
         android:id="@+id/mapFragment"
         android:icon="@android:drawable/ic_menu_mapmode"

@@ -6,10 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.github.sdpsharelook.R
 import com.github.sdpsharelook.revision.SnackbarShowers.LAUNCH_QUIZ
 import com.google.android.material.snackbar.Snackbar
@@ -35,6 +38,7 @@ open class LaunchQuizFragmentLift : Fragment() {
         return inflater.inflate(R.layout.fragment_launch_quiz, container, false)
     }
 
+    private val sectionSelects: MutableList<SectionSelect> = mutableListOf()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         view.findViewById<Button>(R.id.start10QuizButton).setOnClickListener {
@@ -44,16 +48,44 @@ open class LaunchQuizFragmentLift : Fragment() {
             viewModel.onEvent(QuizEvent.StartQuiz(viewModel.size))
         }
         view.findViewById<Button>(R.id.startQuizButton).setOnClickListener {
-            try {
-                val len =
-                    view.findViewById<EditText>(R.id.quizLengthPicker).text.toString().toInt()
-                viewModel.onEvent(QuizEvent.StartQuiz(len))
-            } catch (e: NumberFormatException) {
-                Snackbar.make(view, "Must be a number", Snackbar.LENGTH_SHORT).show()
-            }
+            numberButton(view)
         }
+        view.findViewById<TextView>(R.id.maxWordsToQuiz).text = viewModel.size.toString()
+        val sectionSelectAdapter = SectionSelectAdapter(sectionSelects)
+        view.findViewById<RecyclerView>(R.id.sectionPicker).apply {
+            adapter = sectionSelectAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+        }
+        observeModel(sectionSelectAdapter)
+        viewModel.onEvent(QuizEvent.RequestSections)
         lifecycleScope.launch {
             collectViewModelEvent(view)
+        }
+    }
+
+    private fun observeModel(sectionSelectAdapter: SectionSelectAdapter) {
+        viewModel.checkboxes.observe(viewLifecycleOwner) { (sectionSelect, change) ->
+            when (change) {
+                "remove" -> {
+                    val i = sectionSelects.indexOf(sectionSelect)
+                    sectionSelects.remove(sectionSelect)
+                    sectionSelectAdapter.notifyItemRemoved(i)
+                }
+                "add" -> {
+                    sectionSelects.add(sectionSelect)
+                    sectionSelectAdapter.notifyItemInserted(sectionSelects.lastIndex)
+                }
+            }
+        }
+    }
+
+    private fun numberButton(view: View) {
+        try {
+            val len =
+                view.findViewById<EditText>(R.id.quizLengthPicker).text.toString().toInt()
+            viewModel.onEvent(QuizEvent.StartQuiz(len))
+        } catch (e: NumberFormatException) {
+            Snackbar.make(view, "Must be a number", Snackbar.LENGTH_SHORT).show()
         }
     }
 

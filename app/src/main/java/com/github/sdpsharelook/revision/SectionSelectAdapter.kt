@@ -21,10 +21,10 @@ class SectionSelectAdapter(
     override fun onBindViewHolder(holder: SectionSelectViewHolder, position: Int) {
         holder.itemView.apply {
             sections[position].let {
-//                findViewById<ImageView>(R.id.sectionFlag).setBackgroundResource(R.drawable.spain)
+                findViewById<ImageView>(R.id.sectionFlag).setBackgroundResource(it.section.flag)
                 findViewById<TextView>(R.id.sectionTitle).text = it.section.title
                 findViewById<TextView>(R.id.wordsToReview).text = it.wordsToReview.toString()
-                findViewById<CheckBox>(R.id.sectionCheckBox).
+                findViewById<CheckBox>(R.id.sectionCheckBox).isChecked = it.isChecked
             }
         }
     }

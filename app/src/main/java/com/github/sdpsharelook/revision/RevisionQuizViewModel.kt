@@ -41,16 +41,19 @@ class RevisionQuizViewModel @Inject constructor(
     // general public shared values
     val uiEvent = _uiEvent.receiveAsFlow().shareIn(viewModelScope, SharingStarted.Lazily)
     val size: Int
-        get() = if (launched) quizLength else quizPairsBySection.size
+        get() = if (launched) quizLength else
+            sectionSelects
+                .filter { it.isChecked }
+                .sumOf { it.wordsToReview }
 
     // only for [RevisionQuizFragment]
     val current: Word get() = _current?.second ?: Word()
 
     // only for [LaunchQuizFragment]
     private val sectionSelects: MutableList<SectionSelect> = mutableListOf()
-    private val _checkboxes: MutableLiveData<List<SectionSelect>> =
+    private val _checkboxes: MutableLiveData<Pair<SectionSelect, String>> =
         MutableLiveData()
-    val checkboxes: LiveData<List<SectionSelect>> get() = _checkboxes
+    val checkboxes: LiveData<Pair<SectionSelect, String>> get() = _checkboxes
 
     init {
         sendUiEvent(UiEvent.UpdateBadge)
@@ -66,8 +69,10 @@ class RevisionQuizViewModel @Inject constructor(
 
     private fun handleDeletedSections(deletedSections: List<Section>) {
         deletedSections.forEach { section ->
-            sectionSelects.removeAll { it.section == section }
-            _checkboxes.postValue(sectionSelects)
+            sectionSelects.find { it.section == section }?.let {
+                _checkboxes.postValue(it to "remove")
+                sectionSelects.remove(it)
+            }
 
             quizPairsBySection.remove(section)!!.forEach { (rev, _) ->
                 rev.saveToStorage(getApplication())
@@ -81,8 +86,9 @@ class RevisionQuizViewModel @Inject constructor(
 
     private fun handleNewSections(newSections: List<Section>) {
         newSections.forEach { section ->
-            sectionSelects.add(SectionSelect(section))
-            _checkboxes.postValue(sectionSelects)
+            val element = SectionSelect(section)
+            sectionSelects.add(element)
+            _checkboxes.postValue(element to "add")
 
             assert(section !in quizPairsBySection)
             quizPairsBySection[section] = mutableListOf()
@@ -184,6 +190,11 @@ class RevisionQuizViewModel @Inject constructor(
                 }
                 startQuiz(1)
             }
+            QuizEvent.RequestSections -> {
+                sectionSelects.forEach {
+                    _checkboxes.postValue(it to "add")
+                }
+            }
         }
     }
 
@@ -207,7 +218,7 @@ class RevisionQuizViewModel @Inject constructor(
         quizLength = length
         quizIterator = quizPairsBySection
             .filterKeys { section ->
-                _checkboxes.value.orEmpty().any { it.section == section && it.isChecked }
+                sectionSelects.any { it.section == section && it.isChecked }
             } // select only checked-section words
             .flatMap { it.value } // get all the words
             .shuffled().take(quizLength) // make a random quiz of length quizlength
@@ -217,20 +228,20 @@ class RevisionQuizViewModel @Inject constructor(
     }
 
     private fun lengthFails(length: Int): Boolean {
-        if (length > quizPairsBySection.size) {
+        if (length > size) {
             sendUiEvent(
                 UiEvent.ShowSnackbar(
                     LAUNCH_QUIZ,
-                    "Not enough words (${quizPairsBySection.size})"
+                    "Not enough words (${size})"
                 )
             )
             return true
         }
-        if (length == 0) {
+        if (length <= 0) {
             sendUiEvent(
                 UiEvent.ShowSnackbar(
                     LAUNCH_QUIZ,
-                    "Can't start empty quiz (${quizPairsBySection.size} words available)"
+                    "Can't start empty quiz (${size} words available)"
                 )
             )
             return true

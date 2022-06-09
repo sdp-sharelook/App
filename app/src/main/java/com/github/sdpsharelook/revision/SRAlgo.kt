@@ -8,6 +8,9 @@ import java.io.File
 import java.io.IOException
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.milliseconds
 
 const val SRDATAFILE = "srdatafile.csv"
 
@@ -24,6 +27,12 @@ data class RevisionWord(
     var EF: Double = SRAlgo.MAX_EF,
 ) {
 
+    fun isTime(): Boolean {
+        val delay: Duration = lastReview.milliseconds + nextReview.days
+        val milliseconds: Duration = System.currentTimeMillis().milliseconds
+        return delay <= milliseconds
+    }
+
     fun saveToStorage(context: Context, filePath: String = SRDATAFILE) {
 
         val file = File(context.filesDir, filePath)
@@ -34,7 +43,7 @@ data class RevisionWord(
             val word = decodeFromString(serializer(), str)
             if (word.wordId == wordId) {
                 found = true
-                newF[index] = encodeToString(serializer(),this)
+                newF[index] = encodeToString(serializer(), this)
                 return@forEachIndexed
             }
         }
@@ -43,7 +52,7 @@ data class RevisionWord(
                 printer.write(str + "\n")
             }
             if (!found) {
-                printer.append(encodeToString(serializer(),this)+"\n")
+                printer.append(encodeToString(serializer(), this) + "\n")
             }
         }
 
@@ -77,7 +86,7 @@ class SRAlgo {
             }
             f.useLines { lines ->
                 return lines.map {
-                    decodeFromString(RevisionWord.serializer(),it)
+                    decodeFromString(RevisionWord.serializer(), it)
                 }.toList()
             }
         }

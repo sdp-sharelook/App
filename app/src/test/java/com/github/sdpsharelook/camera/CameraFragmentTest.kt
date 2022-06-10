@@ -1,7 +1,9 @@
 package com.github.sdpsharelook.camera
 
-import androidx.test.espresso.Espresso
-import androidx.test.espresso.action.ViewActions
+import android.content.Context
+import androidx.activity.result.ActivityResultCaller
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
@@ -28,7 +30,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 
-/**
+
 @ExperimentalCoroutinesApi
 @UninstallModules(TextDetectionModule::class)
 @HiltAndroidTest
@@ -62,22 +64,27 @@ class CameraFragmentTest {
 
     @Test
     fun testCamera() {
-        val cameraView = Espresso.onView(ViewMatchers.withId(R.id.cameraImageView))
+        val cameraView = onView(ViewMatchers.withId(R.id.cameraImageView))
         cameraView.check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        val captureButton = Espresso.onView(ViewMatchers.withId(R.id.buttonTakePic))
+        val captureButton = onView(ViewMatchers.withId(R.id.buttonTakePic))
         captureButton.check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
         Intents.init()
 
-        captureButton.perform(ViewActions.click())
-        Espresso.onView(ViewMatchers.withId(R.id.cameraImageView))
+        captureButton.perform(click())
+        onView(ViewMatchers.withId(R.id.cameraImageView))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         Intents.intended(IntentMatchers.hasAction("android.media.action.IMAGE_CAPTURE"))
         assert(Intents.getIntents().size == 1)
         Intents.release()
 
-        Espresso.onView(ViewMatchers.withId(R.id.cameraImageView))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+
+        onView(ViewMatchers.withText("Capture or choose an image from your gallery")).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+
+        val translate = onView(ViewMatchers.withId(R.id.buttonTranslate))
+        translate.perform(click())
+
     }
 
- **/
+}
+

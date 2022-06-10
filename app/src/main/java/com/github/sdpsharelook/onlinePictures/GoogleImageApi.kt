@@ -40,9 +40,9 @@ class GoogleImageApi {
          */
         suspend fun search(
             keyword: String,
-            language: Language,
+            language: String,
         ): List<OnlinePicture>? {
-            val parameter = mutableMapOf(
+            val parameter = mapOf(
                 "q" to sanitizeURL(keyword),
                 "num" to "10",
                 "start" to "0",
@@ -51,10 +51,10 @@ class GoogleImageApi {
                 "filetype" to "png",
                 "imgSize" to "MEDIUM",
                 "cx" to cx,
-                //"safe" to "active",
-                //"imgType" to "clipart"
+                "hl" to language,
+                "safe" to "active",
+                "imgType" to "clipart"
             )
-            language.locale?.let { parameter += mapOf("hl" to language.tag) }
             try {
                 val params = parameter.map { "${it.key}=${it.value}" }.joinToString("&")
                 val url = URL("$api_endpoint?$params")

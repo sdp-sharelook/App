@@ -7,9 +7,11 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.github.sdpsharelook.SelectPictureFragment
+import com.github.sdpsharelook.SelectPictureFragmentLift
 import com.github.sdpsharelook.Word
 import com.github.sdpsharelook.databinding.FragmentSectionDetailBinding
 import com.github.sdpsharelook.storage.IRepository
@@ -24,7 +26,7 @@ class SectionDetailFragment : SectionDetailFragmentLift()
 open class SectionDetailFragmentLift : Fragment() {
 
     @Inject
-    lateinit var wordRTDB : IRepository<List<Word>>
+    lateinit var wordRTDB: IRepository<List<Word>>
 
     /**
      * This property is only valid between onCreateView and onDestroyView.
@@ -40,7 +42,7 @@ open class SectionDetailFragmentLift : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val args: SectionDetailFragmentArgs by navArgs()
 
-        if(args.section!= null){
+        if (args.section != null) {
             section = Json.decodeFromString<Section>(args.section!!)
         }
 
@@ -52,31 +54,40 @@ open class SectionDetailFragmentLift : Fragment() {
         binding.wordList.isLongClickable = true
 
         binding.wordList.setOnItemLongClickListener { _, _, pos, _ ->
-            lifecycleScope.launch{
+            lifecycleScope.launch {
                 removeWord(pos, section!!)
             }
             true
         }
 
         binding.wordList.setOnItemClickListener { _, _, index, _ ->
-            val w = wordList[index]
-            SelectPictureFragment(w!!) {
-                //TODO w.picture = it
-                Toast.makeText(requireContext(), it ?: "picture deleted", Toast.LENGTH_SHORT).show()
-            }.show(parentFragmentManager, null)
+            val word = wordList[index].source
+            val language = wordList[index].sourceLanguage?.tag
+            SelectPictureFragment().apply {
+                arguments = Bundle().apply {
+                    putString(SelectPictureFragmentLift.LANGUAGE_PARAMETER, language)
+                    putString(SelectPictureFragmentLift.WORD_PARAMETER, word)
+                }
+                show(this@SectionDetailFragmentLift.parentFragmentManager, null)
+                setFragmentResultListener(SelectPictureFragmentLift.RESULT_PARAMETER) {_, bundle ->
+                    val s = bundle.getString(SelectPictureFragmentLift.RESULT_PARAMETER)
+                    Toast.makeText(this@SectionDetailFragmentLift.requireContext(), s ?: "picture deleted", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
         }
 
-        binding.wordList.adapter = WordAdapter(requireContext(),wordList)
+        binding.wordList.adapter = WordAdapter(requireContext(), wordList)
 
 
-        lifecycleScope.launch{
+        lifecycleScope.launch {
             section?.let { collectListFlow(it) }
         }
 
     }
 
     private suspend fun collectListFlow(section: Section) {
-        wordRTDB.flow(section.id).collect{
+        wordRTDB.flow(section.id).collect {
             when {
                 it.isSuccess -> {
                     wordList.clear()
@@ -96,13 +107,11 @@ open class SectionDetailFragmentLift : Fragment() {
     }
 
 
-
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentSectionDetailBinding.inflate(layoutInflater,)
+        _binding = FragmentSectionDetailBinding.inflate(layoutInflater)
 
         return binding.root
     }

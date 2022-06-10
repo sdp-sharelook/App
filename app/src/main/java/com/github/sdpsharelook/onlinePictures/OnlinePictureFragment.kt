@@ -19,11 +19,13 @@ class OnlinePictureFragment : BottomSheetDialogFragment() {
     private lateinit var keyword: String
     private lateinit var language: String
     private lateinit var onSuccessListener: (OnlinePicture) -> Unit
+
     companion object {
         val CALLBACK_FUNCTION_PARAMETER = "onPictureSelected"
         val LANGUAGE_PARAMETER = "language"
         val WORD_PARAMETER = "word"
     }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -31,9 +33,9 @@ class OnlinePictureFragment : BottomSheetDialogFragment() {
     ): View =
         FragmentOnlinePictureSelectionBinding.inflate(inflater, container, false)
             .apply {
-                keyword=arguments?.getString(WORD_PARAMETER)!!
-                language=arguments?.getString(LANGUAGE_PARAMETER)!!
-                onSuccessListener=
+                keyword = arguments?.getString(WORD_PARAMETER)!!
+                language = arguments?.getString(LANGUAGE_PARAMETER)!!
+                onSuccessListener =
                     arguments?.getSerializable(CALLBACK_FUNCTION_PARAMETER) as (OnlinePicture?) -> Unit
 
                 CoroutineScope(Dispatchers.IO).launch {
@@ -71,4 +73,6 @@ class OnlinePictureFragment : BottomSheetDialogFragment() {
                     }
                 }
             }.root
+
+
 }

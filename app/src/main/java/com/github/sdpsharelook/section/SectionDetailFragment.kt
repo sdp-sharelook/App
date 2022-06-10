@@ -15,12 +15,9 @@ import com.github.sdpsharelook.Word
 import com.github.sdpsharelook.databinding.FragmentSectionDetailBinding
 import com.github.sdpsharelook.storage.IRepository
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import java.io.Serializable
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -70,12 +67,13 @@ open class SectionDetailFragmentLift : Fragment() {
                     putString(SelectPictureFragment.LANGUAGE_PARAMETER, language)
                     putString(SelectPictureFragment.WORD_PARAMETER, word)
                 }
-                setFragmentResultListener(SelectPictureFragment.RESULT_PARAMETER) { _, bundle ->
+                show(this@SectionDetailFragmentLift.parentFragmentManager, null)
+                setFragmentResultListener(SelectPictureFragment.RESULT_PARAMETER) {_, bundle ->
                     val s = bundle.getString(SelectPictureFragment.RESULT_PARAMETER)
-                    Toast.makeText(requireContext(), s ?: "picture deleted", Toast.LENGTH_SHORT)
+                    Toast.makeText(this@SectionDetailFragmentLift.requireContext(), s ?: "picture deleted", Toast.LENGTH_SHORT)
                         .show()
                 }
-            }.show(parentFragmentManager, null)
+            }
         }
 
         binding.wordList.adapter = WordAdapter(requireContext(), wordList)

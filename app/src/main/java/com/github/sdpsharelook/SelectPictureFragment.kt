@@ -19,9 +19,9 @@ class SelectPictureFragment : BottomSheetDialogFragment() {
     private lateinit var language: String
 
     companion object {
-        val RESULT_PARAMETER = "onPictureSelected"
         val LANGUAGE_PARAMETER = "language"
         val WORD_PARAMETER = "word"
+        val RESULT_PARAMETER = "word"
     }
 
     override fun onCreateView(
@@ -51,8 +51,7 @@ class SelectPictureFragment : BottomSheetDialogFragment() {
     }.root
 
     private fun returnUri(picture: String?) {
-        setFragmentResult(RESULT_PARAMETER,
-            Bundle().apply { putString(RESULT_PARAMETER, picture) })
+        setFragmentResult(RESULT_PARAMETER, Bundle().apply { putString(RESULT_PARAMETER, picture) })
         dismiss()
     }
 }

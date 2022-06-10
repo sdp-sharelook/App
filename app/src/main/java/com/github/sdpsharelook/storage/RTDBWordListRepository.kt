@@ -38,6 +38,7 @@ class RTDBWordListRepository @Inject constructor(
 
                 override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
                     val word = Gson().fromJson(snapshot.value.toString(), Word::class.java)
+
                     val i = wordList.indexOfFirst { it.uid == word.uid }
                     wordList[i] = word
                     trySendBlocking(Result.success(wordList))
@@ -70,6 +71,7 @@ class RTDBWordListRepository @Inject constructor(
      * @param name identifier of entity
      * @param entity Entity List of words
      */
+
     override suspend fun insert(name: String, entity: List<Word>) {
         for (word in entity) {
             getUserFolderReference(name).child(word.uid).setValue(Gson().toJson(word))

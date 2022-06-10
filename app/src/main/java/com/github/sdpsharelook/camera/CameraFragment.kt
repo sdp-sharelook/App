@@ -49,7 +49,7 @@ open class CameraFragmentLift : Fragment() {
     private fun showAlert(message: String) {
         val builder = AlertDialog.Builder(requireContext())
         builder.setMessage(message)
-        builder.setPositiveButton(R.string.button, null)
+        builder.setPositiveButton(R.string.close_dialog, null)
         val dialog = builder.create()
         dialog.show()
     }

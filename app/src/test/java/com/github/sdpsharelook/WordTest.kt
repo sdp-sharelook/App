@@ -1,8 +1,9 @@
 package com.github.sdpsharelook
 
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.serialization.json.Json
+import org.junit.Assert.assertEquals
+
 import org.junit.Test
 
 class WordTest {
@@ -53,18 +54,19 @@ class WordTest {
     }
 
     @Test
-    fun serializeTest() {
-        var testWordCpy = Word.testWord.copy()
-
-        var stringWord = Json.encodeToString(testWordCpy)
-        var word = Json.decodeFromString<Word>(stringWord)
-        assert(testWordCpy == word)
-
-        val w = Word()
-        stringWord = Json.encodeToString(w)
-        word = Json.decodeFromString<Word>(stringWord)
-        assert(w == word)
+    fun `test word serialization`() {
+        val w = Word.testWord
+        val s = Json.encodeToString(Word.serializer(), w)
+        val decoded = Json.decodeFromString(Word.serializer(), s)
+        assertEquals(w,decoded)
     }
 
+    @Test
+    fun `test default word serialization`() {
+        val w = Word()
+        val s = Json.encodeToString(Word.serializer(), w)
+        val decoded = Json.decodeFromString(Word.serializer(), s)
+        assertEquals(w,decoded)
+    }
 
 }

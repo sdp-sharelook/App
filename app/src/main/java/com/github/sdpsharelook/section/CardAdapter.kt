@@ -15,7 +15,6 @@ import kotlinx.coroutines.launch
 class CardAdapter constructor(
     private val clickListener: SectionClickListener,
     private val dialog: Dialog,
-    private val wordRTDB : IRepository<List<Word>>,
     private val sectionDb : IRepository<List<Section>>
 )
     : RecyclerView.Adapter<CardViewHolder>()
@@ -32,7 +31,7 @@ class CardAdapter constructor(
 
     override fun onBindViewHolder(holder: CardViewHolder, position: Int) {
         holder.onDeletClick = {
-            removeItem(it, position)
+            removeItem(position)
         }
 
         holder.onEditClick = {
@@ -56,7 +55,7 @@ class CardAdapter constructor(
         notifyItemChanged(editPosition)
     }
 
-    private fun removeItem(viewHolder: RecyclerView.ViewHolder, index: Int) {
+    private fun removeItem( index: Int) {
         val section = sectionList[index]
         CoroutineScope(Dispatchers.IO).launch{
             sectionDb.delete("SectionList", listOf(section))

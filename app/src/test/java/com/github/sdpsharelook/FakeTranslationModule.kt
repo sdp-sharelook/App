@@ -14,6 +14,7 @@ import dagger.Provides
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
 import kotlinx.coroutines.delay
+import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import javax.inject.Singleton
@@ -61,7 +62,9 @@ object FakeTranslationModule {
 
     @Provides
     @Singleton
-    fun providesLanguageIdentifier(): LanguageIdentifier = mock()
+    fun providesLanguageIdentifier(): LanguageIdentifier = mock{
+        on{identifyLanguage(any()) } doReturn Tasks.forResult("fr")
+    }
 
     @Singleton
     @Provides

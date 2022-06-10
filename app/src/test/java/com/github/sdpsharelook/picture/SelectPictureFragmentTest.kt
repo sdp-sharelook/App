@@ -43,10 +43,10 @@ class SelectPictureFragmentTest {
         hiltRule.inject()
     }
 
-    @Test
+    /*@Test
     fun `test take picture`() = runTest {
         onView(withId(R.id.button_camera)).perform(click())
-    }
+    }*/
 
     @Test
     fun `test launch OnlinePictureFragment`() {

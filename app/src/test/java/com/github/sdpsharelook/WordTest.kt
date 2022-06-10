@@ -3,6 +3,7 @@ package com.github.sdpsharelook
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.serialization.json.Json
 import org.junit.Assert.assertEquals
+
 import org.junit.Test
 
 class WordTest {
@@ -67,4 +68,5 @@ class WordTest {
         val decoded = Json.decodeFromString(Word.serializer(), s)
         assertEquals(w,decoded)
     }
+
 }

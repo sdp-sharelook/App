@@ -9,7 +9,7 @@
     <string name="textToSpeechButtonText">Text to speech</string>
     <string name="pitchTextToSpeech">Pitch</string>
     <string name="name">Name</string>
-    <string name="button">Button</string>
+    <string name="close_dialog">ok</string>
     <string name="greetingString">Default Name Showing String: this should not be visible</string>
     <string name="source_text_hint">Enter text to translate…</string>
     <string name="translation_running">Translation…</string>

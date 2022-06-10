@@ -86,7 +86,7 @@ open class SectionFragmentLift : Fragment(), SectionClickListener {
 
         // set up the recyclerView
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        val cardAdapter = CardAdapter(this, dialog, databaseWordList, sectionDb)
+        val cardAdapter = CardAdapter(this, dialog, sectionDb)
         binding.recyclerView.adapter = cardAdapter
 
         lifecycleScope.launch(Dispatchers.IO) {

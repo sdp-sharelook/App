@@ -21,8 +21,7 @@ data class Section(
 
     override fun equals(other: Any?): Boolean {
         return try {
-            val otherSection = (other as Section)
-            id == otherSection.id
+            id == (other as Section).id
         }catch (e: Exception){
             false
         }

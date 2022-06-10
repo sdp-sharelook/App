@@ -2,17 +2,14 @@ package com.github.sdpsharelook.section
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.sdpsharelook.Word
-import com.github.sdpsharelook.storage.IRepository
-import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromJsonElement
+import org.junit.Assert
 import org.junit.Assert.assertFalse
-import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.kotlin.mock
-import java.util.*
 
 @ExperimentalCoroutinesApi
 @HiltAndroidTest
@@ -47,6 +44,31 @@ class SectionClassTest {
         assert(section.flag == 2)
     }
 
+    @Test
+    fun `test section serialization`() {
+        val sec = Section(title = "Cuisine", flag = 0, id = "id")
+        val s = Json.encodeToString(Section.serializer(), sec)
+        val decoded = Json.decodeFromString(Section.serializer(), s)
+        Assert.assertEquals(sec, decoded)
+    }
+
+    @Test
+    fun `test default section serialization`() {
+        val sec = Section()
+        val s = Json.encodeToString(Section.serializer(), sec)
+        val decoded = Json.decodeFromString(Section.serializer(), s)
+        Assert.assertEquals(sec, decoded)
+
+
+    }
+
+    @Test
+    fun `test Json serialization`() {
+        val sec = Section()
+        val s = Json.encodeToJsonElement(Section.serializer(), sec)
+        val decoded = Json.decodeFromJsonElement<Section>(s)
+        Assert.assertEquals(sec, decoded)
+    }
 
 
 }

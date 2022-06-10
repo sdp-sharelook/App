@@ -11,19 +11,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
-import com.github.sdpsharelook.R
 import com.github.sdpsharelook.SelectPictureFragment
 import com.github.sdpsharelook.SelectPictureFragmentLift
 import com.github.sdpsharelook.Word
 import com.github.sdpsharelook.databinding.FragmentSectionDetailBinding
 import com.github.sdpsharelook.storage.IRepository
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import okhttp3.internal.notify
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -66,8 +62,9 @@ open class SectionDetailFragmentLift : Fragment() {
         }
 
         binding.wordList.setOnItemClickListener { _, _, index, _ ->
-            val word = wordList[index].source
-            val language = wordList[index].sourceLanguage?.tag
+            val w=wordList[index]
+            val word = w.source
+            val language = w.sourceLanguage?.tag
             SelectPictureFragment().apply {
                 arguments = Bundle().apply {
                     putString(SelectPictureFragmentLift.LANGUAGE_PARAMETER, language)
@@ -75,8 +72,8 @@ open class SectionDetailFragmentLift : Fragment() {
                 }
                 show(this@SectionDetailFragmentLift.parentFragmentManager, null)
                 setFragmentResultListener(SelectPictureFragmentLift.RESULT_PARAMETER) {_, bundle ->
-                    val s = bundle.getString(SelectPictureFragmentLift.RESULT_PARAMETER)
-                    Toast.makeText(this@SectionDetailFragmentLift.requireContext(), s ?: "picture deleted", Toast.LENGTH_SHORT).show()
+                    val url = bundle.getString(SelectPictureFragmentLift.RESULT_PARAMETER)
+                    Toast.makeText(this@SectionDetailFragmentLift.requireContext(), url ?: "picture deleted", Toast.LENGTH_SHORT).show()
                     lifecycleScope.launch{
                     val newW = w.copy(picture=url)
                     wordRTDB.insert(section.id, listOf(newW))

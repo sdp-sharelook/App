@@ -145,13 +145,13 @@
     <string name="flag_of_language">flag_of_language</string>
     <string name="edit">edit</string>
     <string name="delete">delete</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="no_text_detected">No Text</string>
     <string name="detect_text">Detect</string>
+>>>>>>>>> Temporary merge branch 2
     <string name="settings">Settings</string>
     <string name="statistics">Statistics</string>
     <string name="mute_notifications">Mute notifications</string>
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="loading">Loading…</string>
     <string name="start">Start</string>
     <string name="start_10">Start (10)</string>

@@ -7,7 +7,6 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -61,15 +60,15 @@ open class CameraFragmentLift : Fragment() {
             takePic()
         }
 
-        binding.buttonTraduire.isEnabled = false
+        binding.buttonTranslate.isEnabled = false
 
         binding.textData.isFocusable = false
         binding.textData.isFocusableInTouchMode = false
         binding.textData.isCursorVisible = false
         binding.textData.setBackgroundColor(Color.TRANSPARENT)
 
-        binding.buttonTraduire.setOnClickListener{
-            translatWord()
+        binding.buttonTranslate.setOnClickListener{
+            translateWord()
         }
     }
 
@@ -79,8 +78,7 @@ open class CameraFragmentLift : Fragment() {
         if (success) {
             val file = File(currentPath!!)
             val uri = Uri.fromFile(file)
-            val imageView = binding.cameraImageView
-            imageView.setImageURI(uri)
+            binding.cameraImageView.setImageURI(uri)
             // Once the image is captured recognize text
             recognizeText(InputImage.fromFilePath(requireContext(), uri))
         } else {
@@ -91,13 +89,9 @@ open class CameraFragmentLift : Fragment() {
     private fun recognizeText(image: InputImage) {
         recognizer.process(image)
             .addOnSuccessListener(
-                OnSuccessListener<Text?> { texts ->
-                    processTextBlock(texts)
-                })
+                OnSuccessListener<Text?> { texts -> processTextBlock(texts) })
             .addOnFailureListener(
-                OnFailureListener { e -> // Task failed with an exception
-                    e.printStackTrace()
-                })
+                OnFailureListener { e -> e.printStackTrace() })
     }
 
     private val requestPermissionLauncher =
@@ -132,9 +126,7 @@ open class CameraFragmentLift : Fragment() {
 
         }
         else -> {
-            requestPermissionLauncher.launch(
-                permission
-            )
+            requestPermissionLauncher.launch(permission)
         }
     }
 
@@ -169,19 +161,17 @@ open class CameraFragmentLift : Fragment() {
 
     private fun processTextBlock(result: Text) {
         if (result.text.isBlank()){
-            binding.textData.setText("Aucun Text")
+            binding.textData.setText("No text detected")
         }else{
-            binding.buttonTraduire.isEnabled = true
-
+            binding.buttonTranslate.isEnabled = true
             binding.textData.isFocusable = true
             binding.textData.isFocusableInTouchMode = true
             binding.textData.isCursorVisible = true
-            //TODO Create word and pass it
             binding.textData.setText(result.text)
         }
     }
 
-    fun translatWord(){
+    private fun translateWord(){
         val action = CameraFragmentDirections.actionMenuCameraLinkToMenuTranslateLink2(binding.textData.text.toString())
         findNavController().navigate(action)
     }

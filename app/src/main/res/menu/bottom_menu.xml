@@ -11,10 +11,6 @@
         android:icon="@android:drawable/ic_menu_save"
         android:title="Saved words" />
     <item
-        android:id="@+id/menuCameraLink"
-        android:icon="@android:drawable/ic_menu_camera"
-        android:title="Camera" />
-    <item
         android:id="@+id/mapFragment"
         android:icon="@android:drawable/ic_menu_mapmode"
         android:title="Map" />

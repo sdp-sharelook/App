@@ -2,6 +2,8 @@ package com.github.sdpsharelook.section
 
 import androidx.core.os.bundleOf
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -13,6 +15,9 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -32,23 +37,25 @@ class SectionDetailFragmentTest {
     @Before
     fun setUp() {
         hiltRule.inject()
-//        val section = Section(
-//            "Hello World!",
-//            R.drawable.spain,
-//            repo.toString(),
-//            "testHelloWorld"
-//        )
-//        sectionList.add(0, section)
-//        val sectionWord = Word(source= "Hola", target = "Bonjour")
-//        val fragmentArgs = bundleOf("sectionID" to 0, "sectionWord" to sectionWord)
-//        FragmentScenario.launch(SectionDetailFragment::class, null, fragmentArgs)
+        val sec = Section("Barcelone", 0, "test")
+        val fragmentArgs = bundleOf( "section" to Json.encodeToString(sec))
+        FragmentScenario.launch(SectionDetailFragment::class, null, fragmentArgs)
+    }
+    @After
+    fun end() {
+        sectionList.clear()
     }
 
     @Test
-    fun `argument word is displayed`() = runTest {
-//        onView(withText("Hola")).check(matches(isDisplayed()))
-//        onView(withText("Bonjour")).check(matches(isDisplayed()))
-//        onView(withText("Hello World!")).check(matches(isDisplayed()))
-//        onView(withId(R.id.sectionFlag)).check(matches(isDisplayed()))
+    fun sectionDetailFragmentTest() = runTest {
+        onView(withText("Hola")).check(matches(isDisplayed()))
+        onView(withText("Bonjour")).check(matches(isDisplayed()))
+        onView(withText("Barcelone")).check(matches(isDisplayed()))
+
+        val word = onView(withText("Hola"))
+        word.check(matches(isDisplayed()))
+        word.perform(ViewActions.longClick())
+        onView(withText("Hola")).check(ViewAssertions.doesNotExist())
+
     }
 }

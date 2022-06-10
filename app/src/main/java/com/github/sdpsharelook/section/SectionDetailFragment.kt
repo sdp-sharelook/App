@@ -80,6 +80,9 @@ open class SectionDetailFragmentLift : Fragment() {
 
         }
 
+        binding.wordList.adapter = WordAdapter(requireContext(),wordList)
+
+
         lifecycleScope.launch{
             section?.let { collectListFlow(it) }
         }

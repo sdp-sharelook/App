@@ -164,4 +164,6 @@
     <string name="quality4">Low Difficulty</string>
     <string name="quality5">No Difficulty</string>
     <string name="help">Help</string>
+    <string name="max_0">Max: 0</string>
+    <string name="words_to_quiz">Number of words available for review in this section</string>
 </resources>

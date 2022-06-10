@@ -1,9 +1,8 @@
 package com.github.sdpsharelook.section
 
-import androidx.annotation.Keep
 import com.google.firebase.database.IgnoreExtraProperties
 import kotlinx.serialization.Serializable
-import java.util.*
+import java.lang.Exception
 @IgnoreExtraProperties
 @Serializable
 data class Section(
@@ -19,4 +18,13 @@ data class Section(
         )
     }
     constructor(id:String) : this("",0, id)
+
+    override fun equals(other: Any?): Boolean {
+        return try {
+            val otherSection = (other as Section)
+            id == otherSection.id
+        }catch (e: Exception){
+            false
+        }
+    }
 }

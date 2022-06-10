@@ -1,6 +1,5 @@
 package com.github.sdpsharelook.translate
 
-import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.IdlingResource
@@ -11,18 +10,18 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.sdpsharelook.R
-import com.github.sdpsharelook.language.Language
-import com.github.sdpsharelook.language.MatchersTest
 import com.github.sdpsharelook.utils.FragmentScenarioRule
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertThrows
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.robolectric.Robolectric
 
 @ExperimentalCoroutinesApi
 @HiltAndroidTest
@@ -85,14 +84,31 @@ class TranslateFragmentTest {
     @Test
     fun `test speech recognition`() = runTest {
         onView(withId(R.id.imageButtonSR)).perform(click())
-        // permission feature was disabled for now in SpeechRecognizer due to a crash
-        /* PermissionChecker.checkCallingOrSelfPermission(
-            context,
-            android.Manifest.permission.RECORD_AUDIO
-        )
-        PermissionRequester().apply {
-            addPermissions(android.Manifest.permission.RECORD_AUDIO)
-            requestPermissions()
-        } */
+        Robolectric.flushForegroundThreadScheduler()
     }
+
+    @Test
+    fun `goToCamera`() = runTest {
+        assertThrows(Exception::class.java ){
+            onView(withId(R.id.captureImageButton)).perform(click())
+        }
+    }
+
+    @Test
+    fun `addWordSection`() = runTest {
+        assertThrows(Exception::class.java ){
+            onView(withId(R.id.addWordToSectionButton)).perform(click())
+        }
+    }
+
+    @Test
+    fun `goToDownload`() = runTest {
+        onView(withId(R.id.sourceText)).perform(replaceText("Mama mia !"))
+        assertThrows(Exception::class.java ){
+            onView(withId(R.id.downloadDetectedLanguage)).perform(click())
+        }
+    }
+
+
+
 }

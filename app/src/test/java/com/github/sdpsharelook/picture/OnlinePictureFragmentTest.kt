@@ -1,5 +1,7 @@
 package com.github.sdpsharelook.download
 
+import android.os.Bundle
+import androidx.core.os.bundleOf
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -10,6 +12,8 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.sdpsharelook.R
 import com.github.sdpsharelook.SelectPictureFragment
+import com.github.sdpsharelook.SelectPictureFragmentLift
+import com.github.sdpsharelook.onlinePictures.OnlinePictureFragmentLift
 import com.github.sdpsharelook.utils.FragmentScenarioRule
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -19,6 +23,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.io.Serializable
 
 @ExperimentalCoroutinesApi
 @HiltAndroidTest
@@ -29,7 +34,14 @@ class OnlinePictureFragmentTest {
     val hiltRule = HiltAndroidRule(this)
 
     @get:Rule(order = 1)
-    val fragmentScenarioRule = FragmentScenarioRule.launch(SelectPictureFragment::class)
+    val fragmentScenarioRule = FragmentScenarioRule.launch(SelectPictureFragment::class,
+        null,
+        Bundle().apply {
+            putString(OnlinePictureFragmentLift.WORD_PARAMETER, "banane")
+            putString(SelectPictureFragmentLift.LANGUAGE_PARAMETER, "fr")
+            putSerializable(OnlinePictureFragmentLift.CALLBACK_FUNCTION_PARAMETER,
+                { s: String? -> } as Serializable)
+        })
 
     @Before
     fun init() {
@@ -37,19 +49,7 @@ class OnlinePictureFragmentTest {
     }
 
     @Test
-    fun `test take picture`() = runTest {
-        val cameraButton = onView(withId(R.id.button_camera))
-        cameraButton.check(matches(isDisplayed()))
-        Intents.init()
-        cameraButton.perform(click())
-        Intents.intended(IntentMatchers.hasAction("android.media.action.IMAGE_CAPTURE"))
-        assert(Intents.getIntents().size == 1)
-        Intents.release()
-    }
-
-    @Test
-    fun `test launch OnlinePictureFragment`() {
-
+    fun `launch OnlinePictureFragment`() = runTest {
     }
 
 }

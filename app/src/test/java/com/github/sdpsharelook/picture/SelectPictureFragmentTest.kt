@@ -1,5 +1,6 @@
 package com.github.sdpsharelook.download
 
+import android.os.Bundle
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -10,6 +11,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.sdpsharelook.R
 import com.github.sdpsharelook.SelectPictureFragment
+import com.github.sdpsharelook.SelectPictureFragmentLift
 import com.github.sdpsharelook.utils.FragmentScenarioRule
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -29,7 +31,12 @@ class SelectPictureFragmentTest {
     val hiltRule = HiltAndroidRule(this)
 
     @get:Rule(order = 1)
-    val fragmentScenarioRule = FragmentScenarioRule.launch(SelectPictureFragment::class)
+    val fragmentScenarioRule = FragmentScenarioRule.launch(SelectPictureFragment::class,
+        null,
+        Bundle().apply {
+            putString(SelectPictureFragmentLift.WORD_PARAMETER, "banane")
+            putString(SelectPictureFragmentLift.LANGUAGE_PARAMETER, "fr")
+        })
 
     @Before
     fun init() {
@@ -38,18 +45,18 @@ class SelectPictureFragmentTest {
 
     @Test
     fun `test take picture`() = runTest {
-        val cameraButton = onView(withId(R.id.button_camera))
-        cameraButton.check(matches(isDisplayed()))
-        Intents.init()
-        cameraButton.perform(click())
-        Intents.intended(IntentMatchers.hasAction("android.media.action.IMAGE_CAPTURE"))
-        assert(Intents.getIntents().size == 1)
-        Intents.release()
+        onView(withId(R.id.button_camera)).perform(click())
     }
 
     @Test
     fun `test launch OnlinePictureFragment`() {
-
+        onView(withId(R.id.button_web)).perform(click())
     }
+
+    @Test
+    fun `test delete picture`() {
+        onView(withId(R.id.image_button_delete))
+    }
+
 
 }

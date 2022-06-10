@@ -4,19 +4,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.BaseAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
+import com.github.sdpsharelook.R
 import com.github.sdpsharelook.SelectPictureFragment
 import com.github.sdpsharelook.Word
 import com.github.sdpsharelook.databinding.FragmentSectionDetailBinding
 import com.github.sdpsharelook.storage.IRepository
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import okhttp3.internal.notify
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -60,10 +65,19 @@ open class SectionDetailFragmentLift : Fragment() {
 
         binding.wordList.setOnItemClickListener { _, _, index, _ ->
             val w = wordList[index]
-            SelectPictureFragment(w!!) {
+            SelectPictureFragment(w!!) { url ->
                 //TODO w.picture = it
-                Toast.makeText(requireContext(), it ?: "picture deleted", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), url ?: "picture deleted", Toast.LENGTH_SHORT).show()
+                lifecycleScope.launch{
+                    val newW = w.copy(picture=url)
+                    wordRTDB.insert(section.id, listOf(newW))
+                }
+
+                (binding.wordList.adapter as ArrayAdapter<Word>).notifyDataSetChanged()
+
             }.show(parentFragmentManager, null)
+            //binding.wordList.adapter
+
         }
 
         binding.wordList.adapter = WordAdapter(requireContext(),wordList)
@@ -73,6 +87,8 @@ open class SectionDetailFragmentLift : Fragment() {
             section?.let { collectListFlow(it) }
         }
 
+        /**Check if we are adding a word from the translator Fragment**/
+        binding.wordList.adapter = WordAdapter(requireContext(),wordList )
     }
 
     private suspend fun collectListFlow(section: Section) {
@@ -81,7 +97,7 @@ open class SectionDetailFragmentLift : Fragment() {
                 it.isSuccess -> {
                     wordList.clear()
                     wordList.addAll(it.getOrDefault(emptyList()) as MutableList<Word>)
-
+                    binding.wordList.adapter = WordAdapter(requireContext(),wordList )
                 }
                 it.isFailure -> {
                     it.exceptionOrNull()?.printStackTrace()

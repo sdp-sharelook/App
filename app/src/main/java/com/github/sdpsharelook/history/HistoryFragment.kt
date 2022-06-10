@@ -1,7 +1,6 @@
 package com.github.sdpsharelook.history
 
 import android.annotation.SuppressLint
-import android.location.Geocoder
 import android.os.Bundle
 import android.view.*
 import android.widget.TextView
@@ -10,7 +9,6 @@ import androidx.lifecycle.lifecycleScope
 import com.github.sdpsharelook.R
 import com.github.sdpsharelook.Word
 import com.github.sdpsharelook.storage.IRepository
-import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.util.*
@@ -48,10 +46,10 @@ open class HistoryFragmentLift : Fragment() {
 
             }
         }
-        val pos = LatLng(-33.865143, 151.209900)
-        val pol = Geocoder(requireContext())
-        val list = pol.getFromLocation(pos.latitude, pos.longitude, 1)
-        val address = list[0].getAddressLine(0)
+//        val pos = LatLng(-33.865143, 151.209900)
+//        val pol = Geocoder(requireContext())
+//        val list = pol.getFromLocation(pos.latitude, pos.longitude, 1)
+//        val address = list[0].getAddressLine(0)
 
     }
 

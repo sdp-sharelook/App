@@ -1,6 +1,5 @@
 package com.github.sdpsharelook
 
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -128,7 +127,6 @@ open class MapsFragmentLift : Fragment(R.layout.fragment_maps) {
     private fun openImage(map: GoogleMap) {
         map.setOnMarkerClickListener { marker ->
             val word = markerMap[marker]
-            BitmapFactory.decodeResource(requireContext().resources, R.drawable.default_user_path)
             val imageView : ImageView = ImageView(requireContext())
             if (word?.picture != null) {
                 imageView.load(word.picture)

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.github.sdpsharelook.SelectPictureFragment
@@ -64,17 +65,15 @@ open class SectionDetailFragmentLift : Fragment() {
         binding.wordList.setOnItemClickListener { _, _, index, _ ->
             val word = wordList[index].source
             val language = wordList[index].sourceLanguage?.tag
-            val callback = { s: String? ->
-                //TODO w.picture = s
-                Toast.makeText(requireContext(), s ?: "picture deleted", Toast.LENGTH_SHORT)
-                    .show()
-            }
             SelectPictureFragment().apply {
                 arguments = Bundle().apply {
                     putString(SelectPictureFragment.LANGUAGE_PARAMETER, language)
                     putString(SelectPictureFragment.WORD_PARAMETER, word)
-                    putSerializable(SelectPictureFragment.CALLBACK_FUNCTION_PARAMETER,
-                        callback as Serializable)
+                }
+                setFragmentResultListener(SelectPictureFragment.RESULT_PARAMETER) { _, bundle ->
+                    val s = bundle.getString(SelectPictureFragment.RESULT_PARAMETER)
+                    Toast.makeText(requireContext(), s ?: "picture deleted", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }.show(parentFragmentManager, null)
         }

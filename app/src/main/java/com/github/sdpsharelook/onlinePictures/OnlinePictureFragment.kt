@@ -34,7 +34,7 @@ class OnlinePictureFragment : BottomSheetDialogFragment() {
                 keyword=arguments?.getString(WORD_PARAMETER)!!
                 language=arguments?.getString(LANGUAGE_PARAMETER)!!
                 onSuccessListener=
-                    arguments?.getSerializable(SelectPictureFragment.CALLBACK_FUNCTION_PARAMETER) as (OnlinePicture?) -> Unit
+                    arguments?.getSerializable(CALLBACK_FUNCTION_PARAMETER) as (OnlinePicture?) -> Unit
 
                 CoroutineScope(Dispatchers.IO).launch {
                     val pictures = GoogleImageApi.search(keyword, language) ?: listOf()

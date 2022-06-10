@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.setFragmentResult
 import com.github.sdpsharelook.camera.Camera
 import com.github.sdpsharelook.databinding.FragmentChoosePictureBinding
 import com.github.sdpsharelook.language.Language
@@ -16,10 +17,9 @@ class SelectPictureFragment : BottomSheetDialogFragment() {
     private val camera = Camera(this)
     private lateinit var word: String
     private lateinit var language: String
-    private lateinit var onPictureSelected: (String?) -> Unit
 
     companion object {
-        val CALLBACK_FUNCTION_PARAMETER = "onPictureSelected"
+        val RESULT_PARAMETER = "onPictureSelected"
         val LANGUAGE_PARAMETER = "language"
         val WORD_PARAMETER = "word"
     }
@@ -29,8 +29,6 @@ class SelectPictureFragment : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View = FragmentChoosePictureBinding.inflate(inflater, container, false).apply {
-        onPictureSelected =
-            arguments?.getSerializable(CALLBACK_FUNCTION_PARAMETER) as (String?) -> Unit
         language = arguments?.getString(LANGUAGE_PARAMETER)!!
         word = arguments?.getString(WORD_PARAMETER)!!
         buttonCamera.setOnClickListener {
@@ -43,17 +41,18 @@ class SelectPictureFragment : BottomSheetDialogFragment() {
                 arguments = Bundle().apply {
                     putString(OnlinePictureFragment.WORD_PARAMETER, word)
                     putString(OnlinePictureFragment.LANGUAGE_PARAMETER, language)
-                    putSerializable(OnlinePictureFragment.CALLBACK_FUNCTION_PARAMETER, {
-                        onlinePicture:OnlinePicture ->
-                        returnUri(onlinePicture.mediumLink)
-                    } as Serializable)
+                    putSerializable(OnlinePictureFragment.CALLBACK_FUNCTION_PARAMETER,
+                        { onlinePicture: OnlinePicture ->
+                            returnUri(onlinePicture.mediumLink)
+                        } as Serializable)
                 }
             }.show(parentFragmentManager, null)
         }
     }.root
 
     private fun returnUri(picture: String?) {
+        setFragmentResult(RESULT_PARAMETER,
+            Bundle().apply { putString(RESULT_PARAMETER, picture) })
         dismiss()
-        onPictureSelected(picture)
     }
 }

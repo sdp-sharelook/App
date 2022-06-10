@@ -96,7 +96,7 @@ open class MapsFragmentLift : Fragment(R.layout.fragment_maps) {
             entry.key?.remove()
         }
         markerMap.clear()
-        for (word in wordList!!) {
+        for (word in wordList) {
             if (word.location != null) {
                 val position =
                     LatLng(word.location!!.latitude, word.location!!.longitude)

@@ -144,12 +144,12 @@ open class MapsFragmentLift : Fragment(R.layout.fragment_maps) {
                 } else {
                     dateArg = word.savedDate
                 }
-                ImagePopupFragmentLift.newInstance(
+                ImagePopupFragment.newInstance(
                     word.source.toString(),
                     word.target.toString(),
                     dateArg,
                     imageView.drawable.toBitmap()
-                ).show(childFragmentManager, ImagePopupFragmentLift.TAG)
+                ).show(childFragmentManager, ImagePopupFragment.TAG)
 
             }
             marker.showInfoWindow()

@@ -14,9 +14,7 @@ import kotlinx.datetime.Instant
 import java.util.*
 
 @AndroidEntryPoint
-class ImagePopUpFragment : ImagePopupFragmentLift()
-
-open class ImagePopupFragmentLift : DialogFragment() {
+class ImagePopupFragment : DialogFragment() {
 
     companion object {
 
@@ -27,13 +25,13 @@ open class ImagePopupFragmentLift : DialogFragment() {
         private const val KEY_IMAGE = "KEY_IMAGE"
         private const val KEY_DATE = "KEY_DATE"
 
-        fun newInstance(source: String, target: String, date: Instant, image: Bitmap): ImagePopupFragmentLift {
+        fun newInstance(source: String, target: String, date: Instant, image: Bitmap): ImagePopupFragment {
             val args = Bundle()
             args.putString(KEY_SOURCE, source)
             args.putString(KEY_TARGET, target)
             args.putLong(KEY_DATE, date.toEpochMilliseconds())
             args.putParcelable(KEY_IMAGE, image)
-            val fragment = ImagePopupFragmentLift()
+            val fragment = ImagePopupFragment()
             fragment.arguments = args
 
             return fragment

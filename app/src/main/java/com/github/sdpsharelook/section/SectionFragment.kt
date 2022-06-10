@@ -132,8 +132,8 @@ open class SectionFragmentLift : Fragment(), SectionClickListener {
                     it.exceptionOrNull()?.printStackTrace()
                 }
             }
-            activity?.runOnUiThread(Runnable() {
-                run() {
+            activity?.runOnUiThread(Runnable {
+                run {
                     updateData()
                 }
 

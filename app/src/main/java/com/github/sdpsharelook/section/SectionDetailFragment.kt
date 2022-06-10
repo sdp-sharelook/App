@@ -56,7 +56,7 @@ open class SectionDetailFragmentLift : Fragment() {
 
         binding.wordList.setOnItemLongClickListener { _, _, pos, _ ->
             lifecycleScope.launch {
-                removeWord(pos, section!!)
+                removeWord(pos, section)
             }
             true
         }
@@ -88,7 +88,7 @@ open class SectionDetailFragmentLift : Fragment() {
 
 
         lifecycleScope.launch {
-            section?.let { collectListFlow(it) }
+            section.let { collectListFlow(it) }
         }
 
         /**Check if we are adding a word from the translator Fragment**/

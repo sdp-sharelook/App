@@ -24,6 +24,6 @@ class OnlinePictureAdapter(
         view ?: AdapterOnlinepictureBinding.inflate(LayoutInflater.from(ctx)).apply {
             val picture = pictures[i]
             imageViewThumbnail.setImageBitmap(picture.thumbnail)
-            textViewTitle.setText("")
+            textViewTitle.text = ""
         }.root
 }

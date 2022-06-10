@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/lastWeekOption"
+        android:icon="@android:drawable/ic_menu_agenda"
+        android:orderInCategory="100"
+        android:title="Last Week"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/lastMonthOption"
+        android:icon="@android:drawable/ic_menu_agenda"
+        android:orderInCategory="100"
+        android:title="Last Month"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/lastYearOption"
+        android:icon="@android:drawable/ic_menu_agenda"
+        android:orderInCategory="100"
+        android:title="Last Year"
+        app:showAsAction="never" />
+
+
+
+</menu>

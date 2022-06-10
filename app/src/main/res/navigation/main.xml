@@ -119,6 +119,11 @@
         android:label="fragment_maps"
         tools:layout="@layout/fragment_maps" />
     <fragment
+        android:id="@+id/historyFragment"
+        android:name="com.github.sdpsharelook.history.HistoryFragment"
+        android:label="fragment_history"
+        tools:layout="@layout/fragment_history" />
+    <fragment
         android:id="@+id/profileInformation"
         android:name="com.github.sdpsharelook.authorization.ProfileInformation"
         android:label="fragment_profile_information"

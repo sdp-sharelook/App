@@ -23,4 +23,9 @@
         android:icon="@drawable/ic_download"
         android:title="Downloader"
         />
+    <item
+        android:id="@+id/historyFragment"
+        android:icon="@android:drawable/ic_menu_save"
+        android:title="History"
+        />
 </menu>

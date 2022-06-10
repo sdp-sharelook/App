@@ -257,11 +257,18 @@ open class TranslateFragmentLift : Fragment() {
 
                 return@launch
             }
-            targetText = getString(R.string.translation_running)
-            targetText = translator.translate(
+            withContext(Dispatchers.Main){
+                targetText = getString(R.string.translation_running)
+            }
+            val translatedText = translator.translate(
                 sourceText, detectedLanguage!!.tag,
                 targetLanguage.tag
             )
+
+            withContext(Dispatchers.Main){
+                targetText = translatedText
+            }
+
             mIdlingResource?.decrement()
         }
     }

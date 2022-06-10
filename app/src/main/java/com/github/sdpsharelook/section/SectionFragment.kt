@@ -192,6 +192,7 @@ open class SectionFragmentLift : Fragment(), SectionClickListener {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        requireArguments().remove("sectionWord")
         _binding = null
     }
 }

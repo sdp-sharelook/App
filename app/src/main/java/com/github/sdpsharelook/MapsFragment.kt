@@ -4,8 +4,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Base64.*
-import android.view.Menu
-import android.view.MenuInflater
 import android.view.View
 import android.widget.ImageView
 import androidx.core.graphics.drawable.toBitmap
@@ -45,6 +43,7 @@ open class MapsFragmentLift : Fragment(R.layout.fragment_maps) {
      * user has installed Google Play services and returned to the app.
      */
     private val callback = OnMapReadyCallback { googleMap ->
+        var words = listOf<Word>()
         lifecycleScope.launch {
             wordRepos.flow().collect { words ->
                 val wordList = words.getOrDefault(emptyList<Word>())
@@ -125,13 +124,15 @@ open class MapsFragmentLift : Fragment(R.layout.fragment_maps) {
                 imageView.load(word.picture!!)
             }
             if (word != null) {
-                ImagePopupFragment.newInstance(
-                    word.source.toString(),
-                    word.target.toString(),
-                    word.savedDate!!,
-                    imageView.drawable.toBitmap()
-                    //decodeImage(word.picture!!)
-                ).show(childFragmentManager, ImagePopupFragment.TAG)
+                word.savedDate?.let {
+                    ImagePopupFragment.newInstance(
+                        word.source.toString(),
+                        word.target.toString(),
+                        it,
+                        imageView.drawable.toBitmap()
+                        //decodeImage(word.picture!!)
+                    ).show(childFragmentManager, ImagePopupFragment.TAG)
+                }
 
             }
             marker.showInfoWindow()
@@ -158,3 +159,5 @@ open class MapsFragmentLift : Fragment(R.layout.fragment_maps) {
         super.onCreateOptionsMenu(menu, inflater)
     }
 }
+
+

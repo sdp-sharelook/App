@@ -36,7 +36,7 @@ data class Language(
             }
         }
         return when (flagId) {
-            0 -> null
+            0 -> R.drawable.ic_no_image
             else -> flagId
         }
     }

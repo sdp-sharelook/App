@@ -25,7 +25,7 @@ class RTSectionRepo @Inject constructor(
                 override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                     val section = Gson().fromJson(snapshot.value.toString(), Section::class.java)
                     sectionList.add(section)
-                    trySendBlocking(Result.success(sectionList))
+                    trySendBlocking(Result.success(sectionList.toList()))
                 }
 
                 override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
@@ -36,13 +36,13 @@ class RTSectionRepo @Inject constructor(
                     val oldIndex = sectionList.indexOf(oldSection)
                     sectionList.removeAt(oldIndex)
                     sectionList.add(oldIndex, section)
-                    trySendBlocking(Result.success(sectionList))
+                    trySendBlocking(Result.success(sectionList.toList()))
                 }
 
                 override fun onChildRemoved(snapshot: DataSnapshot) {
                     val section = Gson().fromJson(snapshot.value.toString(), Section::class.java)
                     sectionList.remove(section)
-                    trySendBlocking(Result.success(sectionList))
+                    trySendBlocking(Result.success(sectionList.toList()))
                 }
 
                 override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}

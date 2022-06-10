@@ -4,11 +4,9 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import com.github.sdpsharelook.language.Language
 import com.google.firebase.database.IgnoreExtraProperties
-import com.google.gson.annotations.Expose
 import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
-import java.util.*
 
 @IgnoreExtraProperties
 @Serializable
@@ -78,5 +76,3 @@ data class Word(
 
 }
 
-@Serializable
-data class Position(val latitude: Double, val longitude: Double)

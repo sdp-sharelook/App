@@ -100,15 +100,4 @@ class TranslateFragmentTest {
             onView(withId(R.id.addWordToSectionButton)).perform(click())
         }
     }
-
-    @Test
-    fun `goToDownload`() = runTest {
-        onView(withId(R.id.sourceText)).perform(replaceText("Mama mia !"))
-        assertThrows(Exception::class.java ){
-            onView(withId(R.id.downloadDetectedLanguage)).perform(click())
-        }
-    }
-
-
-
 }

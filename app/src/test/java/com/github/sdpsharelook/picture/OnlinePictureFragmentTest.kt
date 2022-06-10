@@ -2,6 +2,7 @@ package com.github.sdpsharelook.download
 
 import android.os.Bundle
 import androidx.core.os.bundleOf
+import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -13,16 +14,19 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.sdpsharelook.R
 import com.github.sdpsharelook.SelectPictureFragment
 import com.github.sdpsharelook.SelectPictureFragmentLift
+import com.github.sdpsharelook.onlinePictures.OnlinePictureFragment
 import com.github.sdpsharelook.onlinePictures.OnlinePictureFragmentLift
 import com.github.sdpsharelook.utils.FragmentScenarioRule
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import org.hamcrest.core.IsAnything.anything
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.robolectric.Robolectric
 import java.io.Serializable
 
 @ExperimentalCoroutinesApi
@@ -34,13 +38,14 @@ class OnlinePictureFragmentTest {
     val hiltRule = HiltAndroidRule(this)
 
     @get:Rule(order = 1)
-    val fragmentScenarioRule = FragmentScenarioRule.launch(SelectPictureFragment::class,
+    val fragmentScenarioRule = FragmentScenarioRule.launch(
+        OnlinePictureFragment::class,
         null,
         Bundle().apply {
             putString(OnlinePictureFragmentLift.WORD_PARAMETER, "banane")
-            putString(SelectPictureFragmentLift.LANGUAGE_PARAMETER, "fr")
+            putString(OnlinePictureFragmentLift.LANGUAGE_PARAMETER, "fr")
             putSerializable(OnlinePictureFragmentLift.CALLBACK_FUNCTION_PARAMETER,
-                { s: String? -> } as Serializable)
+                { _: String? -> } as Serializable)
         })
 
     @Before
@@ -50,6 +55,7 @@ class OnlinePictureFragmentTest {
 
     @Test
     fun `launch OnlinePictureFragment`() = runTest {
+        Robolectric.flushForegroundThreadScheduler()
     }
 
 }

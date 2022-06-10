@@ -140,12 +140,12 @@ open class MapsFragmentLift : Fragment(R.layout.fragment_maps) {
                 imageView.load(word.picture!!)
             }
             if (word != null) {
-                ImagePopupFragmentLift.newInstance(
+                ImagePopupFragment.newInstance(
                     word.source.toString(),
                     word.target.toString(),
                     word.savedDate!!,
                     imageView.drawable.toBitmap()
-                ).show(childFragmentManager, ImagePopupFragmentLift.TAG)
+                ).show(childFragmentManager, ImagePopupFragment.TAG)
 
             }
             marker.showInfoWindow()

@@ -158,4 +158,3 @@ class MapsFragment : Fragment(R.layout.fragment_maps) {
     }
 }
 
-

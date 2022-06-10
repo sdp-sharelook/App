@@ -11,11 +11,12 @@
         android:icon="@android:drawable/ic_menu_save"
         android:title="Saved words" />
     <item
-        android:id="@+id/menuCameraLink"
-        android:icon="@android:drawable/ic_menu_camera"
-        android:title="Camera" />
-    <item
         android:id="@+id/mapFragment"
         android:icon="@android:drawable/ic_menu_mapmode"
         android:title="Map" />
+    <item
+        android:id="@id/launchQuizFragment"
+        android:icon="@drawable/ic_baseline_fact_check_24"
+        android:title="Quiz"
+        />
 </menu>

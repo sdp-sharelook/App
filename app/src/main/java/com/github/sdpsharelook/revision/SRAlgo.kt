@@ -1,22 +1,37 @@
 package com.github.sdpsharelook.revision
 
 import android.content.Context
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json.Default.decodeFromString
+import kotlinx.serialization.json.Json.Default.encodeToString
 import java.io.File
 import java.io.IOException
+import kotlin.math.max
+import kotlin.math.min
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.milliseconds
 
-val SRDATAFILE = "srdatafile.csv"
+const val SRDATAFILE = "srdatafile.csv"
 
-data class revisionWord(
+@Serializable
+data class RevisionWord(
     val wordId: String,
     //unix time last review
     var lastReview: Long = 0L,
     //next review in days
     var nextReview: Double = 0.0,
     //number of revisions already done
-    var n: Int = 1,
+    var n: Int = 0,
     //easiness factor used to calculate when next review should be
-    var EF: Double = 1.3,
+    var EF: Double = SRAlgo.MAX_EF,
 ) {
+
+    fun isTime(): Boolean {
+        val delay: Duration = lastReview.milliseconds + nextReview.days
+        val milliseconds: Duration = System.currentTimeMillis().milliseconds
+        return delay <= milliseconds
+    }
 
     fun saveToStorage(context: Context, filePath: String = SRDATAFILE) {
 
@@ -24,10 +39,12 @@ data class revisionWord(
         file.createNewFile()
         val newF = file.readLines().toMutableList()
         var found = false
-        newF.forEach { str ->
-            if (str.startsWith(this.wordId)) {
+        newF.forEachIndexed { index, str ->
+            val word = decodeFromString(serializer(), str)
+            if (word.wordId == wordId) {
                 found = true
-                newF[newF.indexOf(str)] = this.toString()
+                newF[index] = encodeToString(serializer(), this)
+                return@forEachIndexed
             }
         }
         file.bufferedWriter().use { printer ->
@@ -35,7 +52,7 @@ data class revisionWord(
                 printer.write(str + "\n")
             }
             if (!found) {
-                printer.write(this.toString() + "\n")
+                printer.append(encodeToString(serializer(), this) + "\n")
             }
         }
 
@@ -52,54 +69,47 @@ class SRAlgo {
 
     companion object {
 
-        val MIN_EF = 1.3
-        val MAX_EF = 2.5
+        const val MIN_EF = 1.3
+        const val MAX_EF = 2.5
 
         @JvmStatic
         fun loadRevWordsFromLocal(
             context: Context,
             filePath: String = SRDATAFILE
-        ): List<revisionWord> {
+        ): List<RevisionWord> {
             val f = File(context.filesDir, filePath)
-
+            if (f.createNewFile()) {
+                return emptyList()
+            }
             if (!f.isFile || !f.canRead()) {
                 throw IOException("Could not read file to get revision words")
             }
             f.useLines { lines ->
                 return lines.map {
-                    val elements = it.split(",")
-                    revisionWord(
-                        elements[0],
-                        elements[1].toLong(),
-                        elements[2].toDouble(),
-                        elements[3].toInt(),
-                        elements[4].toDouble()
-                    )
+                    decodeFromString(RevisionWord.serializer(), it)
                 }.toList()
             }
-
         }
 
         @JvmStatic
-        fun calcNextReviewTime(word: revisionWord, q: Int) {
+        fun calcNextReviewTime(word: RevisionWord, q: Int) {
 
-            //if got it wrong and can't remember review as soon as possible
             if (q < 3) {
-                word.nextReview = 0.0
-                word.n = 1
-                return
+                //if got it wrong or can't remember
+                //start repetitions anew without changing the E-Factor
+                word.n = 0
+            } else {
+                //else calc new EF
+                val newEF = word.EF
+                val newF = newEF + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02))
+                word.EF = min(max(newF, MIN_EF), MAX_EF)
             }
 
-            //else calc new EF
-            val EF = word.EF
-            val newF = EF + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02))
-            word.EF = Math.min(Math.max(newF, MIN_EF), MAX_EF)
             word.nextReview = when (word.n) {
                 0 -> 0.0
                 1 -> 1.0
                 2 -> 6.0
                 else -> word.EF * word.nextReview
-
             }
         }
     }

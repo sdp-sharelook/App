@@ -10,22 +10,31 @@ import com.github.sdpsharelook.R
 import com.github.sdpsharelook.databinding.FragmentDownloadLanguagesBinding
 import com.github.sdpsharelook.databinding.LayoutLanguageDownloaderBinding
 import com.github.sdpsharelook.language.Language
-import com.github.sdpsharelook.translate.MLKitTranslator
+import com.github.sdpsharelook.translate.TranslationProvider
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 
-class DownloadLanguagesFragment : Fragment() {
-    private val downloader = MLKitTranslatorDownloader()
+@AndroidEntryPoint
+class DownloadLanguagesFragment : DownloadLanguagesFragmentLift()
+
+open class DownloadLanguagesFragmentLift : Fragment() {
+    @Inject
+    lateinit var downloader: TranslatorDownloader
+    @Inject
+    lateinit var translator: TranslationProvider
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View = FragmentDownloadLanguagesBinding.inflate(inflater, container, false).apply {
         CoroutineScope(Dispatchers.IO).launch {
             val downloaded = downloader.downloadedLanguages()?.toSet() ?: setOf()
-            MLKitTranslator.availableLanguages.forEach { language ->
+            translator.availableLanguages.forEach { language ->
                 withContext(Dispatchers.Main) {
                     val languageDownloader =
                         createLanguageDownloader(inflater, language, language in downloaded)

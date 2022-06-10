@@ -5,6 +5,7 @@ import android.widget.TextView
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.pressBack
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -41,28 +42,47 @@ class SectionFragmentTest {
     }
 
     @Test
-    fun `test receives and prints hello world`() = runTest {
+    fun sectionFragmentTest() = runTest {
         val floatingActionButton = onView(withId(R.id.addingBtn))
         floatingActionButton.perform(click())
 
         // wait for the dialogue to popup
-        val dialog = ShadowDialog.getLatestDialog()
+        var dialog = ShadowDialog.getLatestDialog()
         assertTrue(dialog.isShowing)
-        val title = dialog.findViewById<TextView>(R.id.edit_section_name)
-        title.text = "section"
+        var title = dialog.findViewById<TextView>(R.id.edit_section_name)
+        title.text = "Cuisine"
         dialog.findViewById<Button>(R.id.popup_add_btn).performClick()
         ShadowLooper.runUiThreadTasks()
         assertFalse(dialog.isShowing)
 
         //wait the recyclerView to be updated
         Robolectric.flushForegroundThreadScheduler()
-        val recyclerView = onView(withId(R.id.recyclerView))
-        recyclerView.perform(click())
-        recyclerView.perform(pressBack())
 
-        //chek that we are in section details
-        onView(withText("section")).check(matches(isDisplayed()))
-        onView(allOf(withId(R.id.sectionFlag), isDisplayed()))
+        onView(withText("Cuisine")).check(matches(isDisplayed()))
+
+        // test editing the section
+        val editButton = onView(withId(R.id.editButton))
+        editButton.perform(click())
+
+        dialog = ShadowDialog.getLatestDialog()
+        assertTrue(dialog.isShowing)
+        title = dialog.findViewById<TextView>(R.id.edit_section_name)
+        title.text = "Chambre"
+        dialog.findViewById<Button>(R.id.popup_add_btn).performClick()
+        ShadowLooper.runUiThreadTasks()
+        assertFalse(dialog.isShowing)
+
+        //wait the recyclerView to be updated
+        Robolectric.flushForegroundThreadScheduler()
+        onView(withText("Chambre")).check(matches(isDisplayed()))
+
+        // test deleting the section
+
+        val deleteButton = onView(withId(R.id.deleteButton))
+        deleteButton.perform(click())
+        Robolectric.flushForegroundThreadScheduler()
+        onView(withText("Chambre")).check(doesNotExist())
+
+        //TODO sectionCard.perform(click())
     }
-
 }

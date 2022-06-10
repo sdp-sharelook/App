@@ -1,7 +1,6 @@
 package com.github.sdpsharelook.translate
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +9,7 @@ import android.widget.Toast
 import androidx.annotation.VisibleForTesting
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.test.espresso.IdlingResource
@@ -17,7 +17,7 @@ import androidx.test.espresso.idling.CountingIdlingResource
 import com.github.sdpsharelook.R
 import com.github.sdpsharelook.Word
 import com.github.sdpsharelook.databinding.FragmentTranslateBinding
-import com.github.sdpsharelook.downloads.MLKitTranslatorDownloader
+import com.github.sdpsharelook.downloads.TranslatorDownloader
 import com.github.sdpsharelook.language.Language
 import com.github.sdpsharelook.language.LanguageAdapter
 import com.github.sdpsharelook.speechRecognition.RecognitionListener
@@ -31,24 +31,55 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.util.*
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class TranslateFragment : TranslateFragmentLift()
 
 open class TranslateFragmentLift : Fragment() {
 
+    @Inject
+    lateinit var translator: TranslationProvider
+
+    @Inject
+    lateinit var translatorDownloader: TranslatorDownloader
+
+
     /**
      * This property is only valid between onCreateView and onDestroyView.
      */
-    private val binding get() = _binding!!
     private var _binding: FragmentTranslateBinding? = null
+    private val binding get() = _binding!!
     private lateinit var textToSpeech: TextToSpeech
     private val sourceLanguage: Language
         get() = binding.spinnerSourceLang.selectedItem as Language? ?: Language.auto
     private val targetLanguage: Language
         get() = binding.spinnerTargetLang.selectedItem as Language? ?: Language("en")
+    private var _detectedLanguage: Language? = null
+    private var detectedLanguage
+        get() = _detectedLanguage
+        set(value) {
+            _detectedLanguage = value
+            CoroutineScope(Dispatchers.Main).launch {
+                binding.textViewDetectedLanguage.text =
+                    if (value !in translator.availableLanguages) {
+                        targetText = ""
+                        getString(R.string.unrecognized_source_language)
+                    } else {
+                        binding.downloadDetectedLanguage.visibility =
+                            if (!::availableLanguages.isInitialized || value !in availableLanguages) {
+                                targetText =
+                                    getString(R.string.need_to_download_source_language).format(
+                                        detectedLanguage!!.tag)
+                                View.VISIBLE
+                            } else View.GONE
+                        "detected : ${value!!.displayName}"
+                    }
 
-    private lateinit var speechRecognizer: SpeechRecognizer
+            }
+        }
+
+    private var speechRecognizer: SpeechRecognizer? = null
 
     private lateinit var availableLanguages: List<Language>
     private val sourceText
@@ -68,8 +99,7 @@ open class TranslateFragmentLift : Fragment() {
         putLanguagesInSpinners()
 
         initTextToSpeech()
-
-
+        initSpeechRecognizer()
         binding.captureImageButton.setOnClickListener {
             captureImage()
         }
@@ -77,6 +107,9 @@ open class TranslateFragmentLift : Fragment() {
         binding.addWordToSectionButton.setOnClickListener { addWordToSection() }
         val args: TranslateFragmentArgs by navArgs()
         binding.sourceText.setText(args.textDetected)
+        binding.downloadDetectedLanguage.setOnClickListener {
+            downloadLanguage()
+        }
     }
 
     private val onSourceLanguageSelected = object : AdapterView.OnItemSelectedListener {
@@ -86,8 +119,12 @@ open class TranslateFragmentLift : Fragment() {
             position: Int,
             id: Long,
         ) {
-            // speechRecognizer.language = availableLanguages[position]
+            speechRecognizer?.language = sourceLanguage
             updateTranslation()
+            when (sourceLanguage) {
+                Language.auto -> binding.textViewDetectedLanguage.visibility = View.VISIBLE
+                else -> binding.textViewDetectedLanguage.visibility = View.GONE
+            }
         }
 
         override fun onNothingSelected(p0: AdapterView<*>?) { /* do nothing */
@@ -101,32 +138,30 @@ open class TranslateFragmentLift : Fragment() {
             id: Long,
         ) {
             updateTranslation()
-            textToSpeech.language = availableLanguages[position]
+            textToSpeech.language = targetLanguage
         }
 
         override fun onNothingSelected(p0: AdapterView<*>?) { /* do nothing */
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        initSpeechRecognizer()
-    }
 
     private fun putLanguagesInSpinners() {
         CoroutineScope(Dispatchers.IO).launch {
             availableLanguages =
-                MLKitTranslatorDownloader().downloadedLanguages() ?: listOf(Language("en"))
+                translatorDownloader.downloadedLanguages() ?: listOf(Language("en"))
             withContext(Dispatchers.Main) {
                 initTranslator()
                 binding.apply {
                     spinnerSourceLang.adapter =
-                        LanguageAdapter(requireContext(),
-                            (listOf(Language.auto) + availableLanguages))
+                        LanguageAdapter(
+                            requireContext(),
+                            (listOf(Language.auto) + availableLanguages)
+                        )
                     spinnerTargetLang.adapter =
                         LanguageAdapter(requireContext(), availableLanguages)
-                    spinnerSourceLang.setOnItemSelectedListener(onSourceLanguageSelected)
-                    spinnerTargetLang.setOnItemSelectedListener(onTargetLanguageSelected)
+                    spinnerSourceLang.onItemSelectedListener = onSourceLanguageSelected
+                    spinnerTargetLang.onItemSelectedListener = onTargetLanguageSelected
                 }
             }
 
@@ -135,9 +170,7 @@ open class TranslateFragmentLift : Fragment() {
 
 
     private fun initTranslator() {
-        binding.sourceText.addTextChangedListener { afterTextChanged ->
-            updateTranslation()
-        }
+        binding.sourceText.addTextChangedListener { updateTranslation() }
 
         binding.buttonSwitchLang.setOnClickListener {
             when (sourceLanguage) {
@@ -150,9 +183,8 @@ open class TranslateFragmentLift : Fragment() {
                         .show()
                 else -> {
                     val tempSource = binding.sourceText.text.toString()
-                    binding.sourceText.setText(targetText ?: "")
+                    binding.sourceText.setText(targetText)
                     binding.targetText.text = tempSource
-                    val tempLanguage = sourceLanguage
                     val srcSelection = binding.spinnerSourceLang.selectedItemPosition
                     val dstSelection = binding.spinnerTargetLang.selectedItemPosition
                     // -1 and +1 are to realign with language.auto
@@ -200,56 +232,79 @@ open class TranslateFragmentLift : Fragment() {
     private fun initSpeechRecognizer() {
         speechRecognizer = SpeechRecognizer(this, requireContext(), recognitionListener)
         binding.imageButtonSR.setOnClickListener {
-            speechRecognizer.cancel()
-            speechRecognizer.recognizeSpeech()
+            speechRecognizer?.cancel()
+            speechRecognizer?.recognizeSpeech()
         }
     }
 
     /** Call to update the text to translate and translate it.
-     * @param textToTranslate [String] | The text to translate.
      */
     private fun updateTranslation() {
         mIdlingResource?.increment()
         CoroutineScope(Dispatchers.IO).launch {
-            val detectedLanguage =
+            detectedLanguage =
                 if (sourceLanguage == Language.auto && sourceText.length > 2)
-                    Language(MLKitTranslator.detectLanguage(sourceText))
+                    Language(translator.detectLanguage(sourceText))
+                else if (sourceLanguage == Language.auto) null
                 else sourceLanguage
 
-            if (detectedLanguage !in MLKitTranslator.availableLanguages) {
-                targetText = getString(R.string.unrecognized_source_language)
+            if (detectedLanguage !in translator.availableLanguages) {
                 return@launch
             }
             if (!::availableLanguages.isInitialized ||
                 detectedLanguage !in availableLanguages
             ) {
-                targetText =
-                    getString(R.string.need_to_download_source_language).format(detectedLanguage.tag)
+
                 return@launch
             }
             targetText = getString(R.string.translation_running)
-            targetText = MLKitTranslator.translate(sourceText, detectedLanguage.tag,
-                targetLanguage.tag)
+            targetText = translator.translate(
+                sourceText, detectedLanguage!!.tag,
+                targetLanguage.tag
+            )
             mIdlingResource?.decrement()
         }
     }
 
     private fun addWordToSection() {
-
-        if(sourceText.isNullOrEmpty() || targetText.isNullOrEmpty()){
-            Log.e("TRANSLATE", "TRYING TO TRANSLATE WORD WITHOUT SOURCE AND/OR TARGET TEXT")
-            return
-        }
         val action = TranslateFragmentDirections.actionMenuTranslateLinkToMenuSectionsLink(
-            Json.encodeToString(Word(uid = UUID.randomUUID().toString(),source= sourceText.toString(), target = targetText.toString()))
+            Json.encodeToString(
+                Word(
+                    uid = UUID.randomUUID().toString(),
+                    source = sourceText,
+                    target = targetText
+                )
+            )
         )
-        findNavController().navigate(action)
 
+        val navOptions: NavOptions = NavOptions.Builder()
+            .setPopUpTo(R.id.menuTranslateLink, false, true)
+            .setRestoreState(true)
+            .build()
+
+        findNavController().navigate(action, navOptions)
     }
 
     private fun captureImage() {
-        val action = TranslateFragmentDirections.actionMenuTranslateLinkToMenuSectionsLink()
-        findNavController().navigate(action)
+        val action = TranslateFragmentDirections.actionMenuTranslateLinkToMenuCameraLink()
+
+        val navOptions: NavOptions = NavOptions.Builder()
+            .setPopUpTo(R.id.menuTranslateLink, false, true)
+            .setRestoreState(true)
+            .build()
+
+        findNavController().navigate(action, navOptions)
+    }
+
+    private fun downloadLanguage() {
+        val action = TranslateFragmentDirections.actionMenuTranslateLinkToMenuDownloadLink()
+
+        val navOptions: NavOptions = NavOptions.Builder()
+            .setPopUpTo(R.id.menuTranslateLink, false, true)
+            .setRestoreState(true)
+            .build()
+
+        findNavController().navigate(action, navOptions)
     }
 
     override fun onCreateView(

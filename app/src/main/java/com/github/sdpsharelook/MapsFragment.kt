@@ -1,9 +1,7 @@
 package com.github.sdpsharelook
 
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.util.Base64.*
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
@@ -22,7 +20,6 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.io.ByteArrayOutputStream
 import java.util.*
 import javax.inject.Inject
 
@@ -152,21 +149,7 @@ open class MapsFragmentLift : Fragment(R.layout.fragment_maps) {
             true
         }
     }
-
-    private fun getWord() {
-    }
-
-    private fun encodeImage(bm: Bitmap): String? {
-        val stream = ByteArrayOutputStream()
-        bm.compress(Bitmap.CompressFormat.JPEG, 100, stream)
-        return encodeToString(stream.toByteArray(), DEFAULT)
-    }
-
-    private fun decodeImage(s: String): Bitmap {
-        val p = decode(s, DEFAULT)
-        return BitmapFactory.decodeByteArray(p, 0, p.size)
-    }
-
+    
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.timeline_button, menu)
         super.onCreateOptionsMenu(menu, inflater)

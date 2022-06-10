@@ -1,10 +1,6 @@
 package com.github.sdpsharelook
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.util.Base64.*
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
@@ -21,10 +17,10 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.io.ByteArrayOutputStream
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import java.util.*
 import javax.inject.Inject
 
@@ -83,11 +79,7 @@ open class MapsFragmentLift : Fragment(R.layout.fragment_maps) {
                 }
             }
         }
-
-        //setMapLongClick(googleMap)
         openImage(googleMap)
-        //setPoiClick(googleMap)
-
     }
 
     private fun addMarkers(googleMap: GoogleMap, wordList: List<Word>) {
@@ -138,18 +130,23 @@ open class MapsFragmentLift : Fragment(R.layout.fragment_maps) {
     private fun openImage(map: GoogleMap) {
         map.setOnMarkerClickListener { marker ->
             val word = markerMap[marker]
-            BitmapFactory.decodeResource(requireContext().resources, R.drawable.default_user_path)
             val imageView : ImageView = ImageView(requireContext())
-            if (word != null) {
-//                val u = URL(word.picture)
-//                val m = BitmapFactory.decodeStream(u.openConnection().getInputStream())
-                imageView.load(word.picture!!)
+            if (word?.picture != null) {
+                imageView.load(word.picture)
+            } else {
+                imageView.setImageResource(R.drawable.ic_no_image)
             }
             if (word != null) {
+                val dateArg : Instant
+                if (word.savedDate == null) {
+                    dateArg = Clock.System.now()
+                } else {
+                    dateArg = word.savedDate
+                }
                 ImagePopupFragment.newInstance(
                     word.source.toString(),
                     word.target.toString(),
-                    word.savedDate!!,
+                    dateArg,
                     imageView.drawable.toBitmap()
                 ).show(childFragmentManager, ImagePopupFragment.TAG)
 
@@ -157,20 +154,6 @@ open class MapsFragmentLift : Fragment(R.layout.fragment_maps) {
             marker.showInfoWindow()
             true
         }
-    }
-
-    private fun getWord() {
-    }
-
-    private fun encodeImage(bm: Bitmap): String? {
-        val stream = ByteArrayOutputStream()
-        bm.compress(Bitmap.CompressFormat.JPEG, 100, stream)
-        return encodeToString(stream.toByteArray(), DEFAULT)
-    }
-
-    private fun decodeImage(s: String): Bitmap {
-        val p = decode(s, DEFAULT)
-        return BitmapFactory.decodeByteArray(p, 0, p.size)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

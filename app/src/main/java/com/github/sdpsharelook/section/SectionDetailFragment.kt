@@ -11,6 +11,7 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.github.sdpsharelook.SelectPictureFragment
+import com.github.sdpsharelook.SelectPictureFragmentLift
 import com.github.sdpsharelook.Word
 import com.github.sdpsharelook.databinding.FragmentSectionDetailBinding
 import com.github.sdpsharelook.storage.IRepository
@@ -64,12 +65,12 @@ open class SectionDetailFragmentLift : Fragment() {
             val language = wordList[index].sourceLanguage?.tag
             SelectPictureFragment().apply {
                 arguments = Bundle().apply {
-                    putString(SelectPictureFragment.LANGUAGE_PARAMETER, language)
-                    putString(SelectPictureFragment.WORD_PARAMETER, word)
+                    putString(SelectPictureFragmentLift.LANGUAGE_PARAMETER, language)
+                    putString(SelectPictureFragmentLift.WORD_PARAMETER, word)
                 }
                 show(this@SectionDetailFragmentLift.parentFragmentManager, null)
-                setFragmentResultListener(SelectPictureFragment.RESULT_PARAMETER) {_, bundle ->
-                    val s = bundle.getString(SelectPictureFragment.RESULT_PARAMETER)
+                setFragmentResultListener(SelectPictureFragmentLift.RESULT_PARAMETER) {_, bundle ->
+                    val s = bundle.getString(SelectPictureFragmentLift.RESULT_PARAMETER)
                     Toast.makeText(this@SectionDetailFragmentLift.requireContext(), s ?: "picture deleted", Toast.LENGTH_SHORT)
                         .show()
                 }

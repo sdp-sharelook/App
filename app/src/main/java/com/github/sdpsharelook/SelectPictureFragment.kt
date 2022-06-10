@@ -9,6 +9,7 @@ import com.github.sdpsharelook.camera.Camera
 import com.github.sdpsharelook.databinding.FragmentChoosePictureBinding
 import com.github.sdpsharelook.onlinePictures.OnlinePicture
 import com.github.sdpsharelook.onlinePictures.OnlinePictureFragment
+import com.github.sdpsharelook.onlinePictures.OnlinePictureFragmentLift
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.FlowPreview
@@ -46,9 +47,9 @@ open class SelectPictureFragmentLift : BottomSheetDialogFragment() {
             OnlinePictureFragment(
             ).apply {
                 arguments = Bundle().apply {
-                    putString(OnlinePictureFragment.WORD_PARAMETER, word)
-                    putString(OnlinePictureFragment.LANGUAGE_PARAMETER, language)
-                    putSerializable(OnlinePictureFragment.CALLBACK_FUNCTION_PARAMETER,
+                    putString(OnlinePictureFragmentLift.WORD_PARAMETER, word)
+                    putString(OnlinePictureFragmentLift.LANGUAGE_PARAMETER, language)
+                    putSerializable(OnlinePictureFragmentLift.CALLBACK_FUNCTION_PARAMETER,
                         { onlinePicture: OnlinePicture ->
                             returnUri(onlinePicture.mediumLink)
                         } as Serializable)

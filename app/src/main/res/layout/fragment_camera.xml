@@ -50,7 +50,7 @@
             android:text="Capture" />
 
         <Button
-            android:id="@+id/buttonTraduire"
+            android:id="@+id/buttonTranslate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"

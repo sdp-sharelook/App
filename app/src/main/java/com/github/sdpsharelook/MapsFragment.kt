@@ -161,4 +161,3 @@ open class MapsFragmentLift : Fragment(R.layout.fragment_maps) {
     }
 }
 
-

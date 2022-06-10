@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Base64.*
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
@@ -20,6 +21,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
@@ -52,8 +54,10 @@ open class MapsFragmentLift : Fragment(R.layout.fragment_maps) {
      */
     private val callback = OnMapReadyCallback { googleMap ->
         lifecycleScope.launch {
+
             sectionDb.flow().collect {
-                when {
+
+            when {
                     it.isSuccess -> {
                         sectionList = it.getOrDefault(emptyList())!!.toMutableList()
                         val wordList = emptyList<Word>().toMutableList()
@@ -61,7 +65,9 @@ open class MapsFragmentLift : Fragment(R.layout.fragment_maps) {
                             wordRepos.flow(section.id).collect { wordFlow ->
                                 when {
                                     wordFlow.isSuccess -> {
+                                        wordList.clear()
                                         wordList.addAll(wordFlow.getOrDefault(emptyList()) as MutableList<Word>)
+                                        addMarkers(googleMap,wordList)
                                     }
                                     wordFlow.isFailure -> {
                                         wordFlow.exceptionOrNull()
